@@ -58,7 +58,7 @@ namespace Menge {
 		class FSMDescrip;
 
 		/////////////////////////////////////////////////////////////////////
-		
+
 		/*!
 		 *	@brief		Generic base class for FSM exceptions.
 		 */
@@ -67,7 +67,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			FSMException() : MengeException() {}		
+			FSMException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -78,7 +78,7 @@ namespace Menge {
 		};
 
 		/////////////////////////////////////////////////////////////////////
-		
+
 		/*!
 		 *	@brief		Exception thrown when the FSM has an error which cannot be
 		 *				recovered from.
@@ -100,7 +100,7 @@ namespace Menge {
 		};
 
 		/////////////////////////////////////////////////////////////////////
-		
+
 		/*!
 		 *	@brief		Templated class for the behavior finite state machine.
 		 */
@@ -147,7 +147,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Advances the FSM based on the current state for the given
 			 *				agent.
-			 *	
+			 *
 			 *	@param		agent		The agent to advance the FSM for.
 			 */
 			void advance( Agents::BaseAgent * agent );
@@ -170,7 +170,7 @@ namespace Menge {
 			 *	@brief		Returns the state with the given name.
 			 *
 			 *	@param		name		The name of the desired state.
-			 *	@returns	A pointer to the desired state (if it is found), 
+			 *	@returns	A pointer to the desired state (if it is found),
 			 *				otherwise, returns null.
 			 */
 			State * getNode( const std::string & name );
@@ -243,7 +243,7 @@ namespace Menge {
 			 *	@brief		Sets the current state for the given agent.
 			 *
 			 *	@param		agt			The agent whose BFSM state gets set.
-			 *	@param		currNode	The unique identifier of the desired state 
+			 *	@param		currNode	The unique identifier of the desired state
 			 *							(returned by FSM::addNode).
 			 */
 			void setCurrentState( Agents::BaseAgent * agt, size_t currNode );
@@ -263,7 +263,7 @@ namespace Menge {
 			 *	@returns	The id of the state the given agent is in.
 			 */
 			size_t getAgentStateID( const Agents::BaseAgent * agent ) const;
-			
+
 			/*!
 			 *	@brief		Reports the state the given agent is currently in.
 			 *
@@ -294,7 +294,7 @@ namespace Menge {
 			 *	@brief		Returns the number of registered tasks.
 			 */
 			size_t getTaskCount() const { return _tasks.size(); }
-			
+
 			/*!
 			 *	@brief		Finalize the FSM
 			 */
@@ -307,7 +307,7 @@ namespace Menge {
 			 *	this function.  It is the responsibility of the caller to
 			 *	make sure it gets deleted.
 			 *
-			 *	@returns	A pointer to a valid fsm context. 
+			 *	@returns	A pointer to a valid fsm context.
 			 */
 			FsmContext * getContext();
 
@@ -325,8 +325,13 @@ namespace Menge {
 			 */
 			void addVelModifier( VelModifier * v ) { _velModifiers.push_back( v ); }
 
-			friend FSM * buildFSM( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
-								   bool VERBOSE );
+
+			/*!
+			 *	@brief		Returns the velModifiers defined in the simulator
+			 *	@returns  A reference to the velmodifier vector.
+			 */
+			std::vector< VelModifier * >&	getVelModifiers() { return _velModifiers; };
+
 
 		protected:
 			/*!
@@ -370,7 +375,7 @@ namespace Menge {
 		};
 
 		/////////////////////////////////////////////////////////////////////
-		
+
 		/*!
 		 *	@brief		Templated function which builds the behavior fsm from the
 		 *				behavior configuration given.

@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -81,17 +81,17 @@ namespace Menge {
 			FSM * fsm = new FSM( sim );
 
 			// Build the fsm
-			
+
 			//we'll need this iterator later
 			std::vector< VelModifier * >::iterator vItr;
 
 
 			// Map of state names to state IDs.
 			std::map< std::string, size_t > stateNameMap;
-			
+
 			// Copy the GoalSets
-			fsm->_goalSets.clear();
-			fsm->_goalSets.insert( fsmDescrip._goalSets.begin(), fsmDescrip._goalSets.end() );
+			fsm->getGoalSets().clear();
+			fsm->getGoalSets().insert( fsmDescrip._goalSets.begin(), fsmDescrip._goalSets.end() );
 			fsmDescrip._goalSets.clear();
 
 			//	1. Create states
@@ -101,7 +101,7 @@ namespace Menge {
 			std::list< StateDescrip * >::const_iterator sItr = fsmDescrip._states.begin();
 			for ( ; sItr != fsmDescrip._states.end(); ++sItr ) {
 				StateDescrip * sData = *sItr;
-				State * s = fsmDescrip.addState( sData ); 
+				State * s = fsmDescrip.addState( sData );
 
 				if ( s == 0x0 ) {
 					logger << Logger::ERR_MSG << "Error creating state!";
@@ -112,7 +112,7 @@ namespace Menge {
 					logger << Logger::INFO_MSG << "\tAdding state: " << s->getName();
 					logger << "(" << s->getID() << ")\n";
 				}
-				
+
 
 				// State's goal selector
 				GoalSelector * gs = sData->_goalSelector;
@@ -143,7 +143,7 @@ namespace Menge {
 					s->setVelComponent( sData->_velComponent );
 					sData->_velComponent = 0x0;
 				}
-				
+
 				// transfer each action
 				std::list< Action * >::iterator aItr = sData->_actions.begin();
 				for ( ; aItr != sData->_actions.end(); ++aItr ) {
@@ -235,8 +235,8 @@ namespace Menge {
 			// copy over the velocity modifiers
 			vItr = fsmDescrip._velModifiers.begin();
 			//TODO: replace global vel mod initalizer
-			for ( ; vItr != fsmDescrip._velModifiers.end(); ++vItr ) {   
-				fsm->addVelModifier( *vItr );  
+			for ( ; vItr != fsmDescrip._velModifiers.end(); ++vItr ) {
+				fsm->addVelModifier( *vItr );
 			}
 			fsmDescrip._velModifiers.clear();
 
@@ -264,7 +264,7 @@ namespace Menge {
 			logger << " registered tasks.\n";
 			fsm->doTasks();
 
-			
+
 
 			//	5. Initialize all agents
 			if ( VERBOSE ) logger << Logger::INFO_MSG << "Initializing agents:\n";
@@ -297,10 +297,10 @@ namespace Menge {
 				agt->_vel.set( Vector2( 0.f, 0.f ) );
 
 				//register the agent for all vel modifiers
-				vItr = fsm->_velModifiers.begin();
+				vItr = fsm->getVelModifiers().begin();
 				//TODO: replace global vel mod initalizer
-				for ( ; vItr != fsm->_velModifiers.end(); ++vItr ) {
-					( *vItr )->registerAgent(agt);  
+				for ( ; vItr != fsm->getVelModifiers().end(); ++vItr ) {
+					( *vItr )->registerAgent(agt);
 				}
 			}
 
