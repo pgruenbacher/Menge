@@ -173,17 +173,17 @@ namespace Menge {
 				SharedGoalSelector * gs =
 					dynamic_cast< SharedGoalSelector * >( state->getGoalSelector() );
 				if ( gs != 0x0 ) {
-					if ( stateNameMap.count( gs->_stateName ) == 0 ) {
+					if ( stateNameMap.count( gs->getStateName() ) == 0 ) {
 						logger << Logger::ERR_MSG << "Found shared goal selector defined on line ";
-						logger << gs->_lineNo << ", but unable to locate state with the provided "
-							"name: \"" << gs->_stateName << "\".";
+						logger << gs->getLineNo() << ", but unable to locate state with the provided "
+							"name: \"" << gs->getStateName() << "\".";
 						delete fsm;
 						return 0x0;
 					}
-					State * src = fsm->getNode( stateNameMap[ gs->_stateName ] );
+					State * src = fsm->getNode( stateNameMap[ gs->getStateName() ] );
 					if ( dynamic_cast< SharedGoalSelector * >( src->getGoalSelector() ) ) {
 						logger << Logger::ERR_MSG << "Shared goal selector defined on line ";
-						logger << gs->_lineNo << " references a state with a shared goal.  The "
+						logger << gs->getLineNo() << " references a state with a shared goal.  The "
 							"source state must have a full goal selector definition.";
 						delete fsm;
 						return 0x0;

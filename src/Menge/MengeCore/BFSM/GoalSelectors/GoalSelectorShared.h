@@ -18,7 +18,7 @@
 
 /*!
  *	@file		GoalSelectorShared.h
- *	@brief		The definition of the "shared" goal selector. 
+ *	@brief		The definition of the "shared" goal selector.
  */
 
 #ifndef __GOAL_SELECTOR_SHARED_H__
@@ -59,13 +59,17 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 */
 			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
 
 			friend class SharedGoalSelectorFactory;
-			friend FSM * buildFSM( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
-								   bool VERBOSE );
+
+			/* The line number associated */
+			virtual int getLineNo() { return _lineNo; }
+			/* Get the name of the state */
+			virtual std::string getStateName() { return _stateName; }
+
 		protected:
 			/*!
 			 *	@brief		The name of the state which will provide the actual
@@ -83,7 +87,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Factory for the SharedGoalSelector.
 		 */
-		class SharedGoalSelectorFactory : public GoalSelectorFactory { 
+		class SharedGoalSelectorFactory : public GoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		The name of the goal selector type.
@@ -113,7 +117,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new SharedGoalSelector(); }	
+			GoalSelector * instance() const { return new SharedGoalSelector(); }
 
 			/*!
 			 *	@brief		Given a pointer to a GoalSelector instance, sets the appropriate fields
@@ -124,7 +128,7 @@ namespace Menge {
 			 *	@param		behaveFldr	The path to the behavior file.  If the goal selector
 			 *							references resources in the file system, it should be
 			 *							defined relative to the behavior file location.  This is
-			 *							the folder containing that path. 
+			 *							the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( GoalSelector * selector, TiXmlElement * node,

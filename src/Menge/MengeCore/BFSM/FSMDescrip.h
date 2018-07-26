@@ -92,7 +92,7 @@ namespace Menge {
 			 *	@returns	True if parsing was successfful, false otherwise.
 			 */
 			bool loadFromXML( const std::string & xmlName, bool verbose );
-			
+
 			/*!
 			 *	@brief		Creates an FSM instance from the config file.
 			 *
@@ -102,6 +102,8 @@ namespace Menge {
 			 *							or not (false).
 			 */
 			friend FSM * buildFSM( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
+								   bool VERBOSE );
+			friend FSM * buildFSM2( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
 								   bool VERBOSE );
 
 			/*!
@@ -115,7 +117,7 @@ namespace Menge {
 			friend Logger & operator<<( Logger & out, const FSMDescrip & fsmDescrip );
 
 		protected:
-			
+
 			/*!
 			 *	@brief		Adds the transition(s) associated with the given name.
 			 *
@@ -140,7 +142,7 @@ namespace Menge {
 			 *	@brief		Map of state names to states.
 			 */
 			std::map< std::string, State * >	_stateNameMap;
-			
+
 			/*!
 			 *	@brief		A map from agent class id to a behavior description instance.
 			 */
