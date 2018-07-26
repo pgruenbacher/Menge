@@ -86,7 +86,6 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
   SIMULATOR = sim;
 
   bool valid = true;
-  const size_t AGT_COUNT = sim->getNumAgents();
   FSM* fsm = new FSM(sim);
 
   // Build the fsm
@@ -176,15 +175,17 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
   }
 
   // Connect all shared goal selectors
-  std::map<std::string, size_t>::iterator stateItr = stateNameMap.begin();
-  for (; stateItr != stateNameMap.end(); ++stateItr) {
-    std::string stateName = stateItr->first;
-    size_t stateID = stateItr->second;
-    State* state = fsm->getNode(stateID);
+  // auto stateItr = fsm->getNodes().begin();
+  // for (; stateItr != fsm->getNodes().end(); ++stateItr) {
+  for (State* state : fsm->getNodes()) {
+    // std::string stateName = stateItr->first;
+    // std::string stateName = stateItr->getName();
+    // size_t stateID = stateItr->second;
+    // State* state = fsm->getNode(stateID);
     SharedGoalSelector* gs =
         dynamic_cast<SharedGoalSelector*>(state->getGoalSelector());
     if (gs != 0x0) {
-      if (stateNameMap.count(gs->getStateName()) == 0) {
+      if (!fsm->getNode(gs->getStateName())) {
         logger << Logger::ERR_MSG
                << "Found shared goal selector defined on line ";
         logger << gs->getLineNo()
@@ -194,7 +195,7 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
         delete fsm;
         return 0x0;
       }
-      State* src = fsm->getNode(stateNameMap[gs->getStateName()]);
+      State* src = fsm->getNode(gs->getStateName());
       if (dynamic_cast<SharedGoalSelector*>(src->getGoalSelector())) {
         logger << Logger::ERR_MSG << "Shared goal selector defined on line ";
         logger << gs->getLineNo()
@@ -212,57 +213,69 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
 
   if (VERBOSE) {
     logger << Logger::INFO_MSG << "There are "
-           << fsmDescrip._transitions.size();
+           << fsmDescrip.getTransitions().size();
     logger << " transitions\n";
   }
 
+  ACTIVE_FSM = fsm;
+
+  return fsm;
+}
+
+void connectSharedGoalSelectors(FSM* fsm, FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
+              bool VERBOSE) {
+
+  // we'll need this iterator later
+  std::vector<VelModifier*>::iterator vItr;
+
   //  2. Create transitions
   std::map<std::string, std::list<Transition*> >::iterator stItr =
-      fsmDescrip._transitions.begin();
-  for (; stItr != fsmDescrip._transitions.end(); ++stItr) {
+      fsmDescrip.getTransitions().begin();
+  for (; stItr != fsmDescrip.getTransitions().end(); ++stItr) {
     const std::string fromName = stItr->first;
     std::list<Transition*>& tList = stItr->second;
 
     // Determine if the origin state is valid
-    if (fsmDescrip._stateNameMap.find(fromName) ==
-        fsmDescrip._stateNameMap.end()) {
+    if (fsmDescrip.getStateNameMap().find(fromName) ==
+        fsmDescrip.getStateNameMap().end()) {
       logger << Logger::ERR_MSG << "Transition with invalid from node name: ";
       logger << fromName << ".";
       delete fsm;
-      return 0x0;
+      return;
     }
 
     // Try to connect the transitions to the destination(s)
     std::list<Transition*>::iterator tItr = tList.begin();
     for (; tItr != tList.end(); ++tItr) {
       Transition* t = *tItr;
-      if (!t->connectStates(fsmDescrip._stateNameMap)) {
+      if (!t->connectStates(fsmDescrip.getStateNameMap())) {
         delete fsm;
-        return 0x0;
+        return;
       }
-      fsm->addTransition(stateNameMap[fromName], t);
+      fsm->getNode(fromName)->addTransition(t);
+      // fsm->addTransition(stateNameMap[fromName], t);
     }
     tList.clear();
   }
-  fsmDescrip._transitions.clear();
+  fsmDescrip.getTransitions().clear();
 
   //////////////
 
   // copy over the velocity modifiers
-  vItr = fsmDescrip._velModifiers.begin();
+  vItr = fsmDescrip.getVelModifiers().begin();
   // TODO: replace global vel mod initalizer
-  for (; vItr != fsmDescrip._velModifiers.end(); ++vItr) {
+  for (; vItr != fsmDescrip.getVelModifiers().end(); ++vItr) {
     fsm->addVelModifier(*vItr);
   }
-  fsmDescrip._velModifiers.clear();
+  fsmDescrip.getVelModifiers().clear();
 
   // 3. Query simulator and fsm for possible reasons to have a task
   fsm->collectTasks();
-  for (std::list<Task*>::iterator itr = fsmDescrip._tasks.begin();
-       itr != fsmDescrip._tasks.end(); ++itr) {
+  for (std::list<Task*>::iterator itr = fsmDescrip.getTasks().begin();
+       itr != fsmDescrip.getTasks().end(); ++itr) {
     fsm->addTask((*itr));
   }
-  fsmDescrip._tasks.clear();
+  fsmDescrip.getTasks().clear();
 
   // spatial query and elevation tasks
   fsm->addTask(SPATIAL_QUERY->getTask());
@@ -275,6 +288,13 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
     fsm->addTask(sim->getElevationInstance()->getTask());
   }
 
+}
+
+void InitializeFSMAgents(FSM* fsm, FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
+              bool VERBOSE) {
+  // we'll need this iterator later
+  std::vector<VelModifier*>::iterator vItr;
+
   logger << Logger::INFO_MSG << "There are " << fsm->getTaskCount();
   logger << " registered tasks.\n";
   fsm->doTasks();
@@ -283,28 +303,28 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
   if (VERBOSE) logger << Logger::INFO_MSG << "Initializing agents:\n";
   Agents::SimulatorState* initState = sim->getInitialState();
 
-  for (size_t a = 0; a < AGT_COUNT; ++a) {
+  for (size_t a = 0; a < sim->getNumAgents(); ++a) {
     Agents::BaseAgent* agt = sim->getAgent(a);
     // update current state to class-appropriate value
     const std::string stateName = initState->getAgentState(agt->_id);
 
-    std::map<std::string, size_t>::iterator stateIDItr =
-        stateNameMap.find(stateName);
-    if (stateIDItr == stateNameMap.end()) {
+    // std::map<std::string, size_t>::iterator stateIDItr =
+    //     stateNameMap.find(stateName);
+    if (!fsm->getNode(stateName)) {
       logger << Logger::ERR_MSG << "Agent " << agt->_id;
       logger << " requested to start in an unknown state: " << stateName << ".";
       delete fsm;
-      return 0x0;
+      return;
     }
-    size_t stateID = stateIDItr->second;
+    // size_t stateID = stateIDItr->second;
 
     // initialize velocity to preferred velocity
-    State* cState = fsm->getNode(stateID);
+    State* cState = fsm->getNode(stateName);
     if (VERBOSE) {
       logger << Logger::INFO_MSG << "Agent " << agt->_id << " starts in ";
       logger << cState->getName() << ".";
     }
-    fsm->setCurrentState(agt, stateID);
+    fsm->setCurrentState(agt, stateName);
     cState->enter(agt);
     // TODO: Restore support for defining inital velocity state: zero or
     // preferred
@@ -317,10 +337,6 @@ FSM* buildFSM2(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
       (*vItr)->registerAgent(agt);
     }
   }
-
-  ACTIVE_FSM = fsm;
-
-  return fsm;
 }
 }  // namespace BFSM
 }  // namespace Menge

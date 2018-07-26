@@ -116,6 +116,35 @@ namespace Menge {
 			 */
 			friend Logger & operator<<( Logger & out, const FSMDescrip & fsmDescrip );
 
+
+			/*!
+			 *	@brief		List of transitions.
+			 */
+			std::map< std::string, std::list< Transition * > >&		getTransitions() {return _transitions; };
+
+			/*!
+			 *	@brief		Map of state names to states.
+			 */
+			std::map< std::string, State * >&	getStateNameMap() {return _stateNameMap; };
+
+			/*!
+			 *	@brief		A map from agent class id to a behavior description instance.
+			 */
+			std::list< Task * >	getTasks() {return _tasks; };
+
+			/*!
+			 *	@brief		A mapping of goal sets to goals.
+			 *				The goal sets are represented by their id.  The goals for each goal
+			 *				set are stored in a map, mapping the goal's local id to a descriptor
+			 *				for that goal.  This is to facilitate set additions.
+			 */
+			std::map< size_t, GoalSet * >&	getGoalSets() {return _goalSets; };
+
+			/*!
+			 *	@brief		A list of velocity modifiers to be applied to all states in the
+			 *				simulator.
+			 */
+			std::vector< VelModifier * >&	getVelModifiers() {return _velModifiers; };
 		protected:
 
 			/*!

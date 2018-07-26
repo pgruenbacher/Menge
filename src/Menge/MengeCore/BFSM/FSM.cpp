@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -60,7 +60,7 @@ namespace Menge {
 		//                   Implementation of FSM
 		/////////////////////////////////////////////////////////////////////
 
-		FSM::FSM( Agents::SimulatorInterface * sim ):_sim(sim), _agtCount(0), _currNode(0x0) {	
+		FSM::FSM( Agents::SimulatorInterface * sim ):_sim(sim), _agtCount(0), _currNode(0x0) {
 			setAgentCount( sim->getNumAgents() );
 		}
 
@@ -82,7 +82,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		 
+
 		void FSM::collectTasks() {
 			const size_t STATE_COUNT = _nodes.size();
 			for ( size_t i = 0; i < STATE_COUNT; ++i ) {
@@ -92,7 +92,7 @@ namespace Menge {
 			//now collect the velocity modifiers tasks
 			std::vector< VelModifier * >::iterator vItr = _velModifiers.begin();
 			//TODO: replace global vel mod initalizer
-			for ( ; vItr != _velModifiers.end(); ++vItr ) {   
+			for ( ; vItr != _velModifiers.end(); ++vItr ) {
 				addTask((*vItr)->getTask());
 			}
 
@@ -101,7 +101,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		 
+
 		void FSM::addTask( Task * task ) {
 			if ( task ) {
 				for ( size_t i = 0; i < _tasks.size(); ++i ) {
@@ -115,7 +115,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		 
+
 		void FSM::setAgentCount( size_t count ) {
 			if ( _currNode ) {
 				delete [] _currNode;
@@ -127,7 +127,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		 
+
 		void FSM::advance( Agents::BaseAgent * agent ) {
 			const size_t ID = agent->_id;
 			// Evaluate the current state's transitions
@@ -138,7 +138,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		 
+
 		void FSM::computePrefVelocity( Agents::BaseAgent * agent ) {
 			const size_t ID = agent->_id;
 			// Evalute the new state's velocity
@@ -149,10 +149,10 @@ namespace Menge {
 			_currNode[ ID ]->getPrefVelocity( agent, newVel);
 
 			//TODO: My velocity modifiers here
-			 
+
 			std::vector< VelModifier * >::iterator vItr = _velModifiers.begin();
 			//TODO: replace global vel mod initalizer
-			for ( ; vItr != _velModifiers.end(); ++vItr ) {   
+			for ( ; vItr != _velModifiers.end(); ++vItr ) {
 				(*vItr)->adaptPrefVelocity(agent, newVel);
 			}
 
@@ -220,12 +220,24 @@ namespace Menge {
 			}
 			return _goalSets[ goalSetID ];
 		}
-		 
+
 		/////////////////////////////////////////////////////////////////////
 
 		void FSM::setCurrentState( Agents::BaseAgent * agent, size_t currNode ) {
 			assert( currNode < _nodes.size() && "Set invalid state as current state" );
 			_currNode[ agent->_id ] = _nodes[ currNode ];
+		}
+
+		void FSM::setCurrentState( Agents::BaseAgent * agent, const std::string& name ) {
+			const size_t STATE_COUNT = _nodes.size();
+		 size_t i;
+			for ( i = 0; i < STATE_COUNT; ++i ) {
+				if ( _nodes[i]->getName() == name ) {
+					break;
+				}
+			}
+			assert( i != STATE_COUNT && "Set invalid state as current state" );
+			_currNode[ agent->_id ] = _nodes[ i ];
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -236,14 +248,14 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		size_t FSM::getAgentStateID( const Agents::BaseAgent * agent ) const { 
-			return _currNode[ agent->_id ]->getID(); 
+		size_t FSM::getAgentStateID( const Agents::BaseAgent * agent ) const {
+			return _currNode[ agent->_id ]->getID();
 		}
 
 		/////////////////////////////////////////////////////////////////////
 
-		size_t FSM::getAgentStateID( size_t agentID ) const { 
-			return _currNode[ agentID ]->getID(); 
+		size_t FSM::getAgentStateID( size_t agentID ) const {
+			return _currNode[ agentID ]->getID();
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -315,7 +327,7 @@ namespace Menge {
 				StateContext * sCtx = new StateContext( _nodes[ i ] );
 				ctx->addStateContext( _nodes[i]->getID(), sCtx );
 			}
-			
+
 			return ctx;
 		}
 #endif

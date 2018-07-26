@@ -247,6 +247,7 @@ namespace Menge {
 			 *							(returned by FSM::addNode).
 			 */
 			void setCurrentState( Agents::BaseAgent * agt, size_t currNode );
+			void setCurrentState( Agents::BaseAgent * agt, const std::string& nodeName );
 
 			/*!
 			 *	@brief		Gets a pointer to the state the agent is currently in.
@@ -331,6 +332,9 @@ namespace Menge {
 			 *	@returns  A reference to the velmodifier vector.
 			 */
 			std::vector< VelModifier * >&	getVelModifiers() { return _velModifiers; };
+
+			std::vector< State * >&	getNodes() { return _nodes; };
+			std::vector< State * >&	getStates() { return _nodes; };
 
 
 		protected:
