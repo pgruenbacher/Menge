@@ -18,3 +18,6 @@ ipch/
 doc/output
 doc/tags
 examples/**/*.png
+images
+log.css
+log.html
