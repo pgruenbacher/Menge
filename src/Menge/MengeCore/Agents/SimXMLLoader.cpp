@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -86,7 +86,7 @@ namespace Menge {
 				return false;
 			}
 
-			TiXmlElement* experimentNode = xml.RootElement();	
+			TiXmlElement* experimentNode = xml.RootElement();
 			if( ! experimentNode ) {
 				logger << Logger::ERR_MSG << "Scene configuration (" << filename;
 				logger << ") does not contain a root element.";
@@ -103,7 +103,7 @@ namespace Menge {
 			os::path::absPath( filename, absPath );
 			std::string junk;
 			os::path::split( absPath, _sceneFldr, junk );
-			logger << Logger::INFO_MSG << "Scene root: " << _sceneFldr << ".";		
+			logger << Logger::INFO_MSG << "Scene root: " << _sceneFldr << ".";
 
 			// common experiment parameters parsed
 			bool commonDone = false;
@@ -115,7 +115,7 @@ namespace Menge {
 			// Tags I'm not ready to parse - only parse agent sets and obstacles AFTER experiment
 			//	parameters
 			std::list< TiXmlElement * > tagQueue;
-			
+
 			TiXmlElement* child;
 			for( child = experimentNode->FirstChildElement();
 				 child;
@@ -188,7 +188,7 @@ namespace Menge {
 						_sim->setSpatialQuery( spQuery );
 						spatialQueryDone = true;
 					}
-				} else {	// target parameter 
+				} else {	// target parameter
 					if ( !targetDone && _sim->isExpTarget( child->ValueStr() ) ) {
 						// Parse the target
 						TiXmlAttribute * attr;
@@ -207,7 +207,7 @@ namespace Menge {
 						}
 						targetDone = true;
 					}
-				} 
+				}
 			}
 			if ( !targetDone || !commonDone || !spatialQueryDone) {
 				logger << Logger::ERR_MSG << "Missing required experiment parameters: \n";
@@ -248,7 +248,7 @@ namespace Menge {
 			//	TODO: I'll need to save these when I have AgentSources.
 			for ( HASH_MAP< std::string, AgentInitializer * >::iterator itr = _profiles.begin();
 				itr != _profiles.end();
-				++itr ) 
+				++itr )
 			{
 				delete itr->second;
 			}
@@ -257,6 +257,128 @@ namespace Menge {
 			return _sim->initSpatialQuery();
 		}
 
+
+		bool SimXMLLoader::loadFromXMLPaul( const std::string & filename, AgentInitializer * agentInit,
+										bool verbose ) {
+			// COnfirms file is
+			//	a) available for reading
+			//	b) valid xml
+			//	c) An "Experiment"
+			if ( verbose ) logger << Logger::INFO_MSG << "Loading from xml: " << filename << ".";
+			TiXmlDocument xml( filename );
+			bool loadOkay = xml.LoadFile();
+
+			if ( !loadOkay ) {	// load xml file
+				logger << Logger::ERR_MSG << "Could not load simulation configuration xml (";
+				logger << filename << ") due to xml syntax errors.\n";
+				logger << "\t" << xml.ErrorDesc();
+				return false;
+			}
+
+			TiXmlElement* experimentNode = xml.RootElement();
+			if( ! experimentNode ) {
+				logger << Logger::ERR_MSG << "Scene configuration (" << filename;
+				logger << ") does not contain a root element.";
+				return false;
+			}
+
+			if( experimentNode->ValueStr () != "Experiment" ) {
+				logger << Logger::ERR_MSG << "Scene configuration (" << filename;
+				logger << ")'s root element is not \"Experiment\".";
+				return false;
+			}
+
+			std::string absPath;
+			os::path::absPath( filename, absPath );
+			std::string junk;
+			os::path::split( absPath, _sceneFldr, junk );
+			logger << Logger::INFO_MSG << "Scene root: " << _sceneFldr << ".";
+
+			// common experiment parameters parsed
+			bool commonDone = false;
+			// target experiment parameters parsed
+			bool targetDone = !_sim->hasExpTarget();
+			// spatial query must be finished before obstacles and agents can be created
+			bool spatialQueryDone = false;
+
+			// Tags I'm not ready to parse - only parse agent sets and obstacles AFTER experiment
+			//	parameters
+
+			TiXmlElement* child;
+			for( child = experimentNode->FirstChildElement();
+				 child;
+				 child = child->NextSiblingElement()) {
+				if ( child->ValueStr() == "Common" ) {
+					// Currently the only "common" experiment parameter is the time step
+					TiXmlAttribute * attr;
+					for ( attr = child->FirstAttribute(); attr; attr = attr->Next() ) {
+						try {
+							if ( !_sim->setExpParam( attr->Name(), attr->ValueStr() ) ) {
+								logger << Logger::WARN_MSG << "Unrecognized parameter in the "
+									"global \"Common\" parameters (" << attr->Name() << ") on "
+									"line " << child->Row() << "\n";
+							}
+						} catch ( XMLParamException e ) {
+							logger << Logger::ERR_MSG << e.what();
+							return false;
+						}
+					}
+					commonDone = true;
+				} else if ( child->ValueStr() == "AgentProfile" ) {
+					if ( !parseAgentProfile( child, agentInit ) ) {
+						return false;
+					}
+				} else if ( child->ValueStr() == "SpatialQuery" ) {
+					if ( _sim->hasSpatialQuery() ) {
+						logger << Logger::ERR_MSG << "More than one spatial query implementation "
+							"has been specified.  Found redundant spatial query specification on "
+							"line " << child->Row() << ".";
+						return false;
+					}
+					SpatialQuery * spQuery = SpatialQueryDB::getInstance( child, _sceneFldr );
+					if ( spQuery == 0x0 ) {
+						logger << Logger::ERR_MSG << "Unable to instantiate spatial query "
+							"specifcation on line " << child->Row() << ".";
+						return false;
+					} else {
+						_sim->setSpatialQuery( spQuery );
+						spatialQueryDone = true;
+					}
+				} else {	// target parameter
+					if ( !targetDone && _sim->isExpTarget( child->ValueStr() ) ) {
+						// Parse the target
+						TiXmlAttribute * attr;
+						for ( attr = child->FirstAttribute(); attr; attr = attr->Next() ) {
+							try {
+								if ( ! _sim->setExpParam( attr->Name(), attr->ValueStr() ) ) {
+									logger << Logger::WARN_MSG << "Unrecognized parameter in the "
+										"global \"" << child->ValueStr() << "\" parameters (";
+									logger << attr->Name() << ") on line " << child->Row() << "\n";
+								}
+							} catch ( XMLParamException e ) {
+								logger << Logger::ERR_MSG << e.what() << " (on line ";
+								logger << child->Row() << ")";
+								return false;
+							}
+						}
+						targetDone = true;
+					}
+				}
+			}
+			if ( !targetDone || !commonDone || !spatialQueryDone) {
+				logger << Logger::ERR_MSG << "Missing required experiment parameters: \n";
+				if ( !targetDone ) logger << "\tmodel simulation parameters ";
+				if ( !commonDone ) logger << "\tcommon simulation parameters ";
+				if ( !spatialQueryDone ) logger << "\tSpatial Query ";
+				return false;
+			}
+			return true;
+		}
+
+		HASH_MAP< std::string, AgentInitializer * >	SimXMLLoader::getProfilesPaul() {
+			// probably need to make sure this is being claered... idk.
+			return _profiles;
+		};
 		////////////////////////////////////////////////////////////////////
 
 		bool SimXMLLoader::parseAgentGroup( TiXmlElement * node, AgentInitializer * agentInit ) {
@@ -264,7 +386,7 @@ namespace Menge {
 			// Pass 1 get the profile selector
 			// Pass 2 initialize AgentGenerator (Generator for short)
 
-			// Get the profile selector - 
+			// Get the profile selector -
 			TiXmlElement* child;
 			ProfileSelector * profileSel = 0x0;
 			StateSelector * stateSel = 0x0;
@@ -342,11 +464,11 @@ namespace Menge {
 					generator->destroy();
 				}
 			}
-			
+
 			return true;
 		}
 
-		
+
 		////////////////////////////////////////////////////////////////////
 
 		bool SimXMLLoader::parseObstacleSet( TiXmlElement * node) {

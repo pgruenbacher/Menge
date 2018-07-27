@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -39,7 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 /*
 * Freestyle formation
 * http://graphics.cs.uh.edu/wp-content/papers/2013/2011_CGA-crowd-formation-generation-preprint.pdf
-*/ 
+*/
 
 #include "FreeFormation.h"
 
@@ -67,21 +67,31 @@ namespace Formations {
 
 	const std::string FreeFormation::LABEL("formation");
 
+	void FormationPoint::rotate(float rad) { // radians
+   	const float cosRot = cos( rad );
+   	const float sinRot = sin( rad );
+		auto tx = _pos.x();
+		auto ty = _pos.y();
+		_pos = Vector2((cosRot * tx) - (sinRot * ty), (sinRot * tx) + (cosRot * ty));
+		_dir = _dist > 1e-5 ? -( _pos / _dist ) : Vector2(0.f, 0.f);
+	};
+
 	/////////////////////////////////////////////////////////////////////
 
 	FreeFormation::FreeFormation(const std::string & name) : Resource(name){
 		_speed = 0.0f;
 		_direction = Vector2(1,0);
-		_pos = Vector2(0,0);
+		_pos = Vector2(0, 0);
+		// _pos is later calculated to be the average of all averagedAgent positions, or something like that.
 		_agentRadius = 0;
 	};
 
 	/////////////////////////////////////////////////////////////////////
 
 	FreeFormation::~FreeFormation(){
-		//we're certainly not allowed to delete the agents! 
+		//we're certainly not allowed to delete the agents!
 		//but we should clear the vectors we control.
-		
+
 		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
 		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
 			delete *fpIter;
@@ -91,7 +101,7 @@ namespace Formations {
 		// implicitly handle this
 
 		// The problem with this is that this is TWO data structures that have been
-		//	merged.  The *static* underlying formation definition, and the *dynamic* 
+		//	merged.  The *static* underlying formation definition, and the *dynamic*
 		//	data mapping agents to that formation.
 	};
 
@@ -119,7 +129,7 @@ namespace Formations {
 		//now add the point
 		FormationPoint *pt = new FormationPoint();
 
-		pt->_id = _formationPoints.size(); 
+		pt->_id = _formationPoints.size();
 		pt->_pos = point;
 		pt->_dist = abs( point );
 		pt->_dir = pt->_dist > 1e-5 ? -( point / pt->_dist ) : Vector2(0.f, 0.f);
@@ -145,12 +155,12 @@ namespace Formations {
 		agtPoint->_dist = abs( agtPoint->_dir );
 		agtPoint->_border = false;
 		agtPoint->_weight = 0.0f;
-		
+
 		//normalize direction
 		if ( agtPoint->_dist > 1e-5f ) {
 			agtPoint->_dir /= agtPoint->_dist;
 		}
-				 
+
 		//we'll convert to formation coordinates later
 		if (agtPoint->_dist > _agentRadius){
 			_agentRadius = agtPoint->_dist;
@@ -174,7 +184,7 @@ namespace Formations {
 		}
 		//average the weighted center
 		weightedCenter /= totalWeight;
-		
+
 		// Translate to canonical formation space and determine formation size
 		//	offset by weighted center and compute encompassing circle.
 		float formationRadius = 0.f;
@@ -183,14 +193,14 @@ namespace Formations {
 			(*fpIter)->_dist = abs( (*fpIter)->_pos );
 			if ( (*fpIter)->_dist > formationRadius ){
 				formationRadius = (*fpIter)->_dist;
-			}	
+			}
 		}
-		
+
 		float invDist = 1.f / formationRadius;
 		// Scale all distances
 		for (; fpIter != _formationPoints.end(); ++fpIter){
 			(*fpIter)->_dist *= invDist;
-			(*fpIter)->_pos *= invDist;	
+			(*fpIter)->_pos *= invDist;
 		}
 	}
 
@@ -210,11 +220,11 @@ namespace Formations {
 		_direction.set( 0.f, 0.f );
 		_speed = 0.0f;
 		_agentRadius = 0.0f;
-		
+
 		//clear the relationships
 		// TODO: Anything that maps agents -> value should NOT clear at each time
 		//		step.  The structure of these objects should only change when the
-		//		agents in the formation changes.  Not just to update values.			
+		//		agents in the formation changes.  Not just to update values.
 		_agent_formationPoint.clear();
 		_formationPoint_agent.clear();
 		mapIter = _agentPoints.begin();
@@ -225,9 +235,9 @@ namespace Formations {
 
 		// Compute formation world position, direction, and speed
 		float totalSpeed = 0.f;
-		for ( itr = _agents.begin(); itr != _agents.end(); ++itr ) {	
+		for ( itr = _agents.begin(); itr != _agents.end(); ++itr ) {
 			agt = itr->second;
-				
+
 			_pos += agt->_pos * _agentWeights[agt->_id];
 			totalWeight += _agentWeights[agt->_id];
 			//see if we have a cache
@@ -247,9 +257,9 @@ namespace Formations {
 		if ( mag > 1e-5 ) {
 			_direction /= mag;
 		}
-		
-		// Define "sentinel" points for the agents -- currently unnormalized. 
-		for ( itr = _agents.begin(); itr != _agents.end(); ++itr ) {	
+
+		// Define "sentinel" points for the agents -- currently unnormalized.
+		for ( itr = _agents.begin(); itr != _agents.end(); ++itr ) {
 			agt = itr->second;
 			//make a sentinel point
 			addAgentPoint(agt);
@@ -263,7 +273,7 @@ namespace Formations {
 
 		// Finally, map formation points to the remaining agents
 		itr = _agents.begin();
-		for (;itr != _agents.end();++itr){	
+		for (;itr != _agents.end();++itr){
 			agt = itr->second;
 			if ( _agent_formationPoint.find( agt->_id) == _agent_formationPoint.end() ){
 				mapAgentToPoint(agt);
@@ -279,9 +289,9 @@ namespace Formations {
 
 		// The corresponding sentinel point for this agent
 		FormationPoint * agtPoint = _agentPoints[agt->_id];
-		
+
 		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
-		size_t minPt = -1; // min pt for mapping 
+		size_t minPt = -1; // min pt for mapping
 		float distance, minDistance;
 		distance = minDistance = 1000000.0f;
 
@@ -300,6 +310,11 @@ namespace Formations {
 		if (minPt == -1) {
 			// TODO: Although this claims to be "fatal", it doesn't cause the
 			//			program to crash.  Make the exception appropriate.
+			logger << Logger::ERR_MSG <<
+			"Not enough points in formation. Size: " << _formationPoints.size()
+			<< " agents: " << _agents.size()
+			<< " formationPoitn_agentmap: " << _formationPoint_agent.size();
+			logger.close();
 			throw VelModFatalException( "Not enough points in formation." );
 		} else {
 			_formationPoint_agent[ minPt ] = agtPoint->_id;
@@ -320,7 +335,7 @@ namespace Formations {
 		float distance, minDistance;
 		distance = minDistance = 1000000.0;
 		size_t minAgtID = -1;
-		
+
 		for ( itr = _agents.begin(); itr != _agents.end(); ++itr ){
 			const BaseAgent * agt = itr->second;
 			//make sure the agent isn't already mapped to a border
@@ -336,7 +351,7 @@ namespace Formations {
 				}
 			}
 		}
-		
+
 		// ignore if minAgtID == -1:  This means there were insufficient agents
 		//		for the formation.  This is not a problem.
 		if ( minAgtID > -1 ) {
@@ -359,11 +374,33 @@ namespace Formations {
 		// assuming this is only called on agents in the formation
 		assert(_agents.find(agt->_id) != _agents.end() &&
 				"Trying to get a formation goal for an agent that is not in the formation" );
-		
+
 		//the first frame an agent enters a formation does not guaruntee it has been mapped.
 		if (_agent_formationPoint.find(agt->_id) != _agent_formationPoint.end()) {
 		    target = _formationPoints[ _agent_formationPoint[ agt->_id ] ]->_pos + _pos;
 		    target = target + _direction * _speed;
+		    return true;
+		}
+
+		return false;
+	};
+
+	bool FreeFormation::getStaticGoalForAgent( const BaseAgent * agt, PrefVelocity &pVel, Vector2 &target) {
+		// The goal point is the agent's corresponding sential point (with the point moving the
+		// formations direction and speed.)
+
+		//cache input pref dir
+		_agentPrefDirs[ agt->_id ] = pVel.getPreferred();
+		_agentPrefVels[ agt->_id ] = pVel.getPreferredVel();
+
+		// assuming this is only called on agents in the formation
+		assert(_agents.find(agt->_id) != _agents.end() &&
+				"Trying to get a formation goal for an agent that is not in the formation" );
+
+		//the first frame an agent enters a formation does not guaruntee it has been mapped.
+		if (_agent_formationPoint.find(agt->_id) != _agent_formationPoint.end()) {
+		    target = _formationPoints[ _agent_formationPoint[ agt->_id ] ]->_pos;
+		    // target = target + _direction * _speed;
 		    return true;
 		}
 
@@ -394,7 +431,7 @@ namespace Formations {
 		if ( ! ( f >> borderCount ) ) {
 			logger << Logger::ERR_MSG << "Error in parsing formation: file didn't start with ";
 			logger << "border vertex count.";
-			return 0x0; 
+			return 0x0;
 		}
 
 		FreeFormation * form = new FreeFormation( fileName );
@@ -445,7 +482,7 @@ namespace Formations {
 			logger << Logger::ERR_MSG << "Resource with name " << fileName << " is not a formation.";
 			throw ResourceException();
 		}
-	
+
 		return FormationPtr( form );
 	}
 }	// namespace Formations

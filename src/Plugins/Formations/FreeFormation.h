@@ -19,10 +19,10 @@
 /*!
  *	@file		FreeFormation.h
  *	@brief		Implementatin of freestyle formations.
- *				
+ *
  * An implemenatation of the paper at:
  * http://graphics.cs.uh.edu/wp-content/papers/2013/2011_CGA-crowd-formation-generation-preprint.pdf
- */ 
+ */
 
 #ifndef __FREE_FORMATION_H__
 #define __FREE_FORMATION_H__
@@ -40,7 +40,7 @@
  *	@namespace		Formations
  *	@brief			The name space for the Formation Model
  *
- *	This formation model is based off of 
+ *	This formation model is based off of
  *http://graphics.cs.uh.edu/wp-content/papers/2013/2011_CGA-crowd-formation-generation-preprint.pdf
  *
  * We use input files which contain the formation coordinates to
@@ -54,15 +54,17 @@ namespace Formations {
 	 */
 	struct FormationPoint {
 		size_t _id;		///< The id of the sentinel point
-		Menge::Math::Vector2 _pos;	///< The position of the sentinel point (in formation space) 
+		Menge::Math::Vector2 _pos;	///< The position of the sentinel point (in formation space)
 		float _dist;	///< The distance of the sentinel point to the formation center
 		Menge::Math::Vector2 _dir;	///< The direction of the sentinel point to the formation center
 		bool _border;	///< Flag indicating if this is a border point (true) or not (false).
-		float _weight;	///< The weight of the sentinel point 
+		float _weight;	///< The weight of the sentinel point
+
+		void rotate(float phi);
 	};
 
 	/*!
-	 * @brief		The class for modeling a freestyle formation. 
+	 * @brief		The class for modeling a freestyle formation.
 	 */
 	class FreeFormation : public Menge::Resource {
 	public:
@@ -100,13 +102,13 @@ namespace Formations {
 		static Menge::Resource * load( const std::string & fileName );
 
 		/*!
-		 *	@brief		The unique label for this data type to be used with 
+		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.
 		 */
 		static const std::string LABEL;
 
 		/*!
-		 *	@brief		Adds an agent to this formation. 
+		 *	@brief		Adds an agent to this formation.
 		 *
 		 *	Only agents "added" to the formation will be mapped considered.
 		 *	?? What happens if more agents htan formation points are added?
@@ -121,7 +123,7 @@ namespace Formations {
 		 *	@param		agt		The agent to remove.
 		 */
 		void removeAgent( const Menge::Agents::BaseAgent *agt );
-		
+
 		/*!
 		 *	@brief		Computes the mapping from tracked agents to formation points.
 		 *
@@ -129,7 +131,7 @@ namespace Formations {
 		 *
 		 */
 		void mapAgentsToFormation( const Menge::BFSM::FSM * fsm );
-		
+
 		/*!
 		 *	@brief		Provides an intermediate goal for the agent.
 		 *
@@ -143,6 +145,22 @@ namespace Formations {
 		 */
 		bool getGoalForAgent( const Menge::Agents::BaseAgent * agt,
 							  Menge::Agents::PrefVelocity &pVel, Menge::Math::Vector2 &target );
+		bool getStaticGoalForAgent( const Menge::Agents::BaseAgent * agt,
+							  Menge::Agents::PrefVelocity &pVel, Menge::Math::Vector2 &target );
+
+		// moved to public by paul
+		/*!
+		 *	@brief		Adds a point to the formation.
+		 *
+		 *	@param		pt				A point (in formation space).
+		 *	@param		borderPoint		True if the point should be considered a border point.
+		 *	@param		weight			The weight of the point.
+		 */
+		void addFormationPoint( Menge::Math::Vector2 pt, bool borderPoint, float weight );
+		/*!
+		 *	@brief		The formation points defining the formation.
+		 */
+		std::vector< FormationPoint * >  _formationPoints;
 
 	protected:
 
@@ -162,14 +180,6 @@ namespace Formations {
 		 */
 		void mapPointToAgent(FormationPoint *pt);
 
-		/*!
-		 *	@brief		Adds a point to the formation.
-		 *
-		 *	@param		pt				A point (in formation space).
-		 *	@param		borderPoint		True if the point should be considered a border point.
-		 *	@param		weight			The weight of the point.
-		 */
-		void addFormationPoint( Menge::Math::Vector2 pt, bool borderPoint, float weight );
 
 		/*!
 		 *	@brief		Adds an agent to the formation.
@@ -180,7 +190,7 @@ namespace Formations {
 
 		/*!
 		 *	@brief		Finalize the formation representation for use.
-		 *				
+		 *
 		 *	Normalizing the formation defines distances between the formation center
 		 *	and formation points relative to the *size* of the formation.  This allows
 		 *	for arbitrary scales.
@@ -211,16 +221,12 @@ namespace Formations {
 
 		/*!
 		 *	@brief		Maps agent identifiers to formation points.
-		 *				This lets me seach over a space instead of 
+		 *				This lets me seach over a space instead of
 		 *				doing a lot of vector math each timestep
 		 *				? WHAT ?
 		 */
 		std::map< size_t, FormationPoint * > _agentPoints;
 
-		/*!
-		 *	@brief		The formation points defining the formation.
-		 */
-		std::vector< FormationPoint * >  _formationPoints;
 
 		/*!
 		 *	@brief		A separate cache of border points -- this is a subset of _formationPoints.

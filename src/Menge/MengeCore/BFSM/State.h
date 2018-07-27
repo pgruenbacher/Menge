@@ -149,6 +149,8 @@ namespace Menge {
 			 *	@param		isFinal		If true, the state is set to be final, if false, not.
 			 */
 			inline void setFinal( bool isFinal ) { _final = isFinal; }
+			inline void setType( std::string& type ) { _type = type; }
+			inline void setClassId( size_t classId ) { _classId = classId; }
 
 			/*!
 			 *	@brief		Reports if the state is final or not.
@@ -156,6 +158,8 @@ namespace Menge {
 			 *	@returns	True if the state is a final state, false otherwise.
 			 */
 			inline bool getFinal() const { return _final; }
+			inline const std::string& getType() const { return _type; }
+			inline size_t getClassId() const { return _classId; }
 
 			/*!
 			 *	@brief		Test the transitions out of this state for the given agent.
@@ -347,6 +351,12 @@ namespace Menge {
 			 *	@brief		The globally unique id of state
 			 */
 			size_t _id;
+
+			// added by paul. state will usually only be acting on
+			// agents of the same classId.
+			size_t _classId;
+			// likewise groups states of different classIds to same type
+			std::string _type;
 
 			/*!
 			 *	@brief		The lock for accessing the goals.

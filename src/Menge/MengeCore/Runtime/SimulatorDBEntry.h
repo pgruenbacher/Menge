@@ -21,7 +21,7 @@
  *	@brief	Definition of an entry into the simulator database.
  *
  *	This provides the mechanism by which the executable can learn about
- *	new pedestrian models/simulators without any significant code 
+ *	new pedestrian models/simulators without any significant code
  *	contortions.
  */
 
@@ -29,7 +29,8 @@
 #define	__SIMULATOR_DB_ENTRY_H__
 
 #include "MengeCore/CoreConfig.h"
-
+#include "MengeCore/Agents/AgentInitializer.h"
+#include "macros.h"
 #include <string>
 #include <iostream>
 
@@ -54,7 +55,7 @@ namespace Menge {
 	 *	@brief		An entry in the simulator database.
 	 *
 	 *	Every pedestrian model must define and register a SimulatorDBEntry.
-	 *	The entry provides brief and long descriptions of the pedestrian 
+	 *	The entry provides brief and long descriptions of the pedestrian
 	 *	model to display in response to command-line queries.  Furthermore,
 	 *	they are responsible for instantiating simulators, behavior FSM,
 	 *	and SimSystem (although, this is done in the base class and <i>not</i>
@@ -80,7 +81,7 @@ namespace Menge {
 		 *  @brief    Virtual destructor.
 		 */
 		virtual ~SimulatorDBEntry() {}
-		
+
 		/*!
 		 *	@brief		Gives a brief description of the simulator.
 		 *
@@ -137,7 +138,7 @@ namespace Menge {
 		 *	@param		simDuration		The maximum duration to allow the simulation to run.
 		 *	@param		behaveFile		The full path to the xml <i>behavior</i> specification.
 		 *	@param		sceneFile		The full path to the xml <i>scene</i> specification.
-		 *	@param		outFile			The full path to the output file to write the agent 
+		 *	@param		outFile			The full path to the output file to write the agent
 		 *								trajectories.  If the empty string, no output file will
 		 *								be written.
 		 *	@param		scbVersion		The scb version to write.
@@ -163,6 +164,46 @@ namespace Menge {
 		 */
 		float simDuration() const;
 
+		/*!
+		 *	@brief		Creates the simulator.
+		 *
+		 *	@param		sceneFileName		The full path to the simulation scene specification.
+		 *	@param		VERBOSE				Determines if the initialization outputs status
+		 *									and information to the console.  True outputs,
+		 *									false remains silent.
+		 *	@returns	A pointer to the instantiated simulator.
+		 *				If there is an error, NULL is returned.
+		 */
+		Agents::SimulatorInterface * initSimulator( const std::string & sceneFileName,
+													bool VERBOSE );
+
+		Agents::SimulatorInterface * initSimulatorPaul(
+													HASH_MAP< std::string, Agents::AgentInitializer* > &profiles,
+													const std::string & sceneFileName,
+													bool VERBOSE );
+
+		/*!
+		 *	@brief		Creates the finite state machine and finalizes simulator and fsm
+		 *
+		 *	@param		behaveFile		string containing the full path to the behavior file
+		 *	@param		sim				pointer to the simulator interface to be used in
+		 *								conjunction with the FSM
+		 *	@param		VERBOSE			boolean flag for verbose output
+		 *	@returns	A pointer to the instantiated finite state machine for the simulator.
+		 *				If there is an error, NULL is returned.
+		 */
+		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
+							 bool VERBOSE );
+		/*!
+		 *	@brief		Finalizes the finite state machine and simulator in preparation for
+		 *				execution.
+		 *
+		 *	@param		sim		A pointer to the simulator.
+		 *	@param		fsm		The finite state machine that goes with the simulator.
+		 *	@returns	A boolean reporting if finalization was successful (true) or not (false).
+		 */
+		bool finalize( Agents::SimulatorInterface * sim, BFSM::FSM * fsm );
+
 	protected:
 #if 0
 		/*!
@@ -176,7 +217,7 @@ namespace Menge {
 		 *	in the derived SimulatorDBEntry.
 		 *
 		 *	@param		simSystem	The system which tracks the agents.  This should be
-		 *							the same system which was returned by a call to 
+		 *							the same system which was returned by a call to
 		 *							SimulatorDBEntry::getSimulatorSystem.
 		 *	@returns	A pointer to the appropriate agent context.  If the system is of
 		 *				the wrong type (or if there is any other problem), NULL is returned.
@@ -195,41 +236,8 @@ namespace Menge {
 		 */
 		virtual Agents::AgentInitializer * getAgentInitalizer() const;
 
-		/*!
-		 *	@brief		Creates the simulator.
-		 *
-		 *	@param		sceneFileName		The full path to the simulation scene specification.
-		 *	@param		VERBOSE				Determines if the initialization outputs status
-		 *									and information to the console.  True outputs, 
-		 *									false remains silent.
-		 *	@returns	A pointer to the instantiated simulator.
-		 *				If there is an error, NULL is returned.
-		 */
-		Agents::SimulatorInterface * initSimulator( const std::string & sceneFileName,
-													bool VERBOSE );
 
-		/*!
-		 *	@brief		Creates the finite state machine and finalizes simulator and fsm
-		 *
-		 *	@param		behaveFile		string containing the full path to the behavior file
-		 *	@param		sim				pointer to the simulator interface to be used in
-		 *								conjunction with the FSM
-		 *	@param		VERBOSE			boolean flag for verbose output
-		 *	@returns	A pointer to the instantiated finite state machine for the simulator.
-		 *				If there is an error, NULL is returned.
-		 */
-		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
-							 bool VERBOSE );
 
-		/*! 
-		 *	@brief		Finalizes the finite state machine and simulator in preparation for
-		 *				execution.
-		 *
-		 *	@param		sim		A pointer to the simulator.
-		 *	@param		fsm		The finite state machine that goes with the simulator.
-		 *	@returns	A boolean reporting if finalization was successful (true) or not (false).
-		 */
-		bool finalize( Agents::SimulatorInterface * sim, BFSM::FSM * fsm );
 
 		/*!
 		 *	@brief		A pointer to the simulator.  The database entry is not responsible for

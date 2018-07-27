@@ -70,6 +70,30 @@ namespace Menge {
 		return sim;
 	}
 
+	Agents::SimulatorInterface * SimulatorDBEntry::initSimulatorPaul(
+		HASH_MAP< std::string, Agents::AgentInitializer* > &profiles,
+		const std::string & sceneFileName, bool VERBOSE )
+	{
+		Agents::SimulatorInterface * sim = getNewSimulator();
+		Agents::AgentInitializer * agentInit = getAgentInitalizer();
+		Agents::SimXMLLoader loader( sim );
+		logger.line();
+		try {
+			if (!loader.loadFromXMLPaul(sceneFileName, agentInit, VERBOSE)) {
+				logger << Logger::ERR_MSG << "Couldn't initialize scene from xml.";
+				return 0x0;
+			}
+			HASH_MAP< std::string, Agents::AgentInitializer * >	loader_profiles = loader.getProfilesPaul();
+				logger << Logger::ERR_MSG << "Copied profiles read from xml";
+			profiles.insert(loader_profiles.begin(), loader_profiles.end());
+		}
+		catch (MengeFatalException e) {
+			logger << Logger::ERR_MSG << e._msg;
+			return 0x0;
+		}
+		return sim;
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 
 	BFSM::FSM * SimulatorDBEntry::initFSM( const std::string & behaveFile,

@@ -52,7 +52,7 @@ namespace Menge {
 			 *	@param		sim		The simulator to populate based on definition in XML.
 			 */
 			SimXMLLoader( XMLSimulatorBase * sim );
-			
+
 			/*!
 			 *	@brief		Parse the xml and load the given simulator.
 			 *
@@ -64,6 +64,10 @@ namespace Menge {
 			 */
 			bool loadFromXML( const std::string & xmlName, AgentInitializer * agentInit,
 							  bool verbose=false );
+			bool loadFromXMLPaul( const std::string & xmlName, AgentInitializer * agentInit,
+							  bool verbose=false );
+			HASH_MAP< std::string, AgentInitializer * >	getProfilesPaul();
+
 
 		protected:
 			/*!
@@ -87,7 +91,7 @@ namespace Menge {
 			 */
 			bool parseAgentGroup( TiXmlElement * node, AgentInitializer * agentInit );
 
-			
+
 			/*!
 			 *	@brief		Parses the definition of an obstacleset.
 			 *

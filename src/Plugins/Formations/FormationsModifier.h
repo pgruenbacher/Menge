@@ -54,8 +54,8 @@ namespace Formations {
 	 *
 	 *		<VelModifier type="formation" file_name="string"/>
 	 *
-	 *	The value `file_name` contains the path to the formation definition file 
-	 *	(see @ref Formations::FreeFormation for details on the file).  The path 
+	 *	The value `file_name` contains the path to the formation definition file
+	 *	(see @ref Formations::FreeFormation for details on the file).  The path
 	 *	should be relative to the file that specifies the velocity modifier.
 	 */
 	class FORMATIONS_API FormationModifier : public Menge::BFSM::VelModifier {
@@ -98,7 +98,7 @@ namespace Formations {
 		 *	@brief		Provides the task the formation modifier uses to update formations.
 		 *
 		 *	@returns	A pointer to the supporting task.  The caller is responsible to delete it.
-		 */ 
+		 */
 		virtual Menge::BFSM::Task * getTask();
 
 		/*!
@@ -126,7 +126,7 @@ namespace Formations {
 		 *	@brief		The underlying formation data.
 		 */
 		FormationPtr _formation;
-		
+
 		/*!
 		 *	@brief		Concurrency lock for _formation.
 		 */
@@ -179,7 +179,7 @@ namespace Formations {
 		 *	@returns		A pointer to a newly instantiated modifier class.
 		 */
 		Menge::BFSM::VelModifier * instance() const { return new FormationModifier(); }
-		
+
 		/*!
 		 *	@brief		Given a pointer to an modifier instance, sets the appropriate fields
 		 *				from the provided XML node.
@@ -195,7 +195,7 @@ namespace Formations {
 		 *	@param		behaveFldr	The path to the behavior file.  If the modifier references
 		 *							resources in the file system, it should be defined relative
 		 *							to the behavior file location.  This is the folder containing
-		 *							that path. 
+		 *							that path.
 		 *	@returns	A boolean reporting success (true) or failure (false).
 		 */
 		virtual bool setFromXML( Menge::BFSM::VelModifier * modifier, TiXmlElement * node,
