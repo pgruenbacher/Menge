@@ -336,6 +336,8 @@ namespace Menge {
 			std::vector< State * >&	getNodes() { return _nodes; };
 			std::vector< State * >&	getStates() { return _nodes; };
 
+			// to better track names and indices.
+			std::map< std::string, State * >&	getStateNameMap() {return _stateNameMap; };
 
 		protected:
 			/*!
@@ -370,6 +372,9 @@ namespace Menge {
 			 */
 			std::map< size_t, GoalSet * >	_goalSets;
 
+			// to better track names and indices.
+			std::map< std::string, State * >	_stateNameMap;
+
 			/*!
 			 *	@brief		A list of velocity modifiers to be applied to all states in the
 			 *				simulator.
@@ -393,6 +398,11 @@ namespace Menge {
 		 */
 		 FSM * buildFSM( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
 						 bool VERBOSE=false );
+		 // extra utility by paul for refactoring
+			// FSM * buildFSMTotal( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
+			// 				   bool VERBOSE );
+			// FSM * buildFSM3( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
+			// 				   bool VERBOSE );
 
 	}	// namespace BFSM
 } // namespace Menge

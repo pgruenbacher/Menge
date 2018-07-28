@@ -93,6 +93,15 @@ namespace Formations {
   void FormationComponent::setDisplacement(Vector2 v){
     _displacment = v;
   };
+
+  void FormationComponent::loadSetFormation(const std::string& fname) {
+    try {
+      setFormation(loadFormation(fname));
+    } catch ( Menge::ResourceException ) {
+      logger << Logger::ERR_MSG << "Couldn't instantiate formatoin " << fname;
+    }
+    return;
+  };
   /////////////////////////////////////////////////////////////////////
 
   void FormationComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,

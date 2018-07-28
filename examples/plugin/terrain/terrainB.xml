@@ -2,9 +2,9 @@
 
 <BFSM>
 	<VelModifier type="height_field" file_name="battlefield.ht" down_hill_scale="0.2" dir_weight="1.2" up_hill_scale="1.0"/>
-	
+
 	<GoalSet id="0">
-		<Goal type="AABB" id="0" min_x="10" min_y="300" max_x="1014" max_y="400" weight="1.0" />
+		<Goal type="AABB" id="0" min_x="-246" min_y="-212" max_x="502" max_y="-146" weight="1.0" />
 	</GoalSet>
 
 	<State name="Run" speedPolicy="mean" final="0" >

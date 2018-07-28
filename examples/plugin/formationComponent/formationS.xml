@@ -26,26 +26,15 @@
 
     <AgentGroup>
         <ProfileSelector type="const" name="group1" />
-		<StateSelector type="const" name="GetInFormation" />
-		<Generator type="rect_grid"
-					anchor_x="-13" anchor_y="-13"
-					offset_x="1" offset_y="1"
-					count_x="5" count_y="5"
-					displace_dist="u" displace_min="1" displace_max="0.2"
-					/>
+		<StateSelector type="const" name="WalkRight" />
+		<Generator type="explicit" >
+            <Agent p_x="-4.0" p_y="2.0" />
+            <Agent p_x="-8.0" p_y="2.0" />
+            <Agent p_x="-8.0" p_y="-2.0" />
+            <Agent p_x="-4.0" p_y="-2.0" />
+            <Agent p_x="-6" p_y="0" />
+		</Generator>
     </AgentGroup>
 
-	<ObstacleSet type="explicit" class="1">
-		<Obstacle closed="1" >
-			<Vertex p_x="-1" p_y="-10" />
-			<Vertex p_x="5" p_y="-10" />
-			<Vertex p_x="5" p_y="1.5" />
-			<Vertex p_x="3" p_y="1.5" />
-			<Vertex p_x="3" p_y="2" />
-			<Vertex p_x="1" p_y="2" />
-			<Vertex p_x="1" p_y="1.5" />
-			<Vertex p_x="-1" p_y="1.5" />
-		</Obstacle>
-	</ObstacleSet>
 
 </Experiment>

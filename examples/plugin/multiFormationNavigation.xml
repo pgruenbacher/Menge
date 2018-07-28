@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project
+	scene="multiFormationNavigation/formationNavigationS.xml"
+	behavior="multiFormationNavigation/formationNavigationB.xml"
+	view="multiFormationNavigation/formationNavigationV.xml"
+	model="orca"
+	dumpPath="images/test"
+/>

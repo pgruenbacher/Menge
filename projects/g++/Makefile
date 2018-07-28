@@ -48,46 +48,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pgruenbacher/build/menge_paul/projects/g++
+CMAKE_SOURCE_DIR = /home/pgruenbacher/build/Menge/projects/g++
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pgruenbacher/build/menge_paul/projects/g++
+CMAKE_BINARY_DIR = /home/pgruenbacher/build/Menge/projects/g++
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: install/strip
-
-.PHONY : install/strip/fast
 
 # Special rule for the target install/local
 install/local: preinstall
@@ -122,11 +89,33 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pgruenbacher/build/menge_paul/projects/g++/CMakeFiles /home/pgruenbacher/build/menge_paul/projects/g++/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pgruenbacher/build/Menge/projects/g++/CMakeFiles /home/pgruenbacher/build/Menge/projects/g++/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pgruenbacher/build/menge_paul/projects/g++/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pgruenbacher/build/Menge/projects/g++/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -180,6 +169,11 @@ mengeCore/fast:
 	$(MAKE) -f Menge/MengeCore/CMakeFiles/mengeCore.dir/build.make Menge/MengeCore/CMakeFiles/mengeCore.dir/build
 .PHONY : mengeCore/fast
 
+# Manual pre-install relink rule for target.
+mengeCore/preinstall:
+	$(MAKE) -f Menge/MengeCore/CMakeFiles/mengeCore.dir/build.make Menge/MengeCore/CMakeFiles/mengeCore.dir/preinstall
+.PHONY : mengeCore/preinstall
+
 #=============================================================================
 # Target rules for targets named mengeVis
 
@@ -192,6 +186,11 @@ mengeVis: cmake_check_build_system
 mengeVis/fast:
 	$(MAKE) -f Menge/MengeVis/CMakeFiles/mengeVis.dir/build.make Menge/MengeVis/CMakeFiles/mengeVis.dir/build
 .PHONY : mengeVis/fast
+
+# Manual pre-install relink rule for target.
+mengeVis/preinstall:
+	$(MAKE) -f Menge/MengeVis/CMakeFiles/mengeVis.dir/build.make Menge/MengeVis/CMakeFiles/mengeVis.dir/preinstall
+.PHONY : mengeVis/preinstall
 
 #=============================================================================
 # Target rules for targets named menge
@@ -368,12 +367,11 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install"
-	@echo "... list_install_components"
-	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... tinyxml"
 	@echo "... mengeCore"
 	@echo "... mengeVis"

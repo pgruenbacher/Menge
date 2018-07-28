@@ -103,8 +103,6 @@ namespace Menge {
 			 */
 			friend FSM * buildFSM( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
 								   bool VERBOSE );
-			friend FSM * buildFSM2( FSMDescrip & fsmDescrip, Agents::SimulatorInterface * sim,
-								   bool VERBOSE );
 
 			/*!
 			 *	@brief		Friend operator for printing the behavior configuration to an output
@@ -130,7 +128,7 @@ namespace Menge {
 			/*!
 			 *	@brief		A map from agent class id to a behavior description instance.
 			 */
-			std::list< Task * >	getTasks() {return _tasks; };
+			std::list< Task * >&	getTasks() {return _tasks; };
 
 			/*!
 			 *	@brief		A mapping of goal sets to goals.
@@ -145,6 +143,7 @@ namespace Menge {
 			 *				simulator.
 			 */
 			std::vector< VelModifier * >&	getVelModifiers() {return _velModifiers; };
+			std::list< StateDescrip * >&	getStates() { return _states; };
 		protected:
 
 			/*!

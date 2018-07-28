@@ -41,7 +41,7 @@ namespace Menge {
 		class GoalSelector;
 		class VelComponent;
 		class VelModifier;
-		
+
 
 		////////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +57,7 @@ namespace Menge {
 			 *	@param		isFinal		Determines if this state is a final state (true) or not
 			 *							(false).
 			 */
-			StateDescrip( const std::string & name, bool isFinal );
+			StateDescrip( const std::string & name, bool isFinal, size_t agent_class, const std::string &typeName );
 
 			/*!
 			 *	@brief		Destructor
@@ -72,11 +72,16 @@ namespace Menge {
 			 *	@returns	The provided output stream.
 			 */
 			friend Logger & operator<<( Logger & out, const StateDescrip & state );
-			
+
 			/*!
 			 *	@brief		The name of the state.
 			 */
 			std::string	_name;
+
+			// added by paul
+			// will assign an agent class to the state
+			size_t _agent_class;
+			std::string _type;
 
 			/*!
 			 *	@brief		Dictates whether this state is considered a "final" state (true) or not

@@ -14,17 +14,17 @@
 
 	<AgentProfile name="group1" >
 		<OpenSteer tau="3" tauObst="6" />
-        <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="3" pref_speed="2.4" max_speed="3.5" max_accel="5" >
-			<Property name="pref_speed" dist="u" min="1.9" max="2.5"/>
-			<Property name="r" dist="u" min=".19" max=".21"/>
-		</Common>
+      <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="3" pref_speed="2.4" max_speed="3.5" max_accel="5" >
+  			<Property name="pref_speed" dist="u" min="1.9" max="2.5"/>
+  			<Property name="r" dist="u" min=".19" max=".21"/>
+  		</Common>
 		<PedVO factor="1.57" buffer="0.9" tau="3" tauObst="0.1" turningBias="1.0" />
-        <GCF stand_depth="0.18" move_scale="0.53" slow_width="0.25" sway_change="0.05" />
-        <Helbing mass="80" />
-        <Johansson fov_weight="0.16" />
-        <Karamouzas personal_space="0.69" anticipation="8" />
-        <ORCA tau="3" tauObst="0.15" />
-        <Zanlungo mass="80" orient_weight="0.75" />
+      <GCF stand_depth="0.18" move_scale="0.53" slow_width="0.25" sway_change="0.05" />
+      <Helbing mass="80" />
+      <Johansson fov_weight="0.16" />
+      <Karamouzas personal_space="0.69" anticipation="8" />
+      <ORCA tau="3" tauObst="0.15" />
+      <Zanlungo mass="80" orient_weight="0.75" />
 	</AgentProfile>
 
 	<AgentProfile name="group2" inherits="group1" >
@@ -34,20 +34,20 @@
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="Run" />
-		<Generator type="hex_lattice" 
-					anchor_x="512" anchor_y="556" 
+		<Generator type="hex_lattice"
+					anchor_x="0" anchor_y="36"
 					alignment="center" row_direction="x"
 					density="0.2" width="500"
 					population="3200" rotation="0"
 					displace_dist="n" displace_mean="0.0" displace_stddev="0.7"
 					/>
     </AgentGroup>
-	
+
 	<AgentGroup>
         <ProfileSelector type="const" name="group2" />
 		<StateSelector type="const" name="Run" />
-		<Generator type="hex_lattice" 
-					anchor_x="512" anchor_y="850" 
+		<Generator type="hex_lattice"
+					anchor_x="0" anchor_y="438"
 					alignment="center" row_direction="x"
 					density="0.2" width="740"
 					population="9600" rotation="0"

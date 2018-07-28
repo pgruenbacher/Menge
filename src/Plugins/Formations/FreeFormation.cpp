@@ -151,6 +151,7 @@ namespace Formations {
 
 		agtPoint->_id = agt->_id;
 		agtPoint->_pos = agt->_pos;
+		std::cout << "add agent point" << _pos.x() << " " << agt->_pos.x() << std::endl;
 		agtPoint->_dir = _pos - agt->_pos;
 		agtPoint->_dist = abs( agtPoint->_dir );
 		agtPoint->_border = false;
@@ -239,6 +240,7 @@ namespace Formations {
 			agt = itr->second;
 
 			_pos += agt->_pos * _agentWeights[agt->_id];
+			std::cout << "_POS" << _pos.x() << std::endl;
 			totalWeight += _agentWeights[agt->_id];
 			//see if we have a cache
 			if (_agentPrefDirs.find(agt->_id) == _agentPrefDirs.end()){
@@ -251,6 +253,11 @@ namespace Formations {
 		}
 
 		//now that we can localize and normalize the formation, let's do so.
+		std::cout << "_POS2" << _pos.x() << std::endl;
+		if (totalWeight <= 0.0) {
+			totalWeight = 1.0;
+			// throw VelModFatalException("total weight is zero");
+		}
 		_pos /= totalWeight;
 		float mag = abs( _direction );
 		_speed = totalSpeed > 0.f ?  mag / totalSpeed : mag ;
@@ -271,6 +278,7 @@ namespace Formations {
 			mapPointToAgent( *formationItr );
 		}
 
+		std::cout << "PAUL FORMATION MAP" << _formationPoint_agent.size() << std::endl;
 		// Finally, map formation points to the remaining agents
 		itr = _agents.begin();
 		for (;itr != _agents.end();++itr){
@@ -279,6 +287,7 @@ namespace Formations {
 				mapAgentToPoint(agt);
 			}
 		}
+		std::cout << "PAUL FORMATION MAP" << _formationPoint_agent.size() << std::endl;
 	};
 
 	/////////////////////////////////////////////////////////////////////
@@ -345,6 +354,7 @@ namespace Formations {
 
 				//check distance
 				distance = formationDistance( pt, agtPoint );
+				std::cout << "DISTANCE ?? " << distance << " " << pt->_dir.x() << " " << pt->_dir.y() << " " << agtPoint->_dir.x() << " " << agtPoint->_dir.y() << std::endl;
 				if (distance < minDistance) {
 					minDistance = distance;
 					minAgtID = itr->second->_id;

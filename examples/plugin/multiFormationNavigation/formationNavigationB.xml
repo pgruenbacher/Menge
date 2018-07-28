@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<BFSM>
+	<GoalSet id="0">
+		<Goal type="point" id="0" x="-9" y="-10.0"/>
+    <Goal type="point" id="1" x="13" y="-10.0"/>
+	</GoalSet>
+
+<!--     <VelModifier type="formation" file_name="bigSquare.txt" /> -->
+
+  <State name="GetInFormation1" final="0" type="GetInFormation" class="1">
+    <VelModifier type="formation" file_name="bigSquare.txt" />
+  </State>
+
+  <State name="NavigateInFormation1" final="0" type="NavigateInFormation" class="1" >
+      <GoalSelector type="explicit" goal_set="0" goal="1" />
+      <VelComponent type="road_map" file_name="graph.txt" />
+      <VelModifier type="formation" file_name="bigSquare.txt" />
+  </State>
+
+  <State name="GetInFormation2" final="0" type="GetInFormation" class="2">
+    <VelModifier type="formation" file_name="bigSquare2.txt" />
+  </State>
+
+  <State name="NavigateInFormation2" final="0" type="NavigateInFormation" class="2" >
+      <GoalSelector type="explicit" goal_set="0" goal="1" />
+      <VelComponent type="road_map" file_name="graph.txt" />
+      <VelModifier type="formation" file_name="bigSquare2.txt" />
+  </State>
+
+
+  <!-- shared states -->
+  <State name="Stop" final="1">
+    <VelModifier type="formation" file_name="bigSquare.txt" />
+  </State>
+  <State name="Stop2" final="1">
+    <VelModifier type="formation" file_name="bigSquare2.txt" />
+  </State>
+
+
+  <Transition from="GetInFormation1" >
+    <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    <Target type="by_class" typename="NavigateInFormation"/>
+  </Transition>
+  <Transition from="GetInFormation2" >
+    <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    <Target type="by_class" typename="NavigateInFormation"/>
+  </Transition>
+	<Transition from="NavigateInFormation1" to="Stop">
+		<Condition type="AABB" min_x="10" min_y="-13" max_x="16" max_y="-7" inside="1" />
+	</Transition>
+  <Transition from="NavigateInFormation2" to="Stop2">
+    <Condition type="AABB" min_x="10" min_y="-13" max_x="16" max_y="-7" inside="1" />
+  </Transition>
+
+
+
+
+</BFSM>

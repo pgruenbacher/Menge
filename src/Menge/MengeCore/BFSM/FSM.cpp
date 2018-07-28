@@ -182,6 +182,7 @@ namespace Menge {
 				}
 			}
 			_nodes.push_back( node );
+			_stateNameMap[node->getName()] = node;
 			return _nodes.size() - 1;
 		}
 

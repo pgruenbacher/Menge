@@ -49,6 +49,7 @@ namespace Menge {
 	namespace BFSM {
 		class FSMDescrip;
 		class FSM;
+		class FSMBuilder;
 	}
 
 	/*!
@@ -193,6 +194,9 @@ namespace Menge {
 		 *				If there is an error, NULL is returned.
 		 */
 		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
+							 bool VERBOSE );
+		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
+							BFSM::FSMBuilder& builder,
 							 bool VERBOSE );
 		/*!
 		 *	@brief		Finalizes the finite state machine and simulator in preparation for

@@ -92,6 +92,7 @@ class MENGE_API FormationComponent : public VelComponent {
    */
   static const std::string NAME;
   virtual Task * getTask();
+  void loadSetFormation(const std::string& fname);
 };
 
 class MENGE_API FormationComponentFactory : public VelCompFactory {
