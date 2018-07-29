@@ -48,6 +48,7 @@
  */
 
 namespace Formations {
+	using Menge::Math::Vector2;
 
 	/*!
 	 * @brief		The data structure representing a point in the formation.
@@ -60,7 +61,7 @@ namespace Formations {
 		bool _border;	///< Flag indicating if this is a border point (true) or not (false).
 		float _weight;	///< The weight of the sentinel point
 
-		void rotate(float phi);
+		// void rotate(float phi);
 	};
 
 	/*!
@@ -144,9 +145,9 @@ namespace Formations {
 		 *	@returns	True if the an intermediate goal exists and is set in target.
 		 */
 		bool getGoalForAgent( const Menge::Agents::BaseAgent * agt,
-							  Menge::Agents::PrefVelocity &pVel, Menge::Math::Vector2 &target );
+							  Menge::Agents::PrefVelocity &pVel, Vector2 &target );
 		bool getStaticGoalForAgent( const Menge::Agents::BaseAgent * agt,
-							  Menge::Agents::PrefVelocity &pVel, Menge::Math::Vector2 &target );
+							  Menge::Agents::PrefVelocity &pVel, Vector2 &target );
 
 		// moved to public by paul
 		/*!
@@ -157,11 +158,14 @@ namespace Formations {
 		 *	@param		weight			The weight of the point.
 		 */
 		void addFormationPoint( Menge::Math::Vector2 pt, bool borderPoint, float weight );
+
+		// cleans out the formation poitns so we can start from scratch again.
+		void clearFormationPoints();
 		/*!
 		 *	@brief		The formation points defining the formation.
 		 */
 		std::vector< FormationPoint * >  _formationPoints;
-
+		void setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount);
 	protected:
 
 		/*!

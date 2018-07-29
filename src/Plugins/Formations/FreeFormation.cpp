@@ -67,14 +67,14 @@ namespace Formations {
 
 	const std::string FreeFormation::LABEL("formation");
 
-	void FormationPoint::rotate(float rad) { // radians
-   	const float cosRot = cos( rad );
-   	const float sinRot = sin( rad );
-		auto tx = _pos.x();
-		auto ty = _pos.y();
-		_pos = Vector2((cosRot * tx) - (sinRot * ty), (sinRot * tx) + (cosRot * ty));
-		_dir = _dist > 1e-5 ? -( _pos / _dist ) : Vector2(0.f, 0.f);
-	};
+	// void FormationPoint::rotate(float rad) { // radians
+ //   	const float cosRot = cos( rad );
+ //   	const float sinRot = sin( rad );
+	// 	auto tx = _pos.x();
+	// 	auto ty = _pos.y();
+	// 	_pos = Vector2((cosRot * tx) - (sinRot * ty), (sinRot * tx) + (cosRot * ty));
+	// 	_dir = _dist > 1e-5 ? -( _pos / _dist ) : Vector2(0.f, 0.f);
+	// };
 
 	/////////////////////////////////////////////////////////////////////
 
@@ -143,6 +143,15 @@ namespace Formations {
 		}
 	}
 
+	void FreeFormation::clearFormationPoints() {
+		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
+		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
+			delete *fpIter;
+		}
+		_formationPoints.clear();
+		_borderPoints.clear();
+	}
+
 	/////////////////////////////////////////////////////////////////////
 
 	void FreeFormation::addAgentPoint(const BaseAgent *agt) {
@@ -151,7 +160,6 @@ namespace Formations {
 
 		agtPoint->_id = agt->_id;
 		agtPoint->_pos = agt->_pos;
-		std::cout << "add agent point" << _pos.x() << " " << agt->_pos.x() << std::endl;
 		agtPoint->_dir = _pos - agt->_pos;
 		agtPoint->_dist = abs( agtPoint->_dir );
 		agtPoint->_border = false;
@@ -240,7 +248,6 @@ namespace Formations {
 			agt = itr->second;
 
 			_pos += agt->_pos * _agentWeights[agt->_id];
-			std::cout << "_POS" << _pos.x() << std::endl;
 			totalWeight += _agentWeights[agt->_id];
 			//see if we have a cache
 			if (_agentPrefDirs.find(agt->_id) == _agentPrefDirs.end()){
@@ -253,7 +260,6 @@ namespace Formations {
 		}
 
 		//now that we can localize and normalize the formation, let's do so.
-		std::cout << "_POS2" << _pos.x() << std::endl;
 		if (totalWeight <= 0.0) {
 			totalWeight = 1.0;
 			// throw VelModFatalException("total weight is zero");
@@ -278,7 +284,6 @@ namespace Formations {
 			mapPointToAgent( *formationItr );
 		}
 
-		std::cout << "PAUL FORMATION MAP" << _formationPoint_agent.size() << std::endl;
 		// Finally, map formation points to the remaining agents
 		itr = _agents.begin();
 		for (;itr != _agents.end();++itr){
@@ -287,7 +292,6 @@ namespace Formations {
 				mapAgentToPoint(agt);
 			}
 		}
-		std::cout << "PAUL FORMATION MAP" << _formationPoint_agent.size() << std::endl;
 	};
 
 	/////////////////////////////////////////////////////////////////////
@@ -354,7 +358,6 @@ namespace Formations {
 
 				//check distance
 				distance = formationDistance( pt, agtPoint );
-				std::cout << "DISTANCE ?? " << distance << " " << pt->_dir.x() << " " << pt->_dir.y() << " " << agtPoint->_dir.x() << " " << agtPoint->_dir.y() << std::endl;
 				if (distance < minDistance) {
 					minDistance = distance;
 					minAgtID = itr->second->_id;
@@ -426,6 +429,42 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
+
+	void FreeFormation::setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount) {
+		// TODO: Change this to support comments.
+		if(points.size() != weights.size()) {
+			throw VelModFatalException("Points and weights size must match. " + std::to_string(points.size()) + " " + std::to_string(weights.size()) );
+		}
+		if (borderCount > points.size()) {
+			throw VelModFatalException("Pounts must be more than or equal to border count");
+		}
+		clearFormationPoints();
+
+		unsigned int remaining = points.size();
+		float weight;
+		Vector2 v;
+		for ( unsigned int i = 0; i < borderCount; ++i ) {
+			v = points[i];
+			weight = weights[i];
+			addFormationPoint( v, true, weight );
+			remaining--;
+		}
+
+		//while we have points left, they are internal points
+		unsigned int i = borderCount;
+		while ( remaining ) {
+			weight = weights[i];
+			v = points[i];
+			addFormationPoint( v, false, weight );
+			i++;
+			remaining--;
+		}
+		std::cout << "num formation points " << _formationPoints.size() << std::endl;
+		//normalize the formation
+		normalizeFormation();
+	}
+
+
 	Resource * FreeFormation::load( const std::string & fileName ) {
 		// TODO: Change this to support comments.
 		std::ifstream f;
@@ -482,7 +521,7 @@ namespace Formations {
 	/////////////////////////////////////////////////////////////////////
 
 	FormationPtr loadFormation( const std::string & fileName ) throw ( ResourceException ) {
-	    Resource * rsrc = ResourceManager::getResource( fileName, &FreeFormation::load, FreeFormation::LABEL );
+    Resource * rsrc = ResourceManager::getResource( fileName, &FreeFormation::load, FreeFormation::LABEL );
 		if ( rsrc == 0x0 ) {
 			logger << Logger::ERR_MSG << "No resource available.";
 			throw ResourceException();

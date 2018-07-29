@@ -41,18 +41,18 @@
 
 #include <vector>
 
-using Menge::Agents::BaseAgent;
-using Menge::Agents::PrefVelocity;
-using Menge::BFSM::Goal;
-using Menge::BFSM::Task;
-using Menge::BFSM::VelCompFactory;
-using Menge::BFSM::VelComponent;
-using Menge::BFSM::Task;
-using Menge::Logger;
-using Menge::Math::Vector2;
-using Menge::logger;
 
 namespace Formations {
+  using Menge::Agents::BaseAgent;
+  using Menge::Agents::PrefVelocity;
+  using Menge::BFSM::Goal;
+  using Menge::BFSM::Task;
+  using Menge::BFSM::VelCompFactory;
+  using Menge::BFSM::VelComponent;
+  using Menge::BFSM::Task;
+  using Menge::Logger;
+  using Menge::Math::Vector2;
+  using Menge::logger;
 
 class MENGE_API FormationComponent : public VelComponent {
  public:
