@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<BFSM>
+    <State name="March" final="0" >
+      <VelComponent type="goal" weight="1.0" />
+    </State>
+    <State name="Walk2" final="0" >
+      <VelComponent type="goal" weight="1.0" />
+    </State>
+    <State name="Stop" final="1" />
+
+        <Transition from="Walk" to="Walk2"  >
+            <Condition type="goal_reached" distance=".25" />
+        </Transition>
+        <Transition from="Walk2" to="SquareFormation-formation-state"  >
+            <Condition type="goal_reached" distance=".25" />
+        </Transition>
+
+</BFSM>

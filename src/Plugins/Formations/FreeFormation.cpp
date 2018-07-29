@@ -194,22 +194,41 @@ namespace Formations {
 		//average the weighted center
 		weightedCenter /= totalWeight;
 
+		// Paul: I kinda get what they were aming for below
+		// but it was leading to weird behavior if the formation didn't
+		// match a center of 0,0. My code further below overrdies the _dist and _dir
+		// to point to the weighted center. Seems to work ok. Maybe I'm missing something
+		// but *shrug* I'll till there's an issue in the behavior.\
+
+		// ah I see it's for weight prioritization...
+		/// we'll have to get a working expirment.
+
 		// Translate to canonical formation space and determine formation size
 		//	offset by weighted center and compute encompassing circle.
-		float formationRadius = 0.f;
-		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
-			(*fpIter)->_pos -= weightedCenter;
-			(*fpIter)->_dist = abs( (*fpIter)->_pos );
-			if ( (*fpIter)->_dist > formationRadius ){
-				formationRadius = (*fpIter)->_dist;
-			}
-		}
+		// fpIter = _formationPoints.begin();
+		// float formationRadius = 0.f;
+		// for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
+		// 	(*fpIter)->_pos -= weightedCenter;
+		// 	(*fpIter)->_dist = abs( (*fpIter)->_pos );
+		// 	if ( (*fpIter)->_dist > formationRadius ){
+		// 		formationRadius = (*fpIter)->_dist;
+		// 	}
+		// }
 
-		float invDist = 1.f / formationRadius;
-		// Scale all distances
-		for (; fpIter != _formationPoints.end(); ++fpIter){
-			(*fpIter)->_dist *= invDist;
-			(*fpIter)->_pos *= invDist;
+		// float invDist = 1.f / formationRadius;
+		// // Scale all distances
+		// for (; fpIter != _formationPoints.end(); ++fpIter){
+		// 	(*fpIter)->_dist *= invDist;
+		// 	(*fpIter)->_pos *= invDist;
+		// }
+
+		for (int i = 0; i < _formationPoints.size(); i++) {
+			auto pt = _formationPoints[i];
+			// std::cout << "Weighted Center " << weightedCenter.x() << " " << weightedCenter.y();
+			pt->_dist = abs( weightedCenter - pt->_pos );
+			// std::cout << "_DIR? " << pt->_dir.x() << " " << pt->_dir.y() << std::endl;
+			pt->_dir = pt->_dist > 1e-5 ? (weightedCenter -  pt->_pos) / pt->_dist : Vector2(0.f, 0.f);
+			// std::cout << "_DIR AFT? " << pt->_dir.x() << " " << pt->_dir.y() << std::endl;
 		}
 	}
 
@@ -459,7 +478,7 @@ namespace Formations {
 			i++;
 			remaining--;
 		}
-		std::cout << "num formation points " << _formationPoints.size() << std::endl;
+		// std::cout << "num formation points " << _formationPoints.size() << std::endl;
 		//normalize the formation
 		normalizeFormation();
 	}
