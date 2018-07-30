@@ -2,8 +2,7 @@
 
 <BFSM>
 	<GoalSet id="0">
-		<Goal type="point" id="0" x="-1" y="10" />
-		<Goal type="point" id="1" x="-1" y="0" />
+    <Goal type="AABB" id="0" min_x="-20" min_y="-6" max_x="20" max_y="8" />
 	</GoalSet>
 
 		<State name="Walk" final="0" >
@@ -16,7 +15,7 @@
 		</State>
 		<State name="Stop" final="1" />
 
-        <Transition from="Walk" to="Walk2"  >
+        <Transition from="Walk" to="SquareFormation-formation-state"  >
             <Condition type="goal_reached" distance=".25" />
         </Transition>
         <Transition from="Walk2" to="SquareFormation-formation-state"  >

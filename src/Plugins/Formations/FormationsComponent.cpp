@@ -137,6 +137,9 @@ namespace Formations {
         if ( distSq / speedSq < TS_SQD ) {
           // The distance is less than I would travel in a single time step.
           speed = sqrtf( distSq ) / SIM_TIME_STEP;
+          // std::cout << "DO REDUCE" << std::endl;
+        } else {
+          // std:: cout << "?? " << distSq / speedSq << " " << TS_SQD << " " << SIM_TIME_STEP << std::endl;
         }
       }
       pVel.setSpeed( speed );
