@@ -104,6 +104,8 @@ namespace Menge {
 
 		void FSM::addTask( Task * task ) {
 			if ( task ) {
+				// iterate through existing tasks. If it already exists,
+				// then just cancel adding this current task.
 				for ( size_t i = 0; i < _tasks.size(); ++i ) {
 					if ( task->isEquivalent( _tasks[i] ) ) {
 						task->destroy();
