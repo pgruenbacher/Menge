@@ -3,6 +3,7 @@
 #include "napoleonConfig.h"
 #include "nearestEnemy.h"
 
+
 using Menge::PluginEngine::CorePluginEngine;
 
 extern "C" {
