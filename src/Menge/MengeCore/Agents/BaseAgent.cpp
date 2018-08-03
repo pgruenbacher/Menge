@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -62,7 +62,12 @@ namespace Menge {
 			_maxAngVel = TWOPI;	// 360 degrees/sec
 			_maxNeighbors = 10;
 			_neighborDist = 5.f;
+			// the max number of enem agents to track
+			_maxEnem = 10;
+			// the max dist of enem agents to track
+			_enemDist = 15.f;
 			_nearAgents.clear();
+			_nearEnems.clear();
 			_nearObstacles.clear();
 			_class = 0;
 			_obstacleSet = 0xFFFFFFFF;
@@ -85,7 +90,7 @@ namespace Menge {
 			// TODO: Make the acceleration constraint respect collisions (particularly with
 			//		obstacles.  I.e. confirm that the new velocity STILL won't collide
 			//		with the neighboring obstacles.
-			//	The slick way to do this is to replace the float in the _nearObstacles to 
+			//	The slick way to do this is to replace the float in the _nearObstacles to
 			//		represent the minimum acceleration required to avoid collision with the
 			//		obstacle in the next time step.  Then I can simply take the larger of the
 			///		user-define max acceleration and the smallest required acceleration
@@ -159,7 +164,7 @@ namespace Menge {
 
 		void BaseAgent::setPreferredVelocity(PrefVelocity &velocity) {
 			std::vector< BFSM::VelModifier * >::iterator vItr = _velModifiers.begin();
-			for ( ; vItr != _velModifiers.end(); ++vItr ) { 
+			for ( ; vItr != _velModifiers.end(); ++vItr ) {
 				(*vItr)->adaptPrefVelocity(this, velocity);
 			}
 
@@ -176,6 +181,20 @@ namespace Menge {
 		}
 
 		////////////////////////////////////////////////////////////////
+
+		void BaseAgent::insertEnemNeighbor(const BaseAgent* agent, float distSq) {
+			if (_nearEnems.size() != _maxEnem || distSq <= getMaxEnemRange()) {
+				if (_nearEnems.size() != _maxEnem) {
+					_nearEnems.push_back(NearAgent(distSq, agent));
+				}
+				size_t i = _nearEnems.size() - 1;
+				while (i != 0 && distSq < _nearEnems[i-1].distanceSquared) {
+					_nearEnems[i] = _nearEnems[i-1];
+					--i;
+				}
+				_nearEnems[i] = NearAgent(distSq, agent);
+			}
+		}
 
 		void BaseAgent::insertAgentNeighbor(const BaseAgent* agent, float distSq) {
 			if (this != agent) {
@@ -199,7 +218,7 @@ namespace Menge {
 		void BaseAgent::insertObstacleNeighbor( const Obstacle* obstacle, float distSq ) {
 			// the assumption is that two obstacle neighbors MUST have the same classID
 			if ( obstacle->_class & _obstacleSet ) {
-				
+
 				if ( distSq < _neighborDist * _neighborDist) {
 
 					_nearObstacles.push_back( NearObstacle(distSq, obstacle) );
@@ -221,33 +240,54 @@ namespace Menge {
 
 		void BaseAgent::startQuery(){
 			_nearAgents.clear();
+			_nearEnems.clear();
 			_nearObstacles.clear();
 		};
 
 		///////////////////////////////////////////////////////////
 
 		void BaseAgent::filterAgent(const BaseAgent *agent, float distance) {
-			 insertAgentNeighbor(agent, distance);
+			if (isEnemy(agent)) {
+				insertEnemNeighbor(agent, distance);
+			}
+			insertAgentNeighbor(agent, distance);
 		};
 
 		///////////////////////////////////////////////////////////
 
 		void BaseAgent::filterObstacle(const Obstacle * obstacle, float distance){
-			insertObstacleNeighbor(obstacle, distance);	
+			insertObstacleNeighbor(obstacle, distance);
 		};
+
+		bool BaseAgent::isEnemy(const BaseAgent* agent) {
+			return _class != agent->_class;
+		}
 
 		///////////////////////////////////////////////////////////
 
 		float BaseAgent::getMaxAgentRange() {
+			// ah so if, max agents, then it bumps down to current farthest.
 			if (_nearAgents.size() == _maxNeighbors){
 
 				return _nearAgents.back().distanceSquared;
 
 			}
-		    
+
+			// can probably cache this...
 			return _neighborDist * _neighborDist;
+			// return _neighborDistSquared;
 		}
 
+		float BaseAgent::getMaxEnemRange() {
+			// ah so if, max agents, then it bumps down to current farthest.
+			if (_nearEnems.size() == _maxEnem){
+				return _nearEnems.back().distanceSquared;
+			}
+
+			// can probably cache this...
+			return _enemDist * _enemDist;
+			// return _neighborDistSquared;
+		}
 
 	}	// namespace Agents
 }	// namespace Menge

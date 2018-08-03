@@ -12,22 +12,22 @@
 
     <State name="WalkRight" final="0" >
         <!-- <GoalSelector type="explicit" goal_set="0" goal="2" /> -->
-        <VelComponent type="formation" x="4" y="-4" file_name="squareDest2.txt" />
+        <VelComponent type="formationComp" x="4" y="-4" file_name="squareDest2.txt" />
     </State>
 
     <State name="WalkDown" final="0" >
         <!-- <GoalSelector type="explicit" goal_set="0" goal="3" /> -->
-        <VelComponent type="formation" x="-4" y="-4" file_name="squareDest2.txt" />
+        <VelComponent type="formationComp" x="-4" y="-4" file_name="squareDest2.txt" />
     </State>
 
     <State name="WalkLeft" final="0" >
         <!-- <GoalSelector type="explicit" goal_set="0" goal="0" /> -->
-        <VelComponent type="formation" x="4" y="4" file_name="squareDest2.txt" />
+        <VelComponent type="formationComp" x="4" y="4" file_name="squareDest2.txt" />
     </State>
 
     <State name="WalkUp" final="0" >
         <!-- <GoalSelector type="explicit" goal_set="0" goal="1" /> -->
-        <VelComponent type="formation" x="-4" y="-4" file_name="squareDest2.txt" />
+        <VelComponent type="formationComp" x="-4" y="-4" file_name="squareDest2.txt" />
     </State>
 
     <Transition from="WalkRight" to="WalkDown" >

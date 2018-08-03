@@ -101,7 +101,7 @@ class MENGE_API FormationComponentFactory : public VelCompFactory {
 
   virtual const char* name() const { return FormationComponent::NAME.c_str(); }
 
-  virtual const char* description() const { return "Formation component"; };
+  virtual const char* description() const { return "Formation Vel component"; };
 
  protected:
   VelComponent* instance() const { return new FormationComponent(); }

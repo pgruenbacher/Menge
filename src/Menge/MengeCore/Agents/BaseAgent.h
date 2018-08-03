@@ -50,7 +50,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			AgentException() : MengeException() {}		
+			AgentException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -87,7 +87,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			AgentImplementationException() : AgentFatalException() {}		
+			AgentImplementationException() : AgentFatalException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -136,7 +136,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Method for sub-classes to perform additional update work
-			 *			
+			 *
 			 *	This is the last thing called by the update method.  When this is called,
 			 *	position, velocity, and orientation will be updated in the base agent
 			 *	class.
@@ -145,10 +145,10 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Given preferred velocity and neighboring agents and obstacles
-			 *				compute a new velocity.  
+			 *				compute a new velocity.
 			 *
-			 *	This should be overriden by child classes to give unique behaviors.  
-			 *	Each pedestrian model is uniquely defined by how it computes its new 
+			 *	This should be overriden by child classes to give unique behaviors.
+			 *	Each pedestrian model is uniquely defined by how it computes its new
 			 *	velocity and this is the critical class.
 			 *
 			 *	Trying to instantiate a BaseAgent will cause an exception to be thrown
@@ -164,6 +164,7 @@ namespace Menge {
 			 *	@returns		Pointer to the neighboring agent.
 			 */
 			const BaseAgent * getNeighbor( int idx ) const { return _nearAgents[ idx ].agent; }
+			const BaseAgent * getEnem( int idx ) const { return _nearEnems[ idx ].agent; }
 
 			/*!
 			 *	@brief			Returns a pointer to the obstacle with given index
@@ -175,9 +176,9 @@ namespace Menge {
 			const Obstacle * getObstacle( int idx ) const {
 				return _nearObstacles[ idx ].obstacle;
 			}
-			
+
 			/*!
-			 *	@brief			set the agents preferred velocity to the input velocity. 
+			 *	@brief			set the agents preferred velocity to the input velocity.
 			 *
 			 *	@param			velocity to be applied to the agent.
 			 */
@@ -212,7 +213,7 @@ namespace Menge {
 			/*!
 			 *	@brief		The preferred speed of the agent
 			 */
-			float _prefSpeed;	
+			float _prefSpeed;
 
 			/*!
 			 *	@brief		The current 2D position of the agent
@@ -227,7 +228,7 @@ namespace Menge {
 			/*!
 			 *	@brief		The 2D preferred velocity of the agent
 			 */
-			PrefVelocity	_velPref;	
+			PrefVelocity	_velPref;
 
 			/*!
 			 *	@brief		The new velocity computed in computeNewVelocity.
@@ -253,7 +254,7 @@ namespace Menge {
 			Math::Vector2	_orient;
 
 			/*!
-			 *	@brief		The agent's maximum angular velocity (in radians/sec) -- 
+			 *	@brief		The agent's maximum angular velocity (in radians/sec) --
 			 *				used for controlling the changes in agent orientation.
 			 */
 			float	_maxAngVel;
@@ -264,22 +265,28 @@ namespace Menge {
 			size_t _maxNeighbors;
 
 			/*!
-			 *	@brief		The maximum distance at which another agent will be 
+			 *	@brief		The maximum distance at which another agent will be
 			 *				considered for a response.
 			 */
+			// should pobbaly make this private and cache it.
+
 			float _neighborDist;
 
+			//added by paul for tracking enemy units
+			//for combat fsm mechanics, not for crowd movement.
+			float _enemDist;
+			size_t _maxEnem;
 
 			/*!
-			 *	@brief		The population class for this agent.  
+			 *	@brief		The population class for this agent.
 			 *
 			 *	Used to define behavior and visualization properties.
 			 */
 			size_t _class;
-			
+
 			/*!
 			 *	@brief		A mask indicating the obstacles with compatible ids which
-			 *				this agent can see.  
+			 *				this agent can see.
 			 *
 			 *	This is a bitwise mask such that if
 			 *	the ith bit is 1, obstacles with id 2^i are visible.
@@ -287,7 +294,7 @@ namespace Menge {
 			size_t _obstacleSet;
 
 			/*!
-			 *	@brief		The priority of each agent.  
+			 *	@brief		The priority of each agent.
 			 *
 			 *	The relative priority of agents determines aspects of their interaction behavior.
 			 */
@@ -299,10 +306,10 @@ namespace Menge {
 			size_t _id;
 
 			/*!
-			 *	@brief		The agent's radius.  
+			 *	@brief		The agent's radius.
 			 *
-			 *	If the agent is represented as a circle, then this is simply 
-			 *	the circle's radius.  If the agent is represented as an ellipse, 
+			 *	If the agent is represented as a circle, then this is simply
+			 *	the circle's radius.  If the agent is represented as an ellipse,
 			 *	then this is the radius perpendicular to the orientation.
 			 *	Other geometries should provide their own interpretation.
 			 *
@@ -324,6 +331,13 @@ namespace Menge {
 			 *	and the pointer to the neigboring agent.
 			 */
 			std::vector<NearAgent> _nearAgents;
+			/*!
+			 *	@brief		The nearby enems to which the agent should respond.
+			 *
+			 *	Each pair consists of distance between the agent positions, squared
+			 *	and the pointer to the neigboring enem.
+			 */
+			std::vector<NearAgent> _nearEnems;
 
 			/*!
 			 *	@brief		The nearby obstacles to which the agent should respond.
@@ -341,6 +355,7 @@ namespace Menge {
 			 *  @param      distSq         the distance to the indicated agent
 			 */
 			void insertAgentNeighbor(const BaseAgent* agent, float distSq);
+			void insertEnemNeighbor(const BaseAgent* agent, float distSq);
 
 			/*!
 			 *  @brief      Inserts a static obstacle neighbor into the set of neighbors
@@ -394,22 +409,24 @@ namespace Menge {
 			 */
 			virtual Math::Vector2 getQueryPoint(){ return _pos; };
 
+			bool isEnemy(const BaseAgent* agt);
 			/*!
 			 *  @brief      updates the max agent query range if conditions inside the filter are
 			 *              met typically, we don't shrink the query range until the result set is
 			 *				full.
 			 *
-			 *	@returns	The Max query range. Typically this is the initial range unless some 
+			 *	@returns	The Max query range. Typically this is the initial range unless some
 			 *              special conditions are met
 			 */
 			virtual float getMaxAgentRange();
+			virtual float getMaxEnemRange();
 
 			/*!
 			 *  @brief      updates the max query obstacle range if conditions inside the filter
 			 *              are met. typically, we don't shrink the query range until the result
 			 *				set is full.
 			 *
-			 *	@returns	The Max query range. Typically this is the initial range unless some 
+			 *	@returns	The Max query range. Typically this is the initial range unless some
 			 *              special conditions are met
 			 */
 			virtual float getMaxObstacleRange() { return _neighborDist * _neighborDist;};

@@ -37,7 +37,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 */
 
 #include "NearestEnemTask.h"
-#include "FreeFormation.h"
 #include "MengeCore/BFSM/FSM.h"
 
 namespace Napoleon {

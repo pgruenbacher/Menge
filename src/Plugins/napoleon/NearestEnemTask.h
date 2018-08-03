@@ -32,19 +32,17 @@
 
 #include "thirdParty/tinyxml.h"
 
-
+using namespace Menge;
 namespace Napoleon {
     /*!
    *  @brief  Task responsible for updating agent data for maintaining a formation.
    */
-  class FormationsTask : public Menge::BFSM::Task {
-    using namespace Menge;
+  class NearestEnemTask : public Menge::BFSM::Task {
   public:
     /*!
      *  @brief    Constructor
      *
      */
-    // FormationsTask();
 
     /*!
      *  @brief    The work performed by the task.
