@@ -10,9 +10,13 @@ public:
   ActionLimiter();
   ActionLimiter(float dur);
 
-  addAgentID(size_t id);
-  addAgentID(size_t id, float dur);
-  removeAgentID(size_t id);
+  bool addAgentID(size_t id);
+  bool addAgentID(size_t id, float dur);
+  bool removeAgentID(size_t id);
 
+  bool resetAgentID(size_t id);
+  bool resetAgentID(size_t id, float dur);
 
-}
+  bool isAgentTimeout(size_t id);
+
+};
