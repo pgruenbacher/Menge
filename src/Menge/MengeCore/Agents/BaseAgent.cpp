@@ -120,15 +120,20 @@ namespace Menge {
 			// speeds.
 			float speed = abs( _vel );
 			const float speedThresh = _prefSpeed / 3.f;
+			Vector2 prefDir = _velPref.getPreferred();
 			Vector2 newOrient( _orient );	// by default new is old
 			Vector2 moveDir = _vel / speed;
+			bool hasMinPrefDir = absSq(prefDir) > 0.000001f;
+
 			if ( speed >= speedThresh ) {
 				newOrient = moveDir;
+			} else if (speed == 0.0 && hasMinPrefDir) {
+				newOrient = prefDir;
+				newOrient.normalize();
 			} else {
 				float frac = sqrtf( speed / speedThresh );
-				Vector2 prefDir = _velPref.getPreferred();
 				// prefDir *can* be zero if we've arrived at goal.  Only use it if it's non-zero.
-				if ( absSq( prefDir ) > 0.000001f ) {
+				if ( hasMinPrefDir ) {
 					newOrient = frac * moveDir + ( 1.f - frac ) * prefDir;
 					newOrient.normalize();
 				}
@@ -175,6 +180,10 @@ namespace Menge {
 		////////////////////////////////////////////////////////////////
 
 		////////////////////////////////////////////////////////////////
+
+		float BaseAgent::getMeleeRange() const {
+			return 1.0;
+		}
 
 		void BaseAgent::computeNewVelocity() {
 			throw AgentImplementationException();

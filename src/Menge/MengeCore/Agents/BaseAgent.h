@@ -229,6 +229,19 @@ namespace Menge {
 			 *	@brief		The 2D preferred velocity of the agent
 			 */
 			PrefVelocity	_velPref;
+			float getMeleeRange() const;
+
+			// * added by Paul to handle walking backwards, forwards, strafing.
+			// Math::Vector2 _faceDir;
+			// void updateFaceDir();
+			// if true, then facedir should just be locked to orientation movement
+			// if false, then facedir should have a target to look at (usually
+			// enemy) and it's movement will be impacted by the vel dir vs the face
+			// dir (strafe speed vs forward/backward speeds).
+			// likewise a horseman could be looking to side, but would restricted to vel
+			// (horse direction).
+			// also a cavalryman could still have horse sidestep...
+			// bool _lockFaceDirToOrientation = true;
 
 			/*!
 			 *	@brief		The new velocity computed in computeNewVelocity.

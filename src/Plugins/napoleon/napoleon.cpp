@@ -1,7 +1,8 @@
 #include "selectStateByClass.h"
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 #include "napoleonConfig.h"
-#include "nearestEnemy.h"
+#include "NearestEnemyComponent.h"
+#include "EnemyNearCondition.h"
 
 
 using Menge::PluginEngine::CorePluginEngine;
@@ -34,5 +35,6 @@ extern "C" {
     // engine->registerActionFactory( new Menge::BFSM::PropertyXActFactory() );
     engine->registerTargetFactory( new Menge::BFSM::SelectStateByClassTargetFactory() );
     engine->registerVelCompFactory( new Napoleon::NearestEnemComponentFactory() );
+    engine->registerConditionFactory( new Napoleon::EnemyNearCondFactory());
   }
 }

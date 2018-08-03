@@ -50,8 +50,10 @@ namespace Napoleon {
     //                   Implementation of EnemyNearCondition
     ///////////////////////////////////////////////////////////////////////////
 
-    // EnemyNearCondition::EnemyNearCondition() {
-    // }
+    EnemyNearCondition::EnemyNearCondition() {
+      _distSquared = 0.5 * 0.5;
+      _isClose = true;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -73,10 +75,25 @@ namespace Napoleon {
     // void EnemyNearCondition::onLeave( BaseAgent * agent ) {
     // }
 
+    void EnemyNearCondition::setDist(float dist) {
+      _distSquared = dist * dist;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     bool EnemyNearCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
-      return true;
+      bool enemClose = false;;
+      for (Menge::Agents::NearAgent agt : agent->_nearEnems) {
+        if (agt.distanceSquared < _distSquared) {
+          enemClose = true;
+          break;
+        }
+      }
+      if (_isClose) {
+        return enemClose;
+      } else {
+        return !enemClose;
+      }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -90,8 +107,8 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     EnemyNearCondFactory::EnemyNearCondFactory() : ConditionFactory() {
-      // _perAgentID = _attrSet.addBoolAttribute( "per_agent", true /*required*/ );
-      // _durGenID = _attrSet.addFloatDistAttribute( "", true, 0.f, 1.f );
+      _distID = _attrSet.addFloatAttribute( "dist", true, 1.0f);
+      _isCloseID = _attrSet.addBoolAttribute( "is_close", false, true);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -100,22 +117,15 @@ namespace Napoleon {
                        const std::string & behaveFldr ) const {
       EnemyNearCondition * tCond = dynamic_cast< EnemyNearCondition * >( condition );
       assert( tCond != 0x0 &&
-          "Trying to set the properties of a timer condition on an incompatible "
+          "Trying to set the properties of a enemy near condition on an incompatible "
           "object" );
 
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
 
-      // bool useGlobal = !_attrSet.getBool( _perAgentID );
-      // FloatGenerator * gen = _attrSet.getFloatGenerator( _durGenID );
-      // if ( useGlobal ) {
-      //   // This allows for a randomly generated const value.  As opposed to simply
-      //   //  specifying a global const.
-      //   tCond->_durGen = new ConstFloatGenerator( gen->getValue() );
-      //   // TODO: determine if this is safe across dlls.  It may need to be a destroy.
-      //   delete gen;
-      // } else {
-      //   tCond->_durGen = gen;
-      // }
+      float dist = _attrSet.getFloat(_distID);
+      bool isClose = _attrSet.getBool(_isCloseID);
+      tCond->setDist(dist);
+      tCond->_isClose = isClose;
       return true;
     }
 

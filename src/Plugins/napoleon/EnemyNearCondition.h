@@ -36,12 +36,16 @@ using Menge::BFSM::ConditionFactory;
 
 namespace Napoleon {
 
-    class MENGE_API EnemyNearCondition : public Condition {
-
+  class MENGE_API EnemyNearCondition : public Condition {
+    float _distSquared;
     public:
+      bool _isClose;
+      EnemyNearCondition();
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
       EnemyNearCondition * copy();
-    };
+      void setDist(float dist);
+  };
+
   /*!
    *  @brief    The factory for creating the TimerCondition
    */
@@ -62,6 +66,8 @@ namespace Napoleon {
     virtual Condition * instance() const { return new EnemyNearCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
                  const std::string & behaveFldr ) const;
+    size_t _distID;
+    size_t _isCloseID;
   };
 } // namespace Napoleon
 #endif // _ENEMY_NEAR_COND_H_

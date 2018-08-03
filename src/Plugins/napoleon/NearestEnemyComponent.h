@@ -78,7 +78,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   /*! The unique identifier used to register this type with run-time components.
    */
   static const std::string NAME;
-  virtual Task * getTask();
+  // virtual Task * getTask();
   void loadSetFormation(const std::string& fname);
 };
 
