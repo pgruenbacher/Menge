@@ -57,7 +57,6 @@ const float sumNearAgentWeights(const std::vector<Menge::Agents::NearAgent>& nea
   for (Menge::Agents::NearAgent agent : nearAgents) {
     // result += agent.distanceSquared;
     if (checkDist < agent.distanceSquared) {
-      std::cout << "CONTINUE" << std::endl;
       continue;
     }
     // std::cout << "V " << (agent.agent->_neighborDist * agent.agent->_neighborDist) << " " << agent.distanceSquared << std::endl;
@@ -68,6 +67,7 @@ const float sumNearAgentWeights(const std::vector<Menge::Agents::NearAgent>& nea
 }
 
 namespace Napoleon {
+  using Menge::logger;
 
   /////////////////////////////////////////////////////////////////////
   //                   Implementation of GoalVelComponent
@@ -169,6 +169,8 @@ namespace Napoleon {
 
   /////////////////////////////////////////////////////////////////////
   NearestEnemComponentFactory::NearestEnemComponentFactory() : VelCompFactory() {
+    _method = _attrSet.addStringAttribute("method", true /* required */);
+    std::cout<< "_CATION TYPE"  << _method << std::endl;
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -176,8 +178,26 @@ namespace Napoleon {
   bool NearestEnemComponentFactory::setFromXML( VelComponent * component, TiXmlElement * node,
                      const std::string & behaveFldr ) const {
       NearestEnemComponent * nearestEnemComp = dynamic_cast<NearestEnemComponent *>(component);
+    if ( ! VelCompFactory::setFromXML( component, node, behaveFldr ) ) return false;
+
       assert( nearestEnemComp != 0x0 &&
       "Trying to set property component properties on an incompatible object" );
+
+    if (_attrSet.getString(_method).empty()) {
+      logger << Logger::ERR_MSG << "Require method for velocity component";
+      logger.close();
+      throw Menge::BFSM::VelCompFatalException( "Require method for velocity component." );
+    }
+
+    std::string _typeString = _attrSet.getString(_method);
+    if (_typeString == "advancing") {
+      nearestEnemComp->_actionType = NearestEnemComponent::ADVANCING;
+    } else if (_typeString == "withdrawing") {
+      nearestEnemComp->_actionType = NearestEnemComponent::WITHDRAWING;
+    } else {
+      logger << Logger::ERR_MSG << "Should be advancing or withdrawing got: '" << _typeString << "' instead...";
+      return false;
+    }
     if ( ! VelCompFactory::setFromXML( nearestEnemComp, node, behaveFldr ) ) return false;
     return true;
   }

@@ -131,9 +131,10 @@ namespace Menge {
 				newOrient = prefDir;
 				newOrient.normalize();
 			} else {
-				float frac = sqrtf( speed / speedThresh );
 				// prefDir *can* be zero if we've arrived at goal.  Only use it if it's non-zero.
 				if ( hasMinPrefDir ) {
+					// so if travelling backwards...
+					float frac = sqrtf( speed / speedThresh );
 					newOrient = frac * moveDir + ( 1.f - frac ) * prefDir;
 					newOrient.normalize();
 				}

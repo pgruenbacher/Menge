@@ -65,6 +65,8 @@ namespace Menge {
 		const float PRIORITY = 0.f;					///< The default priority
 		const float MAX_ANGLE_VEL = TWOPI;			///< The default maximum angular velocity
 		const size_t OBSTACLE_SET = 0xFFFFFFFF;		///< The default obstacle set (all obstacles)
+		const int MAX_ENEMS = 10;
+		const int ENEM_DIST = 15.f;
 
 		////////////////////////////////////////////////////////////////
 
@@ -79,6 +81,8 @@ namespace Menge {
 			_maxAccel = new ConstFloatGenerator( MAX_ACCEL );
 			_prefSpeed = new ConstFloatGenerator( PREF_SPEED );
 			_maxNeighbors = new ConstIntGenerator( MAX_NEIGHBORS );
+			_maxEnem = new ConstIntGenerator(MAX_ENEMS);
+			_enemDist = new ConstFloatGenerator(ENEM_DIST);
 			_neighborDist = new ConstFloatGenerator( NEIGHBOR_DIST );
 			_radius = new ConstFloatGenerator( RADIUS );
 			_maxAngVel = new ConstFloatGenerator( MAX_ANGLE_VEL );
@@ -95,6 +99,8 @@ namespace Menge {
 			_maxAccel = init._maxAccel->copy();
 			_prefSpeed = init._prefSpeed->copy();
 			_maxNeighbors = init._maxNeighbors->copy();
+			_maxEnem = init._maxEnem->copy();
+			_enemDist = init._enemDist->copy();
 			_neighborDist = init._neighborDist->copy();
 			_radius = init._radius->copy();
 			_maxAngVel = init._maxAngVel->copy();
@@ -117,6 +123,8 @@ namespace Menge {
 			delete _maxAccel;
 			delete _prefSpeed;
 			delete _maxNeighbors;
+			delete _maxEnem;
+			delete _enemDist;
 			delete _neighborDist;
 			delete _radius;
 			delete _maxAngVel;
@@ -132,6 +140,8 @@ namespace Menge {
 			if ( _neighborDist ) delete _neighborDist;
 			if ( _radius ) delete _radius;
 			if ( _maxAngVel ) delete _maxAngVel;
+			if ( _maxEnem ) delete _maxEnem;
+			if ( _enemDist ) delete _enemDist;
 
 			// Values for distribution
 			_maxSpeed = new ConstFloatGenerator( MAX_SPEED );
@@ -141,6 +151,8 @@ namespace Menge {
 			_neighborDist = new ConstFloatGenerator( NEIGHBOR_DIST );
 			_radius = new ConstFloatGenerator( RADIUS );
 			_maxAngVel = new ConstFloatGenerator( MAX_ANGLE_VEL );
+			_maxEnem = new ConstIntGenerator(MAX_ENEMS);
+			_enemDist = new ConstFloatGenerator(ENEM_DIST);
 			// single values
 			_priority = PRIORITY;
 			_obstacleSet = OBSTACLE_SET;
@@ -200,6 +212,8 @@ namespace Menge {
 			agent->_obstacleSet = _obstacleSet;
 			agent->_priority = _priority;
 			agent->_class = _class;
+			agent->_enemDist = _enemDist->getValue();
+			agent->_maxEnem = _maxEnem->getValue();
 
 			std::vector< BFSM::VelModifier * >::iterator vItr = _velModifiers.begin();
 			for ( ; vItr != _velModifiers.end(); ++vItr ) {
@@ -242,6 +256,10 @@ namespace Menge {
 				result = constSizet( _class, value );
 			} else if ( paramName == "priority" ) {
 				result = constFloat( _priority, value );
+			} else if ( paramName == "enem_dist" ) {
+				result = constFloatGenerator(_enemDist, value);
+			} else if ( paramName == "max_enem" ) {
+				result = constIntGenerator(_maxEnem, value);
 			}
 
 			if ( result == FAILURE ) {

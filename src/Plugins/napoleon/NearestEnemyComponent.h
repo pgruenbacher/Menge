@@ -27,7 +27,6 @@
 #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
-
 #include <vector>
 #include <map>
 
@@ -44,12 +43,18 @@ namespace Napoleon {
   using Menge::Math::Vector2;
   using Menge::logger;
 
+
 class MENGE_API NearestEnemComponent : public VelComponent {
  public:
   /*!
    *  @brief    Default constructor.
    */
   NearestEnemComponent();
+  enum ActionType {
+    ADVANCING,
+    WITHDRAWING,
+  };
+
 
  protected:
   /*!
@@ -58,6 +63,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   Menge::ReadersWriterLock _lock;
   std::map< size_t, const Menge::Agents::BaseAgent * > _agents;
   std::map< size_t, const Menge::Agents::BaseAgent * > _to_enem_agents;
+
   virtual ~NearestEnemComponent() {}
   // VelComponent* parseVelComponent(TiXmlElement* node,
   //                                 const std::string& behaveFldr);
@@ -75,6 +81,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   // virtual std::string getStringId() const = 0;
   virtual std::string getStringId() const { return NAME; }
 
+  ActionType _actionType;
   /*! The unique identifier used to register this type with run-time components.
    */
   static const std::string NAME;
@@ -92,11 +99,10 @@ class MENGE_API NearestEnemComponentFactory : public VelCompFactory {
 
  protected:
   VelComponent* instance() const { return new NearestEnemComponent(); }
-
+  size_t _method;
   virtual bool setFromXML(VelComponent* vc, TiXmlElement* node,
                           const std::string& behaveFldr) const;
 
-  size_t _fileNameID;
 };
 }  // namespace Napoleon
 
