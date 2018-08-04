@@ -351,6 +351,7 @@ namespace Menge {
 			 *	and the pointer to the neigboring enem.
 			 */
 			std::vector<NearAgent> _nearEnems;
+			std::vector<NearAgent> _nearFriends;
 
 			/*!
 			 *	@brief		The nearby obstacles to which the agent should respond.
@@ -368,7 +369,9 @@ namespace Menge {
 			 *  @param      distSq         the distance to the indicated agent
 			 */
 			void insertAgentNeighbor(const BaseAgent* agent, float distSq);
+			// meant to be a more farther distance for determinging combat strategy.
 			void insertEnemNeighbor(const BaseAgent* agent, float distSq);
+			void insertFriendNeighbor(const BaseAgent* agent, float distSq);
 
 			/*!
 			 *  @brief      Inserts a static obstacle neighbor into the set of neighbors

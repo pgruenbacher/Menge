@@ -222,6 +222,25 @@ namespace Menge {
 			}
 		}
 
+
+		void BaseAgent::insertFriendNeighbor(const BaseAgent* agent, float distSq) {
+			if (this != agent) {
+				if (_nearFriends.size() != _maxNeighbors || distSq <= getMaxEnemRange()) {
+					if (_nearFriends.size() != _maxNeighbors) {
+						_nearFriends.push_back(NearAgent(distSq, agent));
+					}
+					size_t i = _nearFriends.size() - 1;
+					while (i != 0 && distSq < _nearFriends[i-1].distanceSquared) {
+						_nearFriends[i] = _nearFriends[i-1];
+						--i;
+					}
+					_nearFriends[i] = NearAgent(distSq, agent);
+
+				}
+			}
+			// std::cout << "NEAR FRIENDS " << _nearFriends.size() << std::endl;
+		}
+
 		////////////////////////////////////////////////////////////////
 
 		void BaseAgent::insertObstacleNeighbor( const Obstacle* obstacle, float distSq ) {
@@ -250,6 +269,7 @@ namespace Menge {
 		void BaseAgent::startQuery(){
 			_nearAgents.clear();
 			_nearEnems.clear();
+			_nearFriends.clear();
 			_nearObstacles.clear();
 		};
 
@@ -258,6 +278,8 @@ namespace Menge {
 		void BaseAgent::filterAgent(const BaseAgent *agent, float distance) {
 			if (isEnemy(agent)) {
 				insertEnemNeighbor(agent, distance);
+			} else {
+				insertFriendNeighbor(agent, distance);
 			}
 			insertAgentNeighbor(agent, distance);
 		};

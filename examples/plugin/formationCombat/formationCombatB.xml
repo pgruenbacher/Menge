@@ -11,7 +11,7 @@
     <State name="WalkRight" final="0" >
         <GoalSelector type="explicit" goal_set="0" goal="2" />
         <VelComponent type="goal" />
-        <VelModifier type="formation" file_name="DenseSquare.txt" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare.txt" /> -->
     </State>
 
     <State name="WalkDown" final="0" >
@@ -22,7 +22,7 @@
     <State name="WalkLeft" final="0" >
         <GoalSelector type="explicit" goal_set="0" goal="0" />
         <VelComponent type="goal" />
-        <VelModifier type="formation" file_name="DenseSquare2.txt" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
     </State>
 
     <State name="WalkUp" final="0" >

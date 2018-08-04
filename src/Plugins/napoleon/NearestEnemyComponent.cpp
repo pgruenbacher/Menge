@@ -45,6 +45,27 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/Goals/Goal.h"
 #include "MengeCore/Runtime/os.h"
 
+const float sumNearAgentWeights(const std::vector<Menge::Agents::NearAgent>& nearAgents, float checkDist = 3.0) {
+  // return nearAgents.size();
+  // WTF C++, if I don't set to 0.0, then it defaults to whatever previous value was!??
+  // Apparently uninitalized variables don't default to zero...
+  // return nearAgents.size();
+  // const float meleeDist = 3.0;
+  float result = 0.0;
+  // std::cout << "RESULT?" << result << std::endl;
+
+  for (Menge::Agents::NearAgent agent : nearAgents) {
+    // result += agent.distanceSquared;
+    if (checkDist < agent.distanceSquared) {
+      std::cout << "CONTINUE" << std::endl;
+      continue;
+    }
+    // std::cout << "V " << (agent.agent->_neighborDist * agent.agent->_neighborDist) << " " << agent.distanceSquared << std::endl;
+    result += 1.0f;
+  }
+  // std::cout << "RESULT" << result << " " << nearAgents.size() << std::endl;
+  return result;
+}
 
 namespace Napoleon {
 
@@ -82,9 +103,8 @@ namespace Napoleon {
                       PrefVelocity & pVel ) const {
     bool modify = agent->_nearEnems.size() > 0;
     if ( modify ) {
-      Vector2 target;
+      Vector2 target(0.0, 0.0);
       float distSq = 1000.f * 1000.f;
-      float localDist;
       for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
         if (enem.distanceSquared < distSq) {
           distSq = enem.distanceSquared;
@@ -94,7 +114,7 @@ namespace Napoleon {
 
       // target + displacement - agent position
       Vector2 disp = target - agent->_pos;
-      Vector2 dir;
+      Vector2 dir(0.0, 0.0);
       if ( distSq > 1e-8 ) {
         // Distant enough that I can normalize the direction.
         dir.set( disp / sqrtf( distSq ) );
@@ -102,8 +122,11 @@ namespace Napoleon {
         dir.set( 0.f, 0.f );
       }
       pVel.setSingle(dir);
-      if (agent->_nearEnems.size() > 5) {
-        std::cout << "ENEM SIZE " << agent->_nearEnems.size() << std::endl;
+      float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
+      float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
+      // std::cout << "ENEM SIZE " << sumEnem << " " << sumFriend << std::endl;
+      if (sumEnem > (sumFriend + 0.1)) {
+      // if (agent->_nearEnems.size() > agent->_nearFriends.size() + 1) {
         pVel.setSingle(-dir);
         pVel.setSpeed(0.1);
         pVel.setTarget(target);
@@ -125,13 +148,17 @@ namespace Napoleon {
           // std::cout << "DO REDUCE" << std::endl;
         } else {
           // std:: cout << "?? " << distSq / speedSq << " " << TS_SQD << " " << SIM_TIME_STEP << std::endl;
+          // speed = agent->_prefSpeed;
         }
       }
       pVel.setSpeed( speed );
 
     } else {
-
-      // std::cout << "no modify " << target._x << " " << target._y << std::endl;
+      pVel.setSpeed(agent->_prefSpeed);
+      Vector2 returnToOrig = (agent->_pos) * -1;
+      returnToOrig.normalize();
+      pVel.setSingle(returnToOrig);
+      std::cout << "no modify! fix! " << std::endl;
     }
   }
 
