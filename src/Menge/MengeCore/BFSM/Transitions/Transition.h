@@ -41,7 +41,7 @@ namespace Menge {
 		/*!
 		 *	@brief		The transition between BFSM states.
 		 *
-		 *	Transitions can key on arbitrary state.  For each agent, the 
+		 *	Transitions can key on arbitrary state.  For each agent, the
 		 *	transition is "tested".  If the condition is met, the transition is
 		 *	active and that reports to the state (which then "follows" the transition).
 		 */
@@ -64,7 +64,8 @@ namespace Menge {
 			 *	@param		condition		The condition instance for this transition.
 			 *	@param		target			The target instance for this transition.
 			 */
-			Transition( Condition * condition, TransitionTarget * target );
+			// Transition( Condition * condition, TransitionTarget * target );
+			Transition( std::vector<Condition*>& conditions, TransitionTarget * target );
 
 			/*!
 			 *	@brief		Destructor.
@@ -112,7 +113,7 @@ namespace Menge {
 			 *
 			 *	@param		fsm			A pointer to the fsm.  Tasks are fed to the fsm.
 			 */
-			void getTasks( FSM * fsm );	
+			void getTasks( FSM * fsm );
 
 			/*!
 			 *	@brief		Creats a deep copy of this transition.
@@ -126,7 +127,9 @@ namespace Menge {
 			/*!
 			 *	@brief		The Condition instance for this transition.
 			 */
+			// updated by Paul to handle multiple conditions.
 			Condition * _condition;
+			std::vector<Condition*> _conditions;
 
 			/*!
 			 *	@brief		The target for this transition.

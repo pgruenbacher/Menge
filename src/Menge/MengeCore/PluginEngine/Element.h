@@ -23,6 +23,7 @@
 
 #ifndef __ELEMENT_H__
 #define	__ELEMENT_H__
+#include <iostream>
 
 #include "MengeCore/CoreConfig.h"
 
@@ -41,7 +42,7 @@ namespace Menge {
 	 *	@brief		The basic interface of extendible Menge Elements.
 	 *
 	 *	A Menge element is a component of the Menge framework. A particular
-	 *	crowd simulator is defined by the instantiation of various types of 
+	 *	crowd simulator is defined by the instantiation of various types of
 	 *	elements.
 	 */
 	class MENGE_API Element {
@@ -62,12 +63,12 @@ namespace Menge {
 		 *	the destructor from its own memory space, averting run-time
 		 *  crashes).
 		 *
-		 *	Once this has been called, the Element no longer exists.  
-		 *	Calling methods or accessing members will produce indetermine behavior 
+		 *	Once this has been called, the Element no longer exists.
+		 *	Calling methods or accessing members will produce indetermine behavior
 		 *	(most likely errors).
 		 */
 		void destroy() { delete this; }
-			
+
 		/*!
 		 *	@brief		Return an optional task associated with this element.
 		 *

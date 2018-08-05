@@ -84,6 +84,7 @@ namespace Menge {
 			 */
 			virtual void onLeave( Agents::BaseAgent * agent ){}
 
+		void destroy() { std::cout << "DESTORY CONDITION" << std::endl; delete this; }
 			/*!
 			 *	@brief		Reports if the conditions have been met.
 			 *
