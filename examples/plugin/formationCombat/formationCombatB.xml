@@ -3,41 +3,62 @@
 <BFSM>
 	<GoalSet id="0">
 		<Goal type="point" id="0" x="-10" y="0.0"/>
-        <Goal type="point" id="1" x="0" y="10.0"/>
-		<Goal type="point" id="2" x="10" y="0.0"/>
-        <Goal type="point" id="3" x="0" y="-10.0"/>
+		<Goal type="point" id="1" x="10" y="0.0"/>
+        <Goal type="point" id="2" x="-10" y="0.0"/>
+        <Goal type="point" id="3" x="10" y="0.0"/>
 	</GoalSet>
 
-    <State name="WalkRight" final="0" >
-        <GoalSelector type="explicit" goal_set="0" goal="2" persistent="0" />
+    <State name="WalkRight" final="0" type="ChargeState" class="1">
+        <GoalSelector type="explicit" goal_set="0" goal="1" persistent="0" />
         <VelComponent type="goal" />
         <!-- <VelModifier type="formation" file_name="DenseSquare.txt" /> -->
     </State>
 
-    <State name="WalkDown" final="0" >
-        <GoalSelector type="explicit" goal_set="0" goal="3" persistent="0" />
-        <VelComponent type="goal" />
-    </State>
-
-    <State name="WalkLeft" final="0" >
+    <State name="WalkLeft" final="0" type="ChargeState" class="1">
         <GoalSelector type="explicit" goal_set="0" goal="0" persistent="0" />
         <VelComponent type="goal" />
         <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
     </State>
 
-    <State name="WalkUp" final="0" >
-        <GoalSelector type="explicit" goal_set="0" goal="1" persistent="0" />
+    <State name="Attack" final="0">
+        <GoalSelector type="identity"/>
         <VelComponent type="goal" />
     </State>
 
-    <State name="EnemyNear" final="0">
+
+    <State name="AdvancingEnemy" final="0">
         <VelComponent type="enemy_near_comp" method="advancing"/>
     </State>
     <State name="TooManyEnemyNear" final="0">
         <VelComponent type="enemy_near_comp" method="withdrawing"/>
     </State>
 
-    <Transition from="WalkRight,WalkLeft" to="EnemyNear">
+    <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
+        <Condition type="enemy_near" is_close="0" dist="0.9"/>
+        <Target type="by_class" typename="ChargeState"/>
+    </Transition>
+
+    <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Attack">
+        <Condition type="can_perform"/>
+        <Condition type="enemy_near" dist="1.1"/>
+    </Transition>
+
+    <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="enemy_proximity" dist="0.9"/> -->
+    </Transition>
+    <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="enemy_proximity" dist="0.9" inverse="1"/> -->
+    </Transition>
+
+
+    <Transition from="Attack" to="AdvancingEnemy">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+    </Transition>
+
+
+    <Transition from="WalkRight,WalkLeft" to="AdvancingEnemy">
         <Condition type="enemy_near" dist="0.9"/>
     </Transition>
 

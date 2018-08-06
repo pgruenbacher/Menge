@@ -3,7 +3,8 @@
 #include "napoleonConfig.h"
 #include "NearestEnemyComponent.h"
 #include "EnemyNearCondition.h"
-
+#include "NumEnemCloseCondition.h"
+#include "CanPerformCondition.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
@@ -36,5 +37,7 @@ extern "C" {
     engine->registerTargetFactory( new Menge::BFSM::SelectStateByClassTargetFactory() );
     engine->registerVelCompFactory( new Napoleon::NearestEnemComponentFactory() );
     engine->registerConditionFactory( new Napoleon::EnemyNearCondFactory());
+    engine->registerConditionFactory( new Napoleon::NumEnemyCloseCondFactory());
+    engine->registerConditionFactory( new Napoleon::CanPerformCondFactory());
   }
 }

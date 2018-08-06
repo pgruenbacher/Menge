@@ -1,4 +1,4 @@
-#include "EnemyNearCondition.h"
+#include "CanPerformCondition.h"
 
 /*
 
@@ -43,87 +43,58 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 namespace Napoleon {
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    //                   Implementation of EnemyNearCondition
-    ///////////////////////////////////////////////////////////////////////////
-
-    EnemyNearCondition::EnemyNearCondition() {
-      _distSquared = 0.5 * 0.5;
-      _isClose = true;
+    CanPerformCondition::CanPerformCondition() {
     }
 
-    ///////////////////////////////////////////////////////////////////////////
 
-    // EnemyNearCondition::EnemyNearCondition( const EnemyNearCondition & cond ):Condition(cond) {
-    // }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    // EnemyNearCondition::~EnemyNearCondition() {
-    // }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    // void EnemyNearCondition::onEnter( BaseAgent * agent ) {
-    // }
+    void CanPerformCondition::onEnter( BaseAgent * agent ) {
+      if (_triggerTimes.find(agent->_id) == _triggerTimes.end()) {
+        _triggerTimes[agent->_id] = 0.f;
+      }
+      // _triggerTimes[agent->]
+    }
 
     // ///////////////////////////////////////////////////////////////////////////
 
-    // void EnemyNearCondition::onLeave( BaseAgent * agent ) {
+    // void CanPerformCondition::onLeave( BaseAgent * agent ) {
+    //   _triggerTimes[agent->]
     // }
 
-    void EnemyNearCondition::setDist(float dist) {
-      _distSquared = dist * dist;
+    ///////////////////////////////////////////////////////////////////////////
+    void CanPerformCondition::transitionWillPerform(BaseAgent* agent) {
+      // std::cout << "?? will " << std::endl;
+      _triggerTimes[agent->_id] = Menge::SIM_TIME + 5.f;
+    }
+
+    bool CanPerformCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
+      // std::cout << "?? " << std::endl;
+      return _triggerTimes[agent->_id] < Menge::SIM_TIME;
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    bool EnemyNearCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
-      bool enemClose = false;;
-      for (Menge::Agents::NearAgent agt : agent->_nearEnems) {
-        if (agt.distanceSquared < _distSquared) {
-          enemClose = true;
-          break;
-        }
-      }
-      if (_isClose) {
-        return enemClose;
-      } else {
-        return !enemClose;
-      }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    EnemyNearCondition * EnemyNearCondition::copy() {
-      return new EnemyNearCondition( *this );
+    CanPerformCondition * CanPerformCondition::copy() {
+      return new CanPerformCondition( *this );
     }
 
     ///////////////////////////////////////////////////////////////////////////
     //                   Implementation of EnemyNearCondFactory
     /////////////////////////////////////////////////////////////////////
 
-    EnemyNearCondFactory::EnemyNearCondFactory() : ConditionFactory() {
-      _distID = _attrSet.addFloatAttribute( "dist", true, 1.0f);
-      _isCloseID = _attrSet.addBoolAttribute( "is_close", false, true);
+    CanPerformCondFactory::CanPerformCondFactory() : ConditionFactory() {
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    bool EnemyNearCondFactory::setFromXML( Condition * condition, TiXmlElement * node,
+    bool CanPerformCondFactory::setFromXML( Condition * condition, TiXmlElement * node,
                        const std::string & behaveFldr ) const {
-      EnemyNearCondition * tCond = dynamic_cast< EnemyNearCondition * >( condition );
+      CanPerformCondition * tCond = dynamic_cast< CanPerformCondition * >( condition );
       assert( tCond != 0x0 &&
           "Trying to set the properties of a enemy near condition on an incompatible "
           "object" );
 
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
 
-      float dist = _attrSet.getFloat(_distID);
-      bool isClose = _attrSet.getBool(_isCloseID);
-      tCond->setDist(dist);
-      tCond->_isClose = isClose;
       return true;
     }
 

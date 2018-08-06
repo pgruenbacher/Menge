@@ -10,6 +10,7 @@ namespace Menge {
 
 	EventTriggerFactory::EventTriggerFactory() {
 		_nameID = _attrSet.addStringAttribute("name", true, "");
+		_firePeriodID = _attrSet.addFloatAttribute("fire_period", false, 0.f);
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@ namespace Menge {
 										 const std::string & specFldr) const {
 		if (!ElementFactory<EventTrigger>::setFromXML(trigger, node, specFldr)) return false;
 		trigger->_name = _attrSet.getString(_nameID);
-
+		trigger->_firePeriod = _attrSet.getFloat(_firePeriodID);
 		return true;
 	}
 

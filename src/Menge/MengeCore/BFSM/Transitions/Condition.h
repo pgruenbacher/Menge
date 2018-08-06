@@ -84,7 +84,7 @@ namespace Menge {
 			 */
 			virtual void onLeave( Agents::BaseAgent * agent ){}
 
-		void destroy() { std::cout << "DESTORY CONDITION" << std::endl; delete this; }
+		void destroy() { delete this; }
 			/*!
 			 *	@brief		Reports if the conditions have been met.
 			 *
@@ -98,7 +98,10 @@ namespace Menge {
 			 *	@returns	True if the condition has been met, false otherwise.
 			 */
 			virtual bool conditionMet( Agents::BaseAgent * agent, const Goal * goal ) = 0;
-
+			// since now there can be multiple conditions
+			// so we'll fire this function in the event that
+			// all pass and the transition fires.
+			virtual void transitionWillPerform(Agents::BaseAgent* agent) {};
 			/*!
 			 *	@brief		Create a copy of this condition.
 			 *

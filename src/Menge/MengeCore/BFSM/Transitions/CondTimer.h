@@ -41,7 +41,7 @@ namespace Menge {
 		///////////////////////////////////////////////////////////////////////////
 
 		/*!
-		 *	@brief		The definition of the timer condition. 
+		 *	@brief		The definition of the timer condition.
 		 *
 		 *	The time condition becomes active when the agent has been in the state
 		 *	at least the amount of time specified by the transition properties.
@@ -80,6 +80,7 @@ namespace Menge {
 			~TimerCondition();
 
 		public:
+			bool _isGlobal;
 			/*!
 			 *	@brief		Called when an agent enters a state with this exiting transition.
 			 *
@@ -157,8 +158,10 @@ namespace Menge {
 			virtual const char * description() const {
 				return "The timer condition.  It becomes active when the agent has "
 					"remained in the state at least a user-specified length of time.";
+					// paul - I've also added a condition so that it be a global time.
+					// in which the timer is not reset when user leaves state.
 			}
-			
+
 		protected:
 			/*!
 			 *	@brief		Create an instance of this class's condition.
@@ -188,17 +191,18 @@ namespace Menge {
 			 *	@param		behaveFldr		The path to the behavior file.  If the condition
 			 *								references resources in the file system, it should be
 			 *								defined relative to the behavior file location.  This
-			 *								is the folder containing that path. 
+			 *								is the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( Condition * condition, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
-		
+
 			/*!
 			 *	@brief		The identifier for the "per_agent" boolean attribute.
 			 */
 			size_t	_perAgentID;
-		
+
+			size_t _isGlobal;
 			/*!
 			 *	@brief		The identifier for the duration float distribution attribute.
 			 */

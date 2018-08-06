@@ -118,6 +118,10 @@ namespace Menge {
 				}
 			}
 			if ( !anyFalse ) {
+				for (Condition* cond : _conditions) {
+					cond->transitionWillPerform(agent);
+				}
+
 				return _target->nextState( agent );
 			}
 			return 0x0;
@@ -126,6 +130,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		void Transition::getTasks( FSM * fsm ) {
+			// std::cout << "GET TASKS" << _conditions.size();
 			for (Condition* cond : _conditions) {
 				Task* task = cond->getTask();
 				fsm->addTask(task);
@@ -169,6 +174,12 @@ namespace Menge {
 				if ( child->ValueStr() == "Condition" ) {
 					// condition = ConditionDB::getInstance( child, behaveFldr );
 					Condition* cond = ConditionDB::getInstance(child, behaveFldr);
+					if (cond == 0x0) {
+						logger << Logger::ERR_MSG << "Unrecognized child tag of a Condition on line ";
+						logger << child->Row() << ": " << child->ValueStr() << ".";
+						valid = false;
+
+					}
 					conditions.push_back(cond);
 				} else if ( child->ValueStr() == "Target" ) {
 					if ( target ) target->destroy();

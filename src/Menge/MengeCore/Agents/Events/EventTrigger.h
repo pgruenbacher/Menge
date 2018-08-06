@@ -72,7 +72,12 @@ namespace Menge {
 		 *	@returns	The trigger's name.
 		 */
 		const std::string& getName() const { return _name; }
-		
+
+		/*!
+		 *	@brief		The minimum time between two successive firings (in simulation seconds).
+		 */
+		float	_firePeriod;
+
 		friend class EventTriggerFactory;
 
 	protected:
@@ -92,11 +97,6 @@ namespace Menge {
 		 *				been fired.
 		 */
 		virtual void onFired() {};
-
-		/*!
-		 *	@brief		The minimum time between two successive firings (in simulation seconds).
-		 */
-		float	_firePeriod;
 
 		/*!
 		 *	@brief		The time of the last firing (global simulation time).

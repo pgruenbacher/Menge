@@ -65,6 +65,7 @@ namespace Menge {
 		/*!
 		*	@brief		The identifier for the "name" string attribute.
 		*/
+		size_t _firePeriodID;
 		size_t	_nameID;
 	};
 

@@ -1,4 +1,4 @@
-#include "EnemyNearCondition.h"
+#include "NumEnemCloseCondition.h"
 
 /*
 
@@ -43,14 +43,34 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 namespace Napoleon {
 
+  const float sumNearAgentWeights(const std::vector<Menge::Agents::NearAgent>& nearAgents, float checkDist = 3.0) {
+    // return nearAgents.size();
+    // WTF C++, if I don't set to 0.0, then it defaults to whatever previous value was!??
+    // Apparently uninitalized variables don't default to zero...
+    // return nearAgents.size();
+    // const float meleeDist = 3.0;
+    float result = 0.0;
+    // std::cout << "RESULT?" << result << std::endl;
 
+    for (Menge::Agents::NearAgent agent : nearAgents) {
+      // result += agent.distanceSquared;
+      if (checkDist < agent.distanceSquared) {
+        continue;
+      }
+      // std::cout << "V " << (agent.agent->_neighborDist * agent.agent->_neighborDist) << " " << agent.distanceSquared << std::endl;
+      result += 1.0f;
+    }
+    // std::cout << "RESULT" << result << " " << nearAgents.size() << std::endl;
+    return result;
+  }
     ///////////////////////////////////////////////////////////////////////////
     //                   Implementation of EnemyNearCondition
     ///////////////////////////////////////////////////////////////////////////
 
-    EnemyNearCondition::EnemyNearCondition() {
+    NumEnemyCloseCondition::NumEnemyCloseCondition() {
       _distSquared = 0.5 * 0.5;
-      _isClose = true;
+      // _isClose = true;
+      _inverse = false;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,47 +93,42 @@ namespace Napoleon {
     // void EnemyNearCondition::onLeave( BaseAgent * agent ) {
     // }
 
-    void EnemyNearCondition::setDist(float dist) {
+    void NumEnemyCloseCondition::setDist(float dist) {
       _distSquared = dist * dist;
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    bool EnemyNearCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
-      bool enemClose = false;;
-      for (Menge::Agents::NearAgent agt : agent->_nearEnems) {
-        if (agt.distanceSquared < _distSquared) {
-          enemClose = true;
-          break;
-        }
+    bool NumEnemyCloseCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
+      float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
+      float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
+      if (_inverse) {
+        return !(sumEnem > (sumFriend + 0.1));
       }
-      if (_isClose) {
-        return enemClose;
-      } else {
-        return !enemClose;
-      }
+      return (sumEnem > (sumFriend + 0.1));
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    EnemyNearCondition * EnemyNearCondition::copy() {
-      return new EnemyNearCondition( *this );
+    NumEnemyCloseCondition * NumEnemyCloseCondition::copy() {
+      return new NumEnemyCloseCondition( *this );
     }
 
     ///////////////////////////////////////////////////////////////////////////
     //                   Implementation of EnemyNearCondFactory
     /////////////////////////////////////////////////////////////////////
 
-    EnemyNearCondFactory::EnemyNearCondFactory() : ConditionFactory() {
+    NumEnemyCloseCondFactory::NumEnemyCloseCondFactory() : ConditionFactory() {
       _distID = _attrSet.addFloatAttribute( "dist", true, 1.0f);
-      _isCloseID = _attrSet.addBoolAttribute( "is_close", false, true);
+      // _isCloseID = _attrSet.addBoolAttribute( "is_close", false, true);
+      _inverseID = _attrSet.addBoolAttribute("inverse", false, false);
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    bool EnemyNearCondFactory::setFromXML( Condition * condition, TiXmlElement * node,
+    bool NumEnemyCloseCondFactory::setFromXML( Condition * condition, TiXmlElement * node,
                        const std::string & behaveFldr ) const {
-      EnemyNearCondition * tCond = dynamic_cast< EnemyNearCondition * >( condition );
+      NumEnemyCloseCondition * tCond = dynamic_cast< NumEnemyCloseCondition * >( condition );
       assert( tCond != 0x0 &&
           "Trying to set the properties of a enemy near condition on an incompatible "
           "object" );
@@ -121,9 +136,11 @@ namespace Napoleon {
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
 
       float dist = _attrSet.getFloat(_distID);
-      bool isClose = _attrSet.getBool(_isCloseID);
+      // bool isClose = _attrSet.getBool(_isCloseID);
+      bool inverse = _attrSet.getBool(_inverseID);
       tCond->setDist(dist);
-      tCond->_isClose = isClose;
+      tCond->_inverse = inverse;
+      // tCond->_isClose = isClose;
       return true;
     }
 

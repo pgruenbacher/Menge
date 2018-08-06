@@ -102,40 +102,45 @@ namespace Napoleon {
   void NearestEnemComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,
                       PrefVelocity & pVel ) const {
     bool modify = agent->_nearEnems.size() > 0;
-    if ( modify ) {
-      Vector2 target(0.0, 0.0);
-      float distSq = 1000.f * 1000.f;
-      for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-        if (enem.distanceSquared < distSq) {
-          distSq = enem.distanceSquared;
-          target = enem.agent->_pos;
-        }
+    if ( !modify ) {
+      // pVel.setSpeed(agent->_prefSpeed);
+      // Vector2 returnToOrig = (agent->_pos) * -1;
+      // returnToOrig.normalize();
+      // pVel.setSingle(returnToOrig);
+      std::cout << "no modify! fix! " << agent->_id << std::endl;
+      return;
+    }
+    Vector2 target(0.0, 0.0);
+    float distSq = 1000.f * 1000.f;
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      if (enem.distanceSquared < distSq) {
+        distSq = enem.distanceSquared;
+        target = enem.agent->_pos;
       }
+    }
 
-      // target + displacement - agent position
-      Vector2 disp = target - agent->_pos;
-      Vector2 dir(0.0, 0.0);
-      if ( distSq > 1e-8 ) {
-        // Distant enough that I can normalize the direction.
-        dir.set( disp / sqrtf( distSq ) );
-      } else {
-        dir.set( 0.f, 0.f );
-      }
-      pVel.setSingle(dir);
-      float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
-      float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
-      // std::cout << "ENEM SIZE " << sumEnem << " " << sumFriend << std::endl;
-      if (sumEnem > (sumFriend + 0.1)) {
-      // if (agent->_nearEnems.size() > agent->_nearFriends.size() + 1) {
-        pVel.setSingle(-dir);
-        pVel.setSpeed(0.1);
-        pVel.setTarget(target);
-        return;
-      }
+    // target + displacement - agent position
+    Vector2 disp = target - agent->_pos;
+    Vector2 dir(0.0, 0.0);
+    if ( distSq > 1e-8 ) {
+      // Distant enough that I can normalize the direction.
+      dir.set( disp / sqrtf( distSq ) );
+    } else {
+      dir.set( 0.f, 0.f );
+    }
+    pVel.setSingle(dir);
+    // float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
+    // float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
+    // std::cout << "ENEM SIZE " << sumEnem << " " << sumFriend << std::endl;
+    if (_actionType == WITHDRAWING) {
+    // if (agent->_nearEnems.size() > agent->_nearFriends.size() + 1) {
+      pVel.setSingle(-dir);
+      pVel.setSpeed(0.1);
       pVel.setTarget(target);
-
+      return;
+    } else {
+      pVel.setTarget(target);
       float speed = agent->_prefSpeed;
-
       if ( distSq <= agent->getMeleeRange() ) {
         // I've basically arrived -- speed should be zero.
         speed = 0.f;
@@ -152,13 +157,6 @@ namespace Napoleon {
         }
       }
       pVel.setSpeed( speed );
-
-    } else {
-      pVel.setSpeed(agent->_prefSpeed);
-      Vector2 returnToOrig = (agent->_pos) * -1;
-      returnToOrig.normalize();
-      pVel.setSingle(returnToOrig);
-      std::cout << "no modify! fix! " << std::endl;
     }
   }
 
