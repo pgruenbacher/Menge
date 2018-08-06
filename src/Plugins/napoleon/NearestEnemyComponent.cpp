@@ -168,7 +168,6 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
   NearestEnemComponentFactory::NearestEnemComponentFactory() : VelCompFactory() {
     _method = _attrSet.addStringAttribute("method", true /* required */);
-    std::cout<< "_CATION TYPE"  << _method << std::endl;
   }
 
   /////////////////////////////////////////////////////////////////////

@@ -215,6 +215,14 @@ namespace Menge {
 			 */
 			float _prefSpeed;
 
+			// attacking position for visAgent debugging purposes.
+			Math::Vector2 attacking;
+			bool isAttacking;
+			int _health;
+			int getHealth() { return _health; }
+			void adjustHealth(int v) { _health += v; }
+			bool isDead() const { return _health < 0; }
+
 			/*!
 			 *	@brief		The current 2D position of the agent
 			 */

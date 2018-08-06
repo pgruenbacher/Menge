@@ -5,7 +5,12 @@
 #include "EnemyNearCondition.h"
 #include "NumEnemCloseCondition.h"
 #include "CanPerformCondition.h"
+#include "MengeVis/PluginEngine/VisPluginEngine.h"
+#include "AttackAction.h"
+#include "DeadCondition.h"
+// #include "VisAttackElement.h"
 
+using MengeVis::PluginEngine::VisPluginEngine;
 using Menge::PluginEngine::CorePluginEngine;
 
 extern "C" {
@@ -39,5 +44,11 @@ extern "C" {
     engine->registerConditionFactory( new Napoleon::EnemyNearCondFactory());
     engine->registerConditionFactory( new Napoleon::NumEnemyCloseCondFactory());
     engine->registerConditionFactory( new Napoleon::CanPerformCondFactory());
+    engine->registerActionFactory( new Napoleon::AttackActionFactory());
+    engine->registerConditionFactory ( new Napoleon::DeadCondFactory() );
   }
+
+  // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {
+  //   engine->registerVisElement( new Napoleon::VisAttackElement() );
+  // }
 }

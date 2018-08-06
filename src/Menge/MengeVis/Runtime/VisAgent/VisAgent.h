@@ -87,6 +87,7 @@ namespace MengeVis {
 			 *							purposes (true) or visualization (false).
 			 */
 			void drawGL( bool select = false );
+			void drawAttack();
 
 			/*!
 			 *	@brief		Returns a Agents::BaseAgent pointer of the associated simulation
@@ -129,7 +130,7 @@ namespace MengeVis {
 			virtual void drawAgent( float r, float g, float b) const;
 
 			/*!
-			 *	@brief		Confirm that the agent provided is compatible with this VisAgent 
+			 *	@brief		Confirm that the agent provided is compatible with this VisAgent
 			 *				instance.
 			 *
 			 *				Sub-classes that care about the *type* of agent that is passed in
@@ -140,7 +141,7 @@ namespace MengeVis {
 				return true;
 			}
 
-			/*! 
+			/*!
 			 *	@brief		Sets the position from the agent.
 			 */
 			void setPosition();

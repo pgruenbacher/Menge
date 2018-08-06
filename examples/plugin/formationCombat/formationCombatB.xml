@@ -21,8 +21,14 @@
     </State>
 
     <State name="Attack" final="0">
+        <Action type="attack_action"/>
         <GoalSelector type="identity"/>
         <VelComponent type="goal" />
+    </State>
+
+    <State name="Dying" final="1">
+        <GoalSelector type="identity"/>
+        <VelComponent type="goal"/>
     </State>
 
 
@@ -50,6 +56,10 @@
     <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
         <!-- <Condition type="enemy_proximity" dist="0.9" inverse="1"/> -->
+    </Transition>
+
+    <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">
+        <Condition type="dead"/>
     </Transition>
 
 
