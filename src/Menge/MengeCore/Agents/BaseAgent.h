@@ -239,6 +239,9 @@ namespace Menge {
 			PrefVelocity	_velPref;
 			float getMeleeRange() const;
 
+			void adjustHitChance(float& percentChance, const BaseAgent* agt) const;
+
+
 			// * added by Paul to handle walking backwards, forwards, strafing.
 			// Math::Vector2 _faceDir;
 			// void updateFaceDir();

@@ -41,7 +41,7 @@
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
         <Condition type="not">
-            <Condition type="enemy_near" dist="0.9"/>
+            <Condition type="enemy_near" dist="5.9"/>
         </Condition>
         <Target type="by_class" typename="ChargeState"/>
     </Transition>
@@ -53,11 +53,13 @@
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <!-- <Condition type="enemy_proximity" dist="0.9"/> -->
+        <Condition type="enemy_proximity" dist="1.9"/>
     </Transition>
     <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <!-- <Condition type="enemy_proximity" dist="0.9" inverse="1"/> -->
+        <Condition type="not">
+            <Condition type="enemy_proximity" dist="1.9"/>
+        </Condition>
     </Transition>
 
     <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">
@@ -71,8 +73,7 @@
 
 
     <Transition from="WalkRight,WalkLeft" to="AdvancingEnemy">
-        <Condition type="timer" per_agent="1" dist="c" value="10"/>
-        <Condition type="enemy_near" dist="0.9"/>
+        <Condition type="enemy_near" dist="5.9"/>
     </Transition>
 
 <!--     <Transition from="WalkRight" to="WalkDown" >

@@ -57,7 +57,7 @@ namespace Napoleon {
     //                   Implementation of PropertyXAction
     /////////////////////////////////////////////////////////////////////
 
-    AttackAction::AttackAction() : Action() {
+    AttackAction::AttackAction() : Action(), _randGenerator(50.f, 10.f, 20.f, 80.f) {
     }
 
     /////////////////////////////////////////////////////////////////////
@@ -80,8 +80,25 @@ namespace Napoleon {
             // to grab agent from the fsm.
           }
         }
+
         if (agentId == sizeof(int)) return;
         BaseAgent* finalEnem = Menge::SIMULATOR->getAgent(agentId);
+        if (finalEnem->isDead()) {
+            std::cout << "AL DED!";
+        }
+
+        float hitChance = _randGenerator.getValue();
+        // std::cout << "BEFORE " << hitChance << std::endl;
+        finalEnem->adjustHitChance(hitChance, agent);
+
+        if (hitChance < 50.f) {
+            std::cout << "MISS" << std::endl;
+            return;
+        } else {
+            std::cout << "HIT" << std::endl;
+        }
+        // std::cout << "AFTER " << hitChance << std::endl;
+
         agent->attacking = target;
         agent->isAttacking = true;
         // this shouldn't be occurring concurrenlty...

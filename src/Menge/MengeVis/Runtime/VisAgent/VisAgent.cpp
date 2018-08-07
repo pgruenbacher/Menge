@@ -123,8 +123,8 @@ namespace MengeVis {
 			if (_agent->isAttacking) {
 				float r = 0.5f, g = 0.5f, b = 0.5f;
 				getColor(r,g,b);
-				Menge::Math::Vector3 _p0(_agent->_pos.x() + 0.1f, _agent->_pos.y(), 2.f);
-				Menge::Math::Vector3 _p1(_agent->attacking.x(), _agent->attacking.y(), 2.f);
+				Menge::Math::Vector3 _p0(_agent->_pos.x() + 0.1f, _agent->_pos.y(), 2.2f);
+				Menge::Math::Vector3 _p1(_agent->attacking.x(), _agent->attacking.y(), 2.2f);
 	      glPushAttrib( GL_LINE_BIT | GL_ENABLE_BIT );
 	      glDisable( GL_LIGHTING );
 	      glLineWidth( 1.f );

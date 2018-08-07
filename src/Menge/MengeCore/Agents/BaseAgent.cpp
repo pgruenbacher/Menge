@@ -110,6 +110,28 @@ namespace Menge {
 			postUpdate();
 		}
 
+		void BaseAgent::adjustHitChance( float& hitChance, const BaseAgent* enem) const {
+			Vector2 dir = _pos - enem->_pos;
+			dir.normalize();
+			// std::cout << "DIR " << dir << " " << "_orient " << _orient << std::endl;
+			float dotProduct = dir * _orient;
+			if (std::abs(dotProduct) < 0.5) {
+				// sideways
+				// std::cout << "SIDE " << dotProduct << " " << std::abs(dotProduct) << std::endl;
+				hitChance += 0.0;
+			} else if (dotProduct <= -0.5) {
+				// facing directly
+				// std::cout << "FRONT " << dotProduct << std::endl;
+				hitChance -= 30.0;
+			} else if (dotProduct >= 0.5) {
+				// behind agent.
+				// std::cout << "BEHIN " << dotProduct << std::endl;
+				hitChance += 80.0;
+			} else {
+				std::cout << "UNEPXECTED VALUE " << dotProduct << std::endl;
+			}
+		}
+
 		////////////////////////////////////////////////////////////////
 
 		void BaseAgent::updateOrient( float timeStep ) {

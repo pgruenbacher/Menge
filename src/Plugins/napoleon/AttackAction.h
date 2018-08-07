@@ -28,6 +28,7 @@
 #include "MengeCore/BFSM/Actions/Action.h"
 #include "MengeCore/BFSM/Actions/ActionFactory.h"
 #include "MengeCore/Runtime/SimpleLock.h"
+#include "MengeCore/Math/RandGenerator.h"
 #include <map>
 
 //forward declaration
@@ -69,6 +70,7 @@ namespace Napoleon {
 
   protected:
     Menge::SimpleLock _lock;
+    Menge::Math::UniformFloatGenerator _randGenerator;
   };
 
   class MENGE_API AttackActionFactory : public Menge::BFSM::ActionFactory {

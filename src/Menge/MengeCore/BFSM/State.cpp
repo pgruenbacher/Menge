@@ -65,6 +65,12 @@ namespace Menge {
 			_id = COUNT++;
 		}
 
+		State::State( const std::string & name, const std::string & typeName, size_t classId ) : _velComponent( 0x0 ), transitions_(),
+												   actions_(), _final( false ),
+												   _goalSelector( 0x0 ), _goals(), _name( name ), _type(typeName), _classId(classId) {
+			_id = COUNT++;
+		}
+
 		/////////////////////////////////////////////////////////////////////
 
 		State::~State() {

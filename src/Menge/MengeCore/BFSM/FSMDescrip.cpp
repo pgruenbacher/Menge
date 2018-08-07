@@ -101,12 +101,12 @@ namespace Menge {
 				logger << sData->_name << "\".";
 				return 0x0;
 			}
-			State * node = new State( sData->_name );
-			node->setType(sData->_type);
-			if (sData->_type != "") {
-				node->setFinal( sData->_isFinal );
-				node->setClassId(sData->_agent_class);
-			}
+			State * node = new State( sData->_name, sData->_type, sData->_agent_class );
+			node->setFinal( sData->_isFinal );
+			// if (sData->_type != "") {
+			// 	node->setType(sData->_type);
+			// 	node->setClassId(sData->_agent_class);
+			// }
 			_stateNameMap[ sData->_name ] = node;
 			return node;
 		}
