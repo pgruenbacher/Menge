@@ -70,7 +70,7 @@ namespace Formations {
     _lock.lockWrite();
       _formation->addAgent(agent);
     _lock.releaseWrite();
-    std::cout << "register agent " << std::endl;
+    // std::cout << "register agent " << std::endl;
   };
 
 
@@ -78,7 +78,7 @@ namespace Formations {
     _lock.lockWrite();
     _formation->removeAgent(agent);
     _lock.releaseWrite();
-    std::cout << "unregister agent " << std::endl;
+    // std::cout << "unregister agent " << std::endl;
   };
 
   /////////////////////////////////////////////////////////////////////

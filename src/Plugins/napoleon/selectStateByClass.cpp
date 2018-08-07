@@ -22,6 +22,15 @@ namespace Menge {
     void SelectStateByClassTarget::onLeave( Agents::BaseAgent * agent ) {}
 
     State * SelectStateByClassTarget::nextState( Agents::BaseAgent * agent ) {
+      std::cout << "NEXT STATE" << agent->_class << std::endl;
+      for (auto elem : _targets) {
+        std::cout << "ELEM " << elem.first << std::endl;
+      }
+      if (!_targets[agent->_class]) {
+        std::cout << "????" << std::endl;
+      } else {
+        std::cout << "AA " << _targets[agent->_class]->getName() << std::endl;
+      }
       return _targets[agent->_class];
     }
 
@@ -37,13 +46,23 @@ namespace Menge {
       // }
       // _next = stateMap[ _nextName ];
       _lock.lockWrite();
-      for (auto any : stateMap) {
-        State* state = any.second;
+      for (std::map< std::string, State * >::const_iterator any = stateMap.begin(); any != stateMap.end(); ++any) {
+        State* state = any->second;
         if (state->getType() == _typeName) {
           _targets[state->getClassId()] = state;
+          std::cout << "NAM " << _targets[1] << std::endl;
+          // std::cout << "NAM " << _targets[1]->getName() << std::endl;
+        } else {
+          std::cout << "SKIP " << state->getName() << " '" << state->getType() << "' '" << _typeName << std::endl;
+        }
+        if (!state || state == 0x0) {
+          std::cout << "BAD INSTATN" << std::endl;
+        } else {
+          std::cout << "GODD " << state->getName() << std::endl;
         }
       }
       _lock.releaseWrite();
+      // std::cout << " " << _targets[1]->getName() << std::endl;
       if (_targets.size() == 0) {
         logger << Logger::ERR_MSG;
         logger << "No states with type " << _typeName << " found\n";

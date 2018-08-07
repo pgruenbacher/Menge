@@ -102,7 +102,11 @@ namespace Menge {
 				return 0x0;
 			}
 			State * node = new State( sData->_name );
-			node->setFinal( sData->_isFinal );
+			node->setType(sData->_type);
+			if (sData->_type != "") {
+				node->setFinal( sData->_isFinal );
+				node->setClassId(sData->_agent_class);
+			}
 			_stateNameMap[ sData->_name ] = node;
 			return node;
 		}

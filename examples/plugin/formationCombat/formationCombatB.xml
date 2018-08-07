@@ -14,7 +14,7 @@
         <!-- <VelModifier type="formation" file_name="DenseSquare.txt" /> -->
     </State>
 
-    <State name="WalkLeft" final="0" type="ChargeState" class="1">
+    <State name="WalkLeft" final="0" type="ChargeState" class="2">
         <GoalSelector type="explicit" goal_set="0" goal="0" persistent="0" />
         <VelComponent type="goal" />
         <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
@@ -40,7 +40,9 @@
     </State>
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
-        <Condition type="enemy_near" is_close="0" dist="0.9"/>
+        <Condition type="not">
+            <Condition type="enemy_near" dist="0.9"/>
+        </Condition>
         <Target type="by_class" typename="ChargeState"/>
     </Transition>
 
@@ -69,6 +71,7 @@
 
 
     <Transition from="WalkRight,WalkLeft" to="AdvancingEnemy">
+        <Condition type="timer" per_agent="1" dist="c" value="10"/>
         <Condition type="enemy_near" dist="0.9"/>
     </Transition>
 

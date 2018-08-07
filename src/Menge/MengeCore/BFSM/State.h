@@ -54,7 +54,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			StateException() : MengeException() {}		
+			StateException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -64,7 +64,7 @@ namespace Menge {
 			StateException( const std::string & s ): MengeException(s) {}
 
 		};
-		
+
 		/*!
 		 *	@brief		Exception thrown when the state has an error which cannot be
 		 *				recovered from.
@@ -91,8 +91,8 @@ namespace Menge {
 		 *	@brief		The basic state of the behavior finite state machine.
 		 *
 		 *	A state node in the finite state machine for determining "behaviors".
-		 *	The state requires a velocity component to determine how the preferred 
-		 *	velocity is computed (see VelComponent).  
+		 *	The state requires a velocity component to determine how the preferred
+		 *	velocity is computed (see VelComponent).
 		 *	State's can also include actions, taken on an agent when it leaves the
 		 *	state and an optional corresponding action upon leaving the state (see Action).
 		 *	Agents leave the state based on transitions (see Transition).
@@ -149,7 +149,7 @@ namespace Menge {
 			 *	@param		isFinal		If true, the state is set to be final, if false, not.
 			 */
 			inline void setFinal( bool isFinal ) { _final = isFinal; }
-			inline void setType( std::string& type ) { _type = type; }
+			inline void setType( std::string type ) { std::cout << "SET TYPE " << type << std::endl; _type = type; }
 			inline void setClassId( size_t classId ) { _classId = classId; }
 
 			/*!
@@ -287,7 +287,7 @@ namespace Menge {
 			 *	@returns	The goal mapped to the id.
 			 */
 			const Goal * getGoal( size_t goalId ) { return _goals[ goalId ]; }
-			
+
 		protected:
 			/*!
 			 *	@brief		Test the transitions out of this state, tracking cycles.
@@ -296,7 +296,7 @@ namespace Menge {
 			 *	is found to be active will be taken.
 			 *
 			 *	@param		agent		The agent to test w.r.t. the transitions.
-			 *	@param		visited		The set of states visited during transition testing.  
+			 *	@param		visited		The set of states visited during transition testing.
 			 *							Used to prevent cycles.
 			 *	@returns	A pointer to the next state if a transition is active, otherwise,
 			 *				it returns NULL, meaning the agent remains in this state.
@@ -307,7 +307,7 @@ namespace Menge {
 			 *	@brief		The single velocity component associated with this state.
 			 */
 			VelComponent * _velComponent;
-			
+
 			/*!
 			 *	@brief		A priority-ordered list of transitions to determine if the state
 			 *				changes. The order of the transitions in the implicitly defines the
