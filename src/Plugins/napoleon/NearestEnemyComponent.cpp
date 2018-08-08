@@ -141,7 +141,7 @@ namespace Napoleon {
     } else {
       pVel.setTarget(target);
       float speed = agent->_prefSpeed;
-      if ( distSq <= agent->getMeleeRange() ) {
+      if ( distSq <= (agent->getMeleeRange() - 0.2) ) {
         // I've basically arrived -- speed should be zero.
         speed = 0.f;
       } else {

@@ -14,7 +14,7 @@
 
     <AgentProfile name="group1" >
 		<OpenSteer tau="3" tauObst="6" />
-        <Common max_angle_vel="360"
+        <Common max_angle_vel="15"
             max_enem="10"
             enem_dist="15"
             max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="0.5" max_speed="1" max_accel="5" priority="0.0"/>
@@ -27,7 +27,7 @@
         <Zanlungo mass="80" />
 	</AgentProfile>
     <AgentProfile name="group2" inherites="group1" >
-        <Common max_angle_vel="360"
+        <Common max_angle_vel="15"
             max_enem="10"
             enem_dist="15"
             max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="2" pref_speed="0.5" max_speed="1" max_accel="5" priority="0.0"/>
@@ -37,9 +37,9 @@
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="WalkRight" />
 		<Generator type="rect_grid"
-    		anchor_x="-9" anchor_y="-3"
+    		anchor_x="-9" anchor_y="-12"
     		offset_x="0.8" offset_y="0.8"
-    		count_x="6" count_y="6"
+    		count_x="6" count_y="36"
     		displace_dist="u" displace_min="0.0" displace_max="0.0"
     		/>
     </AgentGroup>
@@ -47,9 +47,9 @@
         <ProfileSelector type="const" name="group2" />
         <StateSelector type="const" name="WalkLeft" />
         <Generator type="rect_grid"
-            anchor_x="9" anchor_y="-3"
+            anchor_x="9" anchor_y="-12.5"
             offset_x="0.8" offset_y="0.8"
-            count_x="6" count_y="6"
+            count_x="6" count_y="36"
             displace_dist="u" displace_min="0.0" displace_max="0.0"
             />
     </AgentGroup>

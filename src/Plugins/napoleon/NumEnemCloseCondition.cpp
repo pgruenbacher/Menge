@@ -103,9 +103,9 @@ namespace Napoleon {
       float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
       float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
       if (_inverse) {
-        return !(sumEnem > (sumFriend + 0.1));
+        return !(sumEnem > (sumFriend));
       }
-      return (sumEnem > (sumFriend + 0.1));
+      return (sumEnem > (sumFriend));
     }
 
     ///////////////////////////////////////////////////////////////////////////

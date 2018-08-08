@@ -45,6 +45,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/GoalSet.h"
 
 #include <iostream>
+#include <limits>
 
 namespace Napoleon {
 
@@ -57,7 +58,7 @@ namespace Napoleon {
     //                   Implementation of PropertyXAction
     /////////////////////////////////////////////////////////////////////
 
-    AttackAction::AttackAction() : Action(), _randGenerator(50.f, 10.f, 20.f, 80.f) {
+    AttackAction::AttackAction() : Action(), _randGenerator(-100.f, 0.f) {
     }
 
     /////////////////////////////////////////////////////////////////////
@@ -70,7 +71,8 @@ namespace Napoleon {
     void AttackAction::onEnter( BaseAgent * agent ) {
         float distSq = 1000.f * 1000.f;
         Menge::Math::Vector2 target(0.f, 0.f);
-        size_t agentId = sizeof(int);
+        size_t maxId = std::numeric_limits<size_t>::max();
+        size_t agentId = maxId;
         for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
           if (enem.distanceSquared < distSq) {
             distSq = enem.distanceSquared;
@@ -81,23 +83,24 @@ namespace Napoleon {
           }
         }
 
-        if (agentId == sizeof(int)) return;
+        if (agentId == maxId) return;
+
         BaseAgent* finalEnem = Menge::SIMULATOR->getAgent(agentId);
         if (finalEnem->isDead()) {
-            std::cout << "AL DED!";
+            std::cerr << "ALready DED!";
         }
 
         float hitChance = _randGenerator.getValue();
+        hitChance += agent->getDefaultHitRate();
         // std::cout << "BEFORE " << hitChance << std::endl;
         finalEnem->adjustHitChance(hitChance, agent);
 
-        if (hitChance < 50.f) {
-            std::cout << "MISS" << std::endl;
+        if (hitChance < 0.f) {
+            // std::cout << "MISS hc: " << hitChance << " cls: " << agent->_class << std::endl;
             return;
         } else {
-            std::cout << "HIT" << std::endl;
+            // std::cout << "HIT hc: " << hitChance << " cls: " << agent->_class << std::endl;
         }
-        // std::cout << "AFTER " << hitChance << std::endl;
 
         agent->attacking = target;
         agent->isAttacking = true;

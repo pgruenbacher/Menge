@@ -78,6 +78,7 @@ namespace MengeVis {
 
 		void VisAgent::drawGL( bool select ) {
 			if ( _agent != 0x0 ) {
+				if (!_agent->visible) return;
 				float r = 0.5f, g = 0.5f, b = 0.5f;
 				if ( select ) {
 					loadSelectName();

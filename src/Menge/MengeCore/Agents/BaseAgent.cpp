@@ -75,6 +75,7 @@ namespace Menge {
 			_id = 0;
 			_radius = 0.19f;
 			_health = 50;
+			visible = true;
 
 			isAttacking = false;
 			attacking = Vector2(0.f, 0.f);

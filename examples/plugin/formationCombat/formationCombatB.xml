@@ -30,6 +30,10 @@
         <GoalSelector type="identity"/>
         <VelComponent type="goal"/>
     </State>
+    <State name="Dead" final="1">
+        <GoalSelector type="identity"/>
+        <VelComponent type="goal"/>
+    </State>
 
 
     <State name="AdvancingEnemy" final="0">
@@ -40,32 +44,30 @@
     </State>
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
-        <Condition type="not">
-            <Condition type="enemy_near" dist="5.9"/>
-        </Condition>
+        <Condition type="enemy_near" dist="5.9" is_close="0"/>
         <Target type="by_class" typename="ChargeState"/>
     </Transition>
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Attack">
         <Condition type="can_perform"/>
-        <Condition type="enemy_near" dist="1.1"/>
+        <Condition type="enemy_near" dist="1.0"/>
     </Transition>
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <Condition type="enemy_proximity" dist="1.9"/>
+        <Condition type="enemy_proximity" dist="4.9"/>
     </Transition>
     <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <Condition type="not">
-            <Condition type="enemy_proximity" dist="1.9"/>
-        </Condition>
+        <Condition type="enemy_proximity" dist="4.9" inverse="1"/>
     </Transition>
 
     <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">
         <Condition type="dead"/>
     </Transition>
-
+    <Transition from="Dying" to="Dead">
+        <Condition type="timer" dist="c" per_agent="1" value="10"/>
+    </Transition>
 
     <Transition from="Attack" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />

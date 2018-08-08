@@ -222,7 +222,7 @@ namespace Menge {
 			int getHealth() { return _health; }
 			void adjustHealth(int v) { _health += v; }
 			bool isDead() const { return _health < 0; }
-
+			bool visible;
 			/*!
 			 *	@brief		The current 2D position of the agent
 			 */
@@ -240,6 +240,7 @@ namespace Menge {
 			float getMeleeRange() const;
 
 			void adjustHitChance(float& percentChance, const BaseAgent* agt) const;
+			float getDefaultHitRate() const { return 50.f; }
 
 
 			// * added by Paul to handle walking backwards, forwards, strafing.
