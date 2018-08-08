@@ -56,6 +56,7 @@ namespace Napoleon {
      *  @param    agent   The agent to act on.
      */
     void onEnter( Menge::Agents::BaseAgent * agent );
+    Menge::BFSM::Task* getTask();
 
     friend class AttackActionFactory;
 

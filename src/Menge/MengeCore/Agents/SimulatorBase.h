@@ -37,7 +37,7 @@
 #include <omp.h>
 #endif
 
-namespace Menge { 
+namespace Menge {
 
 	namespace Agents {
 
@@ -69,7 +69,7 @@ namespace Menge {
 			 *	@brief		Initalize spatial query structure.
 			 */
 			virtual bool initSpatialQuery();
-			
+
 			/*!
 			 *	@brief	After all agents and all obstacles have been added to the scene
 			 *			does the work to finish preparing the simulation to be run.
@@ -105,7 +105,7 @@ namespace Menge {
 			virtual const BaseAgent * getAgent( size_t agentNo ) const {
 				return &_agents[ agentNo ];
 			}
-			
+
 			/*!
 			 *	@brief		Add an agent with specified position to the simulator whose properties
 			 *				are defined by the given agent initializer.
@@ -178,7 +178,7 @@ namespace Menge {
 		////////////////////////////////////////////////////////////////
 		//					Implementation of SimulatorBase
 		////////////////////////////////////////////////////////////////
-		
+
 		template < class Agent >
 		SimulatorBase<Agent>::SimulatorBase(): SimulatorInterface(), _agents() {
 		}
@@ -208,7 +208,7 @@ namespace Menge {
 			for (int i = 0; i < AGT_COUNT; ++i) {
 			  _agents[i].update( TIME_STEP );
 			}
-			
+
 			_globalTime += TIME_STEP;
 
 		}
@@ -225,12 +225,12 @@ namespace Menge {
 				agtPointers[ a ] = &_agents[a];
 			}
 			_spatialQuery->setAgents( agtPointers );
-			
+
 			_spatialQuery->processObstacles();
 
 			return true;
 		}
-			
+
 		////////////////////////////////////////////////////////////////
 
 		template < class Agent >
@@ -267,7 +267,7 @@ namespace Menge {
 		bool SimulatorBase<Agent>::setExpParam( const std::string & paramName,
 												const std::string & value )
 												throw( XMLParamException ) {
-			
+
 			if ( paramName == "time_step" ) {
 				try {
 					LOGICAL_TIME_STEP = toFloat( value );

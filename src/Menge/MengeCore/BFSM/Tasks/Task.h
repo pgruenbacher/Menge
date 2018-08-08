@@ -42,7 +42,7 @@ namespace Menge {
 
 		/*!
 		 *	@brief		Exception thrown when a task fails at doing its work.
-		 *				These exceptions can be logged but should not arrest 
+		 *				These exceptions can be logged but should not arrest
 		 *				execution of the simulation.
 		 */
 		class TaskException : public virtual MengeException {
@@ -50,7 +50,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			TaskException() : MengeException() {}		
+			TaskException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -60,7 +60,7 @@ namespace Menge {
 			TaskException( const std::string & s ): MengeException(s) {}
 
 		};
-		
+
 		/*!
 		 *	@brief		Exception thrown when the task has an error which cannot be
 		 *				recovered from.
@@ -130,7 +130,11 @@ namespace Menge {
 			 *				or unique (false).
 			 */
 			virtual bool isEquivalent( const Task * task ) const = 0;
-		};	
+			// allows us to sort tasks. this may be useful for
+			// like my damageTask, which will update agent health
+			// which needs to happen before the next spatial query.
+			virtual int getPriority() { return 0; }
+		};
 
 		/*!
 		 *	@brief		Parses a TinyXML element containing a task specification

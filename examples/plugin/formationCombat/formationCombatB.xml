@@ -25,6 +25,10 @@
         <GoalSelector type="identity"/>
         <VelComponent type="goal" />
     </State>
+    <State name="Idle" final="0">
+        <GoalSelector type="identity"/>
+        <VelComponent type="goal"/>
+    </State>
 
     <State name="Dying" final="1">
         <GoalSelector type="identity"/>
@@ -74,7 +78,7 @@
     </Transition>
 
 
-    <Transition from="WalkRight,WalkLeft" to="AdvancingEnemy">
+    <Transition from="WalkRight,WalkLeft,Idle" to="AdvancingEnemy">
         <Condition type="enemy_near" dist="5.9"/>
     </Transition>
 

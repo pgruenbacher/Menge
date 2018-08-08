@@ -37,7 +37,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 */
 
 #include "AttackAction.h"
-
+#include "DamageTask.h"
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/BFSM/FSM.h"
@@ -72,26 +72,40 @@ namespace Napoleon {
         float distSq = 1000.f * 1000.f;
         Menge::Math::Vector2 target(0.f, 0.f);
         size_t maxId = std::numeric_limits<size_t>::max();
-        size_t agentId = maxId;
+        // size_t agentId = maxId;
+        const BaseAgent* finalEnem = 0;
         for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
           if (enem.distanceSquared < distSq) {
             distSq = enem.distanceSquared;
             target = enem.agent->_pos;
-            agentId = enem.agent->_id;
+            // agentId = enem.agent->_id;
+            finalEnem = enem.agent;
             // NearAgent.agent is const so we have
             // to grab agent from the fsm.
           }
         }
 
-        if (agentId == maxId) return;
+        if (finalEnem == 0) return;
 
-        BaseAgent* finalEnem = Menge::SIMULATOR->getAgent(agentId);
+        // BaseAgent* finalEnem = Menge::SIMULATOR->getAgent(agentId);
         if (finalEnem->isDead()) {
-            std::cerr << "ALready DED!";
+            // i'm not sure why this is happening
+            // the task should be happening before the next
+            // computeNeighbors is performed...
+            std::cerr << "ALready DED! " << finalEnem->_id << Menge::SIM_TIME << std::endl;
         }
+
+        // don't update enemy agent! this is being evaluated
+        // concurrently! we'll have to copy the damage info
+        // to a task that will be evaluated afterwards, or
+        // we add lock mechanism to the baseagent.
+        // i'll probably try lock mechanism first...simpler...
+        // actually no. we should task it so that we can
+        // monitor damage through signals or events.
 
         float hitChance = _randGenerator.getValue();
         hitChance += agent->getDefaultHitRate();
+        // std::cout << " THREAD ID " << omp_get_thread_num() << std::endl;
         // std::cout << "BEFORE " << hitChance << std::endl;
         finalEnem->adjustHitChance(hitChance, agent);
 
@@ -106,13 +120,20 @@ namespace Napoleon {
         agent->isAttacking = true;
         // this shouldn't be occurring concurrenlty...
         // i think...
-        finalEnem->adjustHealth(-10);
+        DamageTask* t = DamageTask::getSingleton();
+        t->adjustHealth(finalEnem->_id, -10.f);
+        // finalEnem->adjustHealth(-10);
+
     }
 
     /////////////////////////////////////////////////////////////////////
 
     void AttackAction::leaveAction( BaseAgent * agent ) {
         agent->isAttacking = false;
+    }
+
+    Menge::BFSM::Task* AttackAction::getTask() {
+        return DamageTask::getSingleton();
     }
 
     /////////////////////////////////////////////////////////////////////
