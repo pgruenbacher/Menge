@@ -53,6 +53,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   enum ActionType {
     ADVANCING,
     WITHDRAWING,
+    IDLE,
   };
 
 
@@ -77,6 +78,8 @@ class MENGE_API NearestEnemComponent : public VelComponent {
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;
+  void setIdleVelocity(const BaseAgent* agent, const Goal* goal,
+                               PrefVelocity& pVel, Vector2& target) const;
 
   // virtual std::string getStringId() const = 0;
   virtual std::string getStringId() const { return NAME; }

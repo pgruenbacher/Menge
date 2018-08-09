@@ -28,7 +28,7 @@
 
 namespace Menge {
 
-	namespace Agents { 
+	namespace Agents {
 
 		/*!
 		 *	@brief		The definition of a preferred velocity.
@@ -147,6 +147,7 @@ namespace Menge {
 			 *	@returns	A singe point in space which corresponds to the preferred direction.
 			 */
 			inline Math::Vector2 getTarget() const { return _target; }
+			inline bool hasTarget() const { return _target.x() != 0.0 && _target.y() != 0.0; }
 
 			/*!
 			 *	@brief		Sets the target of the preferred velocity.
@@ -166,7 +167,7 @@ namespace Menge {
 						  const Math::Vector2 & preferred );
 
 			/*!
-			 *	@brief		Reports if the arc spans more than a single direction (by reporting 
+			 *	@brief		Reports if the arc spans more than a single direction (by reporting
 			 *				whether the arc has area.)
 			 *
 			 *	@returns	A boolean indicating if the span has area (i.e. spans
@@ -181,7 +182,7 @@ namespace Menge {
 			 *				unit length.
 			 */
 			Math::Vector2		_left;
-			
+
 			/*!
 			 *	@brief		The "right" extent of the preferred velocity span
 			 *				(i.e. det( right, left ) >= 0).  This direction has

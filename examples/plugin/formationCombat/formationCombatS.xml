@@ -17,7 +17,13 @@
         <Common max_angle_vel="15"
             max_enem="10"
             enem_dist="15"
-            max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="0.5" max_speed="1" max_accel="5" priority="0.0"/>
+            max_neighbors="10"
+            obstacleSet="1"
+            neighbor_dist="5" r="0.19" class="1"
+            pref_speed="0.5"
+            max_speed="1"
+            max_accel="5"
+            priority="0.0"/>
         <PedVO factor="1.57" buffer="0.9" tau="3" tauObst="0.15" turningBias="1.0" />
         <GCF stand_depth="0.18" move_scale="0.53" slow_width="0.25" sway_change="0.05" />
         <Helbing mass="80" />

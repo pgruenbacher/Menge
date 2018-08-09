@@ -96,21 +96,48 @@ namespace Napoleon {
   NearestEnemComponent::NearestEnemComponent() : VelComponent() {
   }
 
+  void NearestEnemComponent::setIdleVelocity(const BaseAgent * agent, const Goal * goal,
+                      PrefVelocity & pVel, Vector2& target ) const {
+      using Menge::SIM_TIME_STEP;
+
+      goal->setDirections( agent->_pos, agent->_radius, pVel );
+
+      // speed
+      Vector2 goalPoint = pVel.getTarget();
+      Vector2 disp = goalPoint - agent->_pos;
+      const float distSq = absSq( disp );
+      float speed = agent->_prefSpeed;
+
+      if ( distSq <= 0.0001f ) {
+        // I've basically arrived -- speed should be zero.
+        speed = 0.f;
+      } else {
+        const float speedSq = speed * speed;
+        const float TS_SQD = SIM_TIME_STEP * SIM_TIME_STEP;
+        if ( distSq / speedSq < TS_SQD ) {
+          // The distance is less than I would travel in a single time step.
+          speed = sqrtf( distSq ) / SIM_TIME_STEP;
+        }
+      }
+      pVel.setSpeed( speed );
+      // also make sure target is set for orientation.
+      pVel.setTarget( target );
+  }
 
   /////////////////////////////////////////////////////////////////////
 
   void NearestEnemComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,
                       PrefVelocity & pVel ) const {
     bool modify = agent->_nearEnems.size() > 0;
+    Vector2 target(0.0, 0.0);
     if ( !modify ) {
       // pVel.setSpeed(agent->_prefSpeed);
       // Vector2 returnToOrig = (agent->_pos) * -1;
       // returnToOrig.normalize();
       // pVel.setSingle(returnToOrig);
-      std::cout << "no modify! fix! " << agent->_id << std::endl;
-      return;
+      std::cout << "no modify! fix! " << agent->_id << "GOAL" << goal << " " << std::endl;
+      return setIdleVelocity(agent, goal, pVel, target);
     }
-    Vector2 target(0.0, 0.0);
     float distSq = 1000.f * 1000.f;
     for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
       if (enem.distanceSquared < distSq) {
@@ -138,6 +165,9 @@ namespace Napoleon {
       pVel.setSpeed(0.1);
       pVel.setTarget(target);
       return;
+
+    } else if (_actionType == IDLE) {
+      return setIdleVelocity(agent, goal, pVel, target);
     } else {
       pVel.setTarget(target);
       float speed = agent->_prefSpeed;
@@ -191,6 +221,8 @@ namespace Napoleon {
       nearestEnemComp->_actionType = NearestEnemComponent::ADVANCING;
     } else if (_typeString == "withdrawing") {
       nearestEnemComp->_actionType = NearestEnemComponent::WITHDRAWING;
+    } else if (_typeString == "idle") {
+      nearestEnemComp->_actionType = NearestEnemComponent::IDLE;
     } else {
       logger << Logger::ERR_MSG << "Should be advancing or withdrawing got: '" << _typeString << "' instead...";
       return false;

@@ -23,7 +23,8 @@
     <State name="Attack" final="0">
         <Action type="attack_action"/>
         <GoalSelector type="identity"/>
-        <VelComponent type="goal" />
+        <!-- <VelComponent type="goal" /> -->
+        <VelComponent type="enemy_near_comp" method="idle"/>
     </State>
     <State name="Idle" final="0">
         <GoalSelector type="identity"/>

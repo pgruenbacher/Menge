@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -70,6 +70,7 @@ namespace MengeVis {
 
 		BaseAgentContext::BaseAgentContext() : SceneGraph::SelectContext(), _selected( 0x0 ),
 											   _showNbrRadius( false ), _showNbr( false ),
+											   _showEnem(false), _showFriend(false),
 											   _showMaxSpd( false ), _showVel( false ),
 											   _showPrefVel( false ), _showOrient( false ) {}
 
@@ -95,6 +96,8 @@ namespace MengeVis {
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_n ) {
 						_showNbr = !_showNbr;
+						_showEnem = false;
+						_showFriend = false;
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_m ) {
 						_showMaxSpd = !_showMaxSpd;
@@ -107,6 +110,16 @@ namespace MengeVis {
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_o ) {
 						_showOrient = !_showOrient;
+						result.set( true, true );
+					} else if ( e.key.keysym.sym == SDLK_e ) {
+						_showEnem = !_showEnem;
+						_showNbr = false;
+						_showFriend = false;
+						result.set( true, true );
+					} else if ( e.key.keysym.sym == SDLK_f ) {
+						_showFriend = !_showFriend;
+						_showEnem = false;
+						_showNbr = false;
 						result.set( true, true );
 					}
 				}
@@ -167,15 +180,26 @@ namespace MengeVis {
 		////////////////////////////////////////////////////////////////////////////
 
 		void BaseAgentContext::drawNeighbors( const BaseAgent * agt ) {
-			if ( _showNbr ) {
+			if ( _showNbr || _showEnem || _showFriend ) {
+
+				std::vector<Menge::Agents::NearAgent> agentList;
+				if (_showNbr) {
+					agentList = agt->_nearAgents;
+				} else if (_showFriend) {
+					agentList = agt->_nearFriends;
+				} else {
+					agentList = agt->_nearEnems;
+				}
+
+				// white text.
 				glColor4f( 1.f, 1.f, 1.f, 1.f );
 
-				const size_t NBR_COUNT = agt->_nearAgents.size();
+				const size_t NBR_COUNT = agentList.size();
 				for ( size_t i = 0; i < NBR_COUNT; ++i ) {
 					std::stringstream ss;
 					ss << std::setiosflags( std::ios::fixed ) << std::setprecision( 2 );
-					ss << sqrtf( agt->_nearAgents[ i ].distanceSquared );
-					const BaseAgent * nbr = agt->_nearAgents[ i ].agent;
+					ss << sqrtf( agentList[ i ].distanceSquared );
+					const BaseAgent * nbr = agentList[ i ].agent;
 					const Vector2 & p = nbr->_pos;
 					writeAlignedText( ss.str(), p, SceneGraph::TextWriter::CENTERED, true );
 				}
@@ -268,6 +292,8 @@ namespace MengeVis {
 			ss << "\nPosition: " << agt->_pos;
 			ss << "\nNeighbo(r) radius: " << agt->_neighborDist;
 			ss << "\n(N)eighbors: " << agt->_nearAgents.size();
+			ss << "\n(E)NearEnems: " << agt->_nearEnems.size();
+			ss << "\n(F)NearFriends: " << agt->_nearFriends.size();
 			ss << "\n(M)ax Speed: " << agt->_maxSpeed;
 			ss << "\n(O)rientation: " << agt->_orient;
 			ss << "\n(V)elocity: " << agt->_vel << "(" << abs( agt->_vel ) << ")";

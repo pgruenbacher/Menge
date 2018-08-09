@@ -39,6 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 
 #include "MengeCore/Agents/Obstacle.h"
+#include <algorithm>
 
 namespace Menge {
 
@@ -151,20 +152,26 @@ namespace Menge {
 			Vector2 newOrient( _orient );	// by default new is old
 			Vector2 moveDir = _vel / speed;
 			bool hasMinPrefDir = absSq(prefDir) > 0.000001f;
-
+			Vector2 targetDir = _velPref.getTarget() - _pos;
 			if ( speed >= speedThresh ) {
 				newOrient = moveDir;
 			} else if (speed == 0.0 && hasMinPrefDir) {
 				newOrient = prefDir;
 				newOrient.normalize();
+			} else if (speed == 0.0 && _velPref.hasTarget()) {
+				newOrient = targetDir;
+				newOrient.normalize();
 			} else {
+				// if slow enough, face target.
+				newOrient = targetDir;
+				newOrient.normalize();
 				// prefDir *can* be zero if we've arrived at goal.  Only use it if it's non-zero.
-				if ( hasMinPrefDir ) {
-					// so if travelling backwards...
-					float frac = sqrtf( speed / speedThresh );
-					newOrient = frac * moveDir + ( 1.f - frac ) * prefDir;
-					newOrient.normalize();
-				}
+				// if ( hasMinPrefDir ) {
+				// 	// so if travelling backwards...
+				// 	float frac = sqrtf( speed / speedThresh );
+				// 	newOrient = frac * moveDir + ( 1.f - frac ) * prefDir;
+				// 	newOrient.normalize();
+				// }
 			}
 
 			// TODO(curds01): At low speeds, small movement perturbations cause radically different
@@ -235,7 +242,7 @@ namespace Menge {
 
 		void BaseAgent::insertAgentNeighbor(const BaseAgent* agent, float distSq) {
 			if (this != agent) {
-				if (_nearAgents.size() != _maxNeighbors || distSq <= getMaxAgentRange()) {
+				if (_nearAgents.size() != _maxNeighbors || distSq <= getMaxNeighborRange()) {
 					if (_nearAgents.size() != _maxNeighbors) {
 						_nearAgents.push_back(NearAgent(distSq, agent));
 					}
@@ -253,7 +260,7 @@ namespace Menge {
 
 		void BaseAgent::insertFriendNeighbor(const BaseAgent* agent, float distSq) {
 			if (this != agent) {
-				if (_nearFriends.size() != _maxNeighbors || distSq <= getMaxEnemRange()) {
+				if (_nearFriends.size() != _maxNeighbors || distSq <= getMaxFriendRange()) {
 					if (_nearFriends.size() != _maxNeighbors) {
 						_nearFriends.push_back(NearAgent(distSq, agent));
 					}
@@ -326,7 +333,7 @@ namespace Menge {
 
 		///////////////////////////////////////////////////////////
 
-		float BaseAgent::getMaxAgentRange() {
+		float BaseAgent::getMaxNeighborRange() {
 			// ah so if, max agents, then it bumps down to current farthest.
 			if (_nearAgents.size() == _maxNeighbors){
 
@@ -339,10 +346,36 @@ namespace Menge {
 			// return _neighborDistSquared;
 		}
 
+		float BaseAgent::getMaxAgentRange() {
+			// we're just assuming the _nearEnems min distance is larger
+			// since this function is being used by the spatial query.
+			// if (_nearEnems.size() == _maxEnem){
+			// 	return _nearEnems.back().distanceSquared;
+			// }
+
+			// // can probably cache this...
+			// return _enemDist * _enemDist;
+			return std::max(
+				std::max(getMaxNeighborRange(), getMaxEnemRange()),
+				getMaxFriendRange()
+			);
+		}
+
 		float BaseAgent::getMaxEnemRange() {
 			// ah so if, max agents, then it bumps down to current farthest.
 			if (_nearEnems.size() == _maxEnem){
 				return _nearEnems.back().distanceSquared;
+			}
+
+			// can probably cache this...
+			return _enemDist * _enemDist;
+			// return _neighborDistSquared;
+		}
+
+		float BaseAgent::getMaxFriendRange() {
+			// ah so if, max agents, then it bumps down to current farthest.
+			if (_nearFriends.size() == _maxEnem){
+				return _nearFriends.back().distanceSquared;
 			}
 
 			// can probably cache this...

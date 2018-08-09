@@ -149,6 +149,8 @@ namespace MengeVis {
 			 *	@brief		Determines if the neighbors are indicated in the view
 			 */
 			bool	_showNbr;
+			bool	_showEnem;
+			bool	_showFriend;
 
 			/*!
 			 *	@brief		Function for drawing neighbor distances

@@ -448,6 +448,8 @@ namespace Menge {
 			 */
 			virtual float getMaxAgentRange();
 			virtual float getMaxEnemRange();
+			virtual float getMaxNeighborRange();
+			virtual float getMaxFriendRange();
 
 			/*!
 			 *  @brief      updates the max query obstacle range if conditions inside the filter
