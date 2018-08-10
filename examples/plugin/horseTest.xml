@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project
+	scene="horseTest/horseTestS.xml"
+	behavior="horseTest/horseTestB.xml"
+	view="horseTest/horseTestV.xml"
+	model="orca"
+	dumpPath="horseTest/images"
+/>
