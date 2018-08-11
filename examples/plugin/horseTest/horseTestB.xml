@@ -6,6 +6,8 @@
 		<Goal type="point" id="1" x="-1" y="-7" />
 	</GoalSet>
 
+	<VelModifier type="turn"/>
+
 	<State name="Walk1" final="0" >
 		<GoalSelector type="explicit" goal_set="0" goal="0" />
 		<VelComponent type="goal" />

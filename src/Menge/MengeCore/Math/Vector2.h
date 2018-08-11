@@ -53,7 +53,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Templated vector in R2
 		 */
-		template <class Type> 
+		template <class Type>
 		class MENGE_API Vector2d {
 		public:
 			/////////////////////////////    CONSTRUCTORS      ////////////////////////////
@@ -65,7 +65,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Constructor with arguments
 			 *
-			 *	@param		x		The x-value of the vector.		
+			 *	@param		x		The x-value of the vector.
 			 *	@param		y		The y-value of the vector.
 			 */
 			inline Vector2d( Type x, Type y ): _x(x), _y(y) {}
@@ -371,7 +371,7 @@ namespace Menge {
 				float dy = _y - y;
 				return dx * dx + dy * dy;
 			}
-			
+
 			/*!
 			 *	@brief		x-component of the vector
 			 */
@@ -547,9 +547,9 @@ namespace Menge {
 		 *
 		 *  @param	v1				The first of two-dimensional vectors to be compared
 		 *  @param	v2				The second of two-dimensional vectors to be compared
-		 *  @param	threshSqd		The squared threshhold to test against 
+		 *  @param	threshSqd		The squared threshhold to test against
 		 *                          defaults to 3 decimal places (0.001)^2
-		 *  @returns  A boolean: true if they are equivalent within a threshhold, 
+		 *  @returns  A boolean: true if they are equivalent within a threshhold,
 		 *            false otherwise.
 		 */
 		template< class Type >
@@ -566,7 +566,7 @@ namespace Menge {
 													   const Vector2d<float> & v2,
 													   float threshSqd );
 
-		/*! 
+		/*!
 		 *  @brief      Computes the signed distance from a line connecting the
 		 *              specified points to a specified point.
 		 *  @param      a               The first point on the line.

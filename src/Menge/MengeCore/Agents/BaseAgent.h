@@ -223,6 +223,11 @@ namespace Menge {
 			void adjustHealth(int v) { _health += v; }
 			bool isDead() const { return _health < 0; }
 			bool visible;
+			float currentTiltAngle;
+			float maxTiltAngle;
+			Math::Vector2 getTurnCircleDelta() const;
+			float getTurnRadius() const;
+			bool targetInTurnCircle(const Math::Vector2& v) const;
 			/*!
 			 *	@brief		The current 2D position of the agent
 			 */

@@ -70,6 +70,7 @@ namespace MengeVis {
 
 		BaseAgentContext::BaseAgentContext() : SceneGraph::SelectContext(), _selected( 0x0 ),
 											   _showNbrRadius( false ), _showNbr( false ),
+											   _showEnemRadius( false),
 											   _showEnem(false), _showFriend(false),
 											   _showMaxSpd( false ), _showVel( false ),
 											   _showPrefVel( false ), _showOrient( false ) {}
@@ -93,6 +94,7 @@ namespace MengeVis {
 				if ( noMods ) {
 					if ( e.key.keysym.sym == SDLK_r ) {
 						_showNbrRadius = !_showNbrRadius;
+						_showEnemRadius = !_showEnemRadius;
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_n ) {
 						_showNbr = !_showNbr;
@@ -121,6 +123,9 @@ namespace MengeVis {
 						_showEnem = false;
 						_showNbr = false;
 						result.set( true, true );
+					} else if (e.key.keysym.sym == SDLK_c) {
+						_showTurnCircles = !_showTurnCircles;
+						result.set(true, true);
 					}
 				}
 			}
@@ -150,6 +155,8 @@ namespace MengeVis {
 				const BaseAgent * agt = _selected->getAgent();
 				drawNeighbors( agt );
 				drawNbrRadius( agt );
+				drawEnemRadius( agt );
+				drawTurnCircles( agt );
 				drawMaxSpeed( agt );
 				drawVelocity( agt );
 				drawPrefVelocity( agt );
@@ -177,6 +184,53 @@ namespace MengeVis {
 			}
 		}
 
+		void BaseAgentContext::drawEnemRadius( const BaseAgent * agt ) {
+			if ( _showEnemRadius ) {
+				glPushAttrib( GL_POLYGON_BIT );
+				glEnable( GL_BLEND );
+				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+				glPushMatrix();
+        glTranslatef( agt->_pos.x(), agt->_pos.y(), H );
+				float r = agt->_enemDist;
+				SceneGraph::Circle::drawCircle( r, 1.f, 0.75f, 0.85f, 0.05f );
+				SceneGraph::Circle::drawCircle( r, 1.f, 0.75f, 0.85f, 1.f, GL_LINE );
+
+				glPopMatrix();
+				glPopAttrib();
+			}
+		}
+
+		void BaseAgentContext::drawTurnCircles( const BaseAgent * agt ) {
+			if ( _showTurnCircles ) {
+				glPushAttrib( GL_POLYGON_BIT );
+				glEnable( GL_BLEND );
+				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+				glPushMatrix();
+				float r = agt->getTurnRadius();
+
+				float red = 1.f;
+				if (agt->targetInTurnCircle(Vector2(-1, -7))) {
+					// std::cout << "YES!" << std::endl;
+					red = 0.5f;
+				}
+				// float dx = 0.0;
+				// float dy = 0.0;
+				// agt->getTurnCircleDelta(dx, dy);
+				Vector2 dv = agt->getTurnCircleDelta();
+        glTranslatef( agt->_pos.x() + dv.x(), agt->_pos.y() + dv.y(), H );
+				// SceneGraph::Circle::drawCircle( r, 1.f, 0.75f, 0.85f, 0.05f );
+				SceneGraph::Circle::drawCircle( r, red, 0.75f, 0.85f, 1.f, GL_LINE );
+
+        glTranslatef( - dv.x() * 2, - dv.y() * 2, H );
+				// SceneGraph::Circle::drawCircle( r, 1.f, 0.75f, 0.85f, 0.05f );
+				SceneGraph::Circle::drawCircle( r, red, 0.75f, 0.85f, 1.f, GL_LINE );
+
+				glPopMatrix();
+				glPopAttrib();
+			}
+		}
 		////////////////////////////////////////////////////////////////////////////
 
 		void BaseAgentContext::drawNeighbors( const BaseAgent * agt ) {

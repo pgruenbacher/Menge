@@ -37,7 +37,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 */
 
 #include "MengeCore/Agents/BaseAgent.h"
-
+#include "MengeCore/Math/Geometry2D.h"
 #include "MengeCore/Agents/Obstacle.h"
 #include <algorithm>
 
@@ -218,6 +218,37 @@ namespace Menge {
 
 		float BaseAgent::getMeleeRange() const {
 			return 1.0;
+		}
+
+		float BaseAgent::getTurnRadius() const {
+    	const float prefVel = abs(_vel);
+	    // const float minTurnVel = 0.5;
+	    float rotationSpeedInRadians = _maxAngVel;
+	    float radius = prefVel / rotationSpeedInRadians / 0.1;
+	    // return 3.0;
+	    return radius;
+		}
+
+		Math::Vector2 BaseAgent::getTurnCircleDelta() const {
+	    float radius = getTurnRadius();
+	    float unitAngle = atan(_vel.y() / _vel.x());
+	    float dX = cos(unitAngle + Math::PI / 2) * radius;
+	    float dY = sin(unitAngle + Math::PI / 2) * radius;
+	    // override dx and dy;
+	    // dx = (circlesCenterX);
+	    // dy = (circlesCenterY);
+	    return Math::Vector2(dX, dY);
+		}
+
+		bool BaseAgent::targetInTurnCircle(const Math::Vector2& target) const {
+			Vector2 dV;
+			// add 2.0 margin
+			float radius = getTurnRadius();
+			dV = target - _pos - getTurnCircleDelta();
+			if (absSq(dV) < (radius * radius)) return true;
+			dV = target - _pos + getTurnCircleDelta();
+			if (absSq(dV) < (radius * radius)) return true;
+			return false;
 		}
 
 		void BaseAgent::computeNewVelocity() {

@@ -144,13 +144,16 @@ namespace MengeVis {
 			 *	@brief		Function for drawing neighbor radius
 			 */
 			void drawNbrRadius( const  Menge::Agents::BaseAgent * agt );
-
+			void drawEnemRadius( const Menge::Agents::BaseAgent* agt);
+			void drawTurnCircles ( const Menge::Agents::BaseAgent * agt);
 			/*!
 			 *	@brief		Determines if the neighbors are indicated in the view
 			 */
 			bool	_showNbr;
 			bool	_showEnem;
 			bool	_showFriend;
+			bool _showEnemRadius;
+			bool _showTurnCircles;
 
 			/*!
 			 *	@brief		Function for drawing neighbor distances

@@ -37,6 +37,9 @@ namespace Menge {
 	}
 
 	namespace Math {
+		const double PI = atan(1)*4;
+		// constexpr float PI() { return std::atan(1)*4; }
+		// constexpr float PI() { return std::atan(1)*4; }
 
 		/*!
 		 *	@brief		Abstract 2d Geometry class for FSM queries.
@@ -65,7 +68,7 @@ namespace Menge {
 			 */
 			virtual bool containsPoint( const Vector2 & pt ) const = 0;
 
-			/*! 
+			/*!
 			 *	@brief		Determine if the point is inside the shape, not located at the
 			 *				instance value, but at the given position.  Definition of "at the
 			 *				given position" is defined by each shape.
@@ -85,14 +88,14 @@ namespace Menge {
 			virtual float squaredDistance(const Vector2 & pt) const = 0;
 
 			/*!
-			 *	@brief		Set the preferred velocity directions w.r.t. the goal: left, right, and 
+			 *	@brief		Set the preferred velocity directions w.r.t. the goal: left, right, and
 			 *				preferred.
 			 *
-			 *	The Agents::PrefVelocity class represents a span of velocities that will reach the 
-			 *	goal. For a goal that covers a 2D region, the directions in the 
-			 *	Agents::PrefVelocity should span the arc subtended by the goal from the query 
-			 *	point's perspective.  Furthermore, it should have sufficient clearance for a disk 
-			 *	with the given radius to pass through. This should be overridden by subclasses to 
+			 *	The Agents::PrefVelocity class represents a span of velocities that will reach the
+			 *	goal. For a goal that covers a 2D region, the directions in the
+			 *	Agents::PrefVelocity should span the arc subtended by the goal from the query
+			 *	point's perspective.  Furthermore, it should have sufficient clearance for a disk
+			 *	with the given radius to pass through. This should be overridden by subclasses to
 			 *	account for their unique geometry.
 			 *
 			 *	The arc subtends an angle formed by a cone.  The apex of the cone is at the point
@@ -111,7 +114,7 @@ namespace Menge {
 			 *	@param		r				The radius of clearance.
 			 *	@param		directions		An instance of Agents::PrefVelocity.
 			 */
-			virtual void setDirections(const Vector2 & q, float r, 
+			virtual void setDirections(const Vector2 & q, float r,
 				Agents::PrefVelocity & directions) const = 0;
 
 			// TODO: Delete this function= transition uses it determine distance to goal
@@ -121,10 +124,10 @@ namespace Menge {
 			 *				query point.
 			 *
 			 *	A "valid" target point is the nearest point to the query point that is sufficiently
-			 *	inside the goal region that a disk with the given radius is completely inside the 
+			 *	inside the goal region that a disk with the given radius is completely inside the
 			 *	goal. It need not be literally the *best* value, an approximation is sufficient.
 			 *
-			 *	In the case where the goal region is too small to hold the agent, then the 
+			 *	In the case where the goal region is too small to hold the agent, then the
 			 *	"deepest" point in the region is a good approximation.
 			 *
 			 *	@param		q		The query point.
@@ -190,7 +193,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports the point position.
-			 *				
+			 *
 			 *	@returns	The point position.
 			 */
 			const Vector2 & getPosition() const { return _position; }
@@ -287,7 +290,7 @@ namespace Menge {
 			 */
 			CircleShape(const Vector2 & center, float radius) :
 				Geometry2D(), _center(center), _radius(radius) {}
-			
+
 			/*!
 			 *	@brief		Copy constructor
 			 *
@@ -314,7 +317,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports the circle's radius.
-			 *				
+			 *
 			 *	@returns	The circle's radius.
 			 */
 			float getRadius() const { return _radius; }
@@ -328,7 +331,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports the circle's center.
-			 *				
+			 *
 			 *	@returns	The circle center.
 			 */
 			const Vector2 & getCenter() const { return _center; }
@@ -360,7 +363,7 @@ namespace Menge {
 			 */
 			virtual bool containsPoint( const Vector2 & pt ) const;
 
-			/*! 
+			/*!
 			 *	@brief		Determine if the point is inside a circle, centered on the
 			 *				given position.
 			 *
@@ -453,7 +456,7 @@ namespace Menge {
 			 *							the x- and y-axes, respectively.
 			 */
 			AABBShape( const Vector2 & minPt, const Vector2 & maxPt );
-			
+
 			/*!
 			 *	@brief		Copy constructor
 			 *
@@ -487,7 +490,7 @@ namespace Menge {
 			 */
 			virtual bool containsPoint( const Vector2 & pt ) const;
 
-			/*! 
+			/*!
 			 *	@brief		Determine if the point is inside a AABB, centered on the
 			 *				given position.
 			 *
@@ -499,21 +502,21 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports the box's size (width by height)
-			 *				
+			 *
 			 *	@returns	The box size.
 			 */
 			const Vector2 getSize() const { return _maxPt - _minPt; }
 
 			/*!
 			 *	@brief		Reports the box's maximal point (in x & y directions).
-			 *				
+			 *
 			 *	@returns	The box's maximal extents.
 			 */
 			const Vector2 & getMaxPoint() const { return _maxPt; }
 
 			/*!
 			 *	@brief		Reports the box's minimal point (in x & y directions).
-			 *				
+			 *
 			 *	@returns	The box's minimal extents.
 			 */
 			const Vector2 & getMinPoint() const { return _minPt; }
@@ -626,7 +629,7 @@ namespace Menge {
 			 *	@param		angle		The angle of rotation (in radians).
 			 */
 			OBBShape( const Vector2 & pivot, const Vector2 & size, float angle );
-			
+
 			/*!
 			 *	@brief		Copy constructor
 			 *
@@ -649,7 +652,7 @@ namespace Menge {
 			 *	@returns	A new OBBShape offset from this one by the vector pt.
 			 */
 			OBBShape operator+( const Vector2 & pt );
-			
+
 			/*!
 			 *	@brief		Determine if the point is inside the shape based on
 			 *				the instance properties.
@@ -659,7 +662,7 @@ namespace Menge {
 			 */
 			virtual bool containsPoint( const Vector2 & pt ) const;
 
-			/*! 
+			/*!
 			 *	@brief		Determine if the point is inside a OBB, centered on the
 			 *				given position.
 			 *
@@ -749,7 +752,7 @@ namespace Menge {
 
       /*!
        @brief   Converts a position vector from the geometry origin to P, expressed in the geometry
-                frame (`r_GP`) to a position vector from the world origin to P, expressed in the 
+                frame (`r_GP`) to a position vector from the world origin to P, expressed in the
                 world frame (`r_WP`).
 
       @param  r_GP    The position vector from the geometry origin to a point P, expressed in the
@@ -766,7 +769,7 @@ namespace Menge {
 
       @param  r_WP    The position vector from the world origin to a point P, expressed in the world
                       frame.
-      @retval r_GP_G  The position vector from geometry origin to the point P, expressed in the 
+      @retval r_GP_G  The position vector from geometry origin to the point P, expressed in the
                       geometry frame.
       */
       Vector2 convertToGeometry(const Vector2& r_WP) const;
@@ -867,14 +870,14 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Returns the size of the obb (w, h)
-			 *				
+			 *
 			 *	@returns	The box's size.
 			 */
 			const Vector2 & getSize() const { return _size; }
 
 			/*!
 			 *	@brief		Return the pivot point of the obb.
-			 *				
+			 *
 			 *	@returns	The box's pivot.
 			 */
 			const Vector2 & getPivot() const { return _pivot; }
@@ -885,7 +888,7 @@ namespace Menge {
 			 *				point).
 			 */
 			Vector2 _pivot;
-			
+
 			/*!
 			 *	@brief		The width and height of the box (along its local coordinate system).
 			 */
@@ -901,7 +904,7 @@ namespace Menge {
 			 *				(used for accelerating queries).
 			 */
 			float _cosTheta;
-			
+
 			/*!
 			 *	@brief		The sine of the box's angle of rotation
 			 *				(used for accelerating queries).
@@ -913,9 +916,9 @@ namespace Menge {
 		 *	@brief		Reads the attributes of an XML element to determine if it contains the
 		 *				definition of a known Geoemtry2D instance -- instantiating the shape if
 		 *				possible.
-		 * 
+		 *
 		 *	@param [in,out]	node  	The node containing xml attributes.
-		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape 
+		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape
 		 *							attribute names.
 		 *
 		 *	@return	Null if it fails, else the new geometry.  The caller is responsible for
@@ -928,7 +931,7 @@ namespace Menge {
 		 *	@brief	Creates a point from the attributes of an XML element.
 		 *
 		 *	@param [in,out]	node  	The node containing xml attributes.
-		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape 
+		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape
 		 *							attribute names.
 		 *
 		 *	@return	Null if it fails, else the new point.  The caller is responsible for destroying
@@ -940,7 +943,7 @@ namespace Menge {
 		 *	@brief	Creates a circle from the attributes of an XML element.
 		 *
 		 *	@param [in,out]	node  	The node containing xml attributes.
-		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape 
+		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape
 		 *							attribute names.
 		 *
 		 *	@return	Null if it fails, else the new circle.  The caller is responsible for
@@ -952,7 +955,7 @@ namespace Menge {
 		 *	@brief	Creates an axis-aligned bounding box from the attributes of an XML element.
 		 *
 		 *	@param [in,out]	node  	The node containing xml attributes.
-		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape 
+		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape
 		 *							attribute names.
 		 *
 		 *  @return	Null if it fails, else the new AABB.  The caller is responsible for destroying
@@ -964,7 +967,7 @@ namespace Menge {
 		 *  @brief	Creates an oriented bounding box (OBB) from the attributes of an XML element.
 		 *
 		 *	@param [in,out]	node  	The node containing xml attributes.
-		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape 
+		 *	@param 		  	prefix	(Optional) A prefix that can be pre-pended to the shape
 		 *							attribute names.
 		 *
 		 *  @return	Null if it fails, else the new OBB.  The caller is responsible for destroying

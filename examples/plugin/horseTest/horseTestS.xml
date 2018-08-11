@@ -13,7 +13,7 @@
 
     <AgentProfile name="group1" >
 		<OpenSteer tau="3" tauObst="6" />
-        <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="3.04" max_accel="0.1" />
+        <Common max_angle_vel="60" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="3.04" max_accel="1" />
         <PedVO factor="1.57" buffer="0.9" tau="3" tauObst="0.1" turningBias="1.0" />
         <GCF stand_depth="0.18" move_scale="0.53" slow_width="0.25" sway_change="0.05" />
         <Helbing mass="80" />
@@ -29,7 +29,7 @@
 		<Generator type="rect_grid"
 				anchor_x="-10" anchor_y="5.0"
 				offset_x="-.5" offset_y="-0.5"
-				count_x="3" count_y="1"
+				count_x="1" count_y="1"
 				/>
     </AgentGroup>
 

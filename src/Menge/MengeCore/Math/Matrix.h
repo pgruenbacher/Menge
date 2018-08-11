@@ -33,20 +33,21 @@
 namespace Menge {
 
 	namespace Math {
+
 		/*!
 		 *	@brief		Basic 4x4 matrix of floats.
 		 *
-		 *	Functions predominantly come in the form result.op( operand1, operand2 ) to limit 
+		 *	Functions predominantly come in the form result.op( operand1, operand2 ) to limit
 		 *	implicit data copying.  The operations is performed on the parameter, and the
 		 *	result is stored in the instance calling the operation.
-		 *	
+		 *
 		 *	The data is stored column-major data -- i.e. the data is organized:
 		 *		[ [x-axis   0]
 		 *		  [y-axis   0]
 		 *		  [z-axis   0]
 		 *		  [tx ty tz 1] ]
 		 *	It's assumed that multiplication with vectors is LEFT-multiplication by row vectors
-		 *	i.e. q = p * M  (where q & p are vectors and M is matrix).	
+		 *	i.e. q = p * M  (where q & p are vectors and M is matrix).
 		 */
 		class MENGE_API Matrix4x4 {
 		public:
@@ -55,7 +56,7 @@ namespace Menge {
 			 *
 			 *	This constructor initializes the matrix to be the identity.
 			 */
-			Matrix4x4();				
+			Matrix4x4();
 
 			/*!
 			 *	@brief		Non-initializing constructor.
@@ -82,7 +83,7 @@ namespace Menge {
 			 *	@returns	The value of the matrix at (row, col).
 			 */
 			inline float operator()( int row, int col ) const { return _matData[row][col]; }
-			
+
 			/*!
 			 *	@brief		Reference index operation.
 			 *
@@ -104,7 +105,7 @@ namespace Menge {
 			 *	@param		v3		The value for the fourth column.
 			 */
 			void setRow( int row, float v0, float v1, float v2, float v3 = 1.f );
-			
+
 			/*!
 			 *	@brief		Set the values of an entire row of the matrix.
 			 *
@@ -113,14 +114,14 @@ namespace Menge {
 			 *	@param		v3		The value for the fourth column.
 			 */
 			void setRow( int row, const Vector3 & vec, float v3 = 1.f );
-			
+
 			/*!
 			 *	@brief		Multiplies the given matrix by an implicit scale matrix
 			 *				and stores it here.
 			 *
 			 *	The scale vector parameter is <sx, sy, sz>, which implicitly defines
 			 *	a scale transformation matrix S (with sx, sy, sz, 1 on the diagonal and zeros
-			 *	everywhere else). 
+			 *	everywhere else).
 			 *	We then perform the matrix *left* multiplication: S * m and assign it to this
 			 *	matrix.
 			 *
@@ -136,7 +137,7 @@ namespace Menge {
 			 *
 			 *	The scale vector parameter is <sx, sy, sz>, which implicitly defines
 			 *	a scale transformation matrix S (with sx, sy, sz, 1 on the diagonal and zeros
-			 *	everywhere else). 
+			 *	everywhere else).
 			 *	We then perform the matrix *right* multiplication: m * S and assign it to this
 			 *	matrix.
 			 *
@@ -175,14 +176,14 @@ namespace Menge {
 			 *	both the last row and the last column.  This method exploits that knowledge to
 			 *	perform the matrix multiplication efficiently.
 			 *	The result of the multiplication is written in place.
-			 *	Essentially, this is an optimized version of M = M * T.  
+			 *	Essentially, this is an optimized version of M = M * T.
 			 *	Where T is *almost* the identity matrix, but with <tx, ty, tz, 0> on the bottom
 			 *	row.
 			 *
 			 *	@param		trans		The translation vector <tx, ty, tz>
 			 */
 			void translateRotation( const Vector3 & trans );
-			
+
 			/*!
 			 *	@brief		Left-multiply this matrix by a translation matrix.
 			 *
@@ -190,7 +191,7 @@ namespace Menge {
 			 *	both the last row and the last column.  This method exploits that knowledge to
 			 *	perform the matrix multiplication efficiently.
 			 *	The result of the multiplication is written in place.
-			 *	Essentially, this is an optimized version of M = T * M.  
+			 *	Essentially, this is an optimized version of M = T * M.
 			 *	Where T is *almost* the identity matrix, but with <tx, ty, tz, 0> on the bottom
 			 *	row.
 			 *
@@ -207,7 +208,7 @@ namespace Menge {
 			 *	@param		v3		The value for M[3, 3].
 			 */
 			void setDiagonal( float v0, float v1, float v2, float v3 = 1.f );
-			
+
 			/*!
 			 *	@brief		Sets the diagonal to the given values.
 			 *

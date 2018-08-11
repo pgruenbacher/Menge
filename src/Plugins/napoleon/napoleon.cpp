@@ -8,6 +8,7 @@
 #include "MengeVis/PluginEngine/VisPluginEngine.h"
 #include "AttackAction.h"
 #include "DeadCondition.h"
+#include "TurnModifier.h"
 // #include "VisAttackElement.h"
 
 using MengeVis::PluginEngine::VisPluginEngine;
@@ -46,6 +47,7 @@ extern "C" {
     engine->registerConditionFactory( new Napoleon::CanPerformCondFactory());
     engine->registerActionFactory( new Napoleon::AttackActionFactory());
     engine->registerConditionFactory ( new Napoleon::DeadCondFactory() );
+    engine->registerVelModFactory ( new Napoleon::TurnModifierFactory() );
   }
 
   // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {
