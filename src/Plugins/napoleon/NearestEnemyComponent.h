@@ -27,6 +27,7 @@
 #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
+#include "MengeCore/Agents/BaseAgent.h"
 #include <vector>
 #include <map>
 
@@ -42,9 +43,10 @@ namespace Napoleon {
   using Menge::Logger;
   using Menge::Math::Vector2;
   using Menge::logger;
-
+  using Menge::Agents::NearAgent;
 
 class MENGE_API NearestEnemComponent : public VelComponent {
+
  public:
   /*!
    *  @brief    Default constructor.
@@ -75,6 +77,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   virtual void onExit(BaseAgent* agent);
   void registerAgent(const BaseAgent* agent);
   void unregisterAgent(const BaseAgent* agent);
+  const NearAgent getTargetEnem(const BaseAgent* agent) const;
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;

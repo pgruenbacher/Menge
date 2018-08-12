@@ -124,27 +124,36 @@ namespace Napoleon {
       pVel.setTarget( target );
   }
 
+  const NearAgent NearestEnemComponent::getTargetEnem(const BaseAgent* agent) const {
+    float distSq = 1000.f * 1000.f;
+    NearAgent targetEnem(distSq, 0x0);
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      if (enem.distanceSquared < distSq) {
+        distSq = enem.distanceSquared;
+        targetEnem = enem;
+      }
+    }
+    return targetEnem;
+  }
+
   /////////////////////////////////////////////////////////////////////
 
   void NearestEnemComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,
                       PrefVelocity & pVel ) const {
     bool modify = agent->_nearEnems.size() > 0;
-    Vector2 target(0.0, 0.0);
+    Vector2 target(0.f, 0.f);
     if ( !modify ) {
       // pVel.setSpeed(agent->_prefSpeed);
       // Vector2 returnToOrig = (agent->_pos) * -1;
       // returnToOrig.normalize();
       // pVel.setSingle(returnToOrig);
-      std::cout << "no modify! fix! " << agent->_id << "GOAL" << goal << " " << std::endl;
+      // std::cout << "no modify! fix! " << agent->_id << "GOAL" << goal << " " << std::endl;
       return setIdleVelocity(agent, goal, pVel, target);
     }
-    float distSq = 1000.f * 1000.f;
-    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-      if (enem.distanceSquared < distSq) {
-        distSq = enem.distanceSquared;
-        target = enem.agent->_pos;
-      }
-    }
+    const NearAgent targetEnem = getTargetEnem(agent);
+    if (targetEnem.agent == 0x0) return;
+    target = targetEnem.agent->_pos;
+    float distSq = targetEnem.distanceSquared;
 
     // target + displacement - agent position
     Vector2 disp = target - agent->_pos;

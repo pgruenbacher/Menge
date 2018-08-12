@@ -93,23 +93,25 @@ namespace Napoleon {
     }
     newPref.normalize();
 
-    if (agent->targetInTurnCircle(pVel.getTarget() + (newPref * 2.f))) {
+    if (agent->targetInTurnCircle(pVel.getTarget()) ||
+        agent->targetInTurnCircle(pVel.getTarget() + agent->_vel * 4)
+      ) {
       // go current vel
-      if (ct < 0.5) {
+      // if (ct < 0.0) {
         pVel.setSingle(newPref);
         pVel.setSpeed(abs(agent->_vel));
         return;
-      } else {
-        // this means that the target is relatively forward of us, so we should slow down to turn to approach..
-        // unless we're charging...
-        std::cout << "GO FOR" << std::endl;
-        pVel.setSpeed(std::max(abs(agent->_prefSpeed) - 0.5, double(0)));
-      }
+      // } else {
+      //   // this means that the target is relatively forward of us, so we should slow down to turn to approach..
+      //   // unless we're charging...
+      //   // std::cout << "GO FOR" << std::endl;
+      //   // pVel.setSpeed(std::max(abs(agent->_vel) - 0.1, double(0.1)));
+      // }
     }
 
     if (ct > maxCt) {
       // within turn limit.
-      std::cout << "WITHIN TURN LIMIT" << std::endl;
+      // std::cout << "WITHIN TURN LIMIT" << std::endl;
       return;
     } else {
       // changing direction at a rate greater than _maxAngVel

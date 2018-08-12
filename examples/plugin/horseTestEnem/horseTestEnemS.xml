@@ -13,24 +13,37 @@
 
     <AgentProfile name="group1" >
 		<OpenSteer tau="3" tauObst="6" />
-        <Common max_angle_vel="4" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="3.04" max_accel="0.5" />
-        <PedVO factor="1.57" buffer="0.9" tau="3" tauObst="0.1" turningBias="1.0" />
-        <GCF stand_depth="0.18" move_scale="0.53" slow_width="0.25" sway_change="0.05" />
-        <Helbing mass="80" />
-        <Johansson fov_weight="0.16" />
-        <Karamouzas personal_space="0.69" anticipation="8" />
+        <Common max_angle_vel="10" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="3.04" max_accel="0.5" />
         <ORCA tau="3.0" tauObst="0.15" />
-        <Zanlungo mass="80" orient_weight="0.75" />
 	</AgentProfile>
+
+
+    <AgentProfile name="group2" >
+        <Common max_angle_vel="15"
+            max_enem="10"
+            enem_dist="15"
+            max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="2" pref_speed="0.5" max_speed="1" max_accel="5" priority="0.0"/>
+        <ORCA tau="3.0" tauObst="0.15" />
+    </AgentProfile>
 
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
-		<StateSelector type="const" name="Walk1" />
+		<StateSelector type="const" name="Trot" />
 		<Generator type="rect_grid"
-				anchor_x="-10" anchor_y="5.0"
+				anchor_x="-10" anchor_y="10"
 				offset_x="-.5" offset_y="-0.5"
 				count_x="3" count_y="3"
 				/>
+    </AgentGroup>
+
+    <AgentGroup>
+        <ProfileSelector type="const" name="group2" />
+        <StateSelector type="const" name="Idle" />
+        <Generator type="rect_grid"
+                anchor_x="0" anchor_y="0"
+                offset_x="-.5" offset_y="-0.5"
+                count_x="10" count_y="10"
+                />
     </AgentGroup>
 
 </Experiment>

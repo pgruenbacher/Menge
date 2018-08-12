@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<BFSM>
+	<GoalSet id="0">
+		<Goal type="point" id="0" x="-1" y="-1" />
+		<Goal type="point" id="1" x="-1" y="-7" />
+	</GoalSet>
+
+
+	<!-- horsement -->
+	<State name="HorseCharge" final="0" >
+		<VelModifier type="turn"/>
+		<!-- <GoalSelector type="explicit" goal_set="0" goal="0" /> -->
+		<!-- <VelComponent type="goal" /> -->
+    <VelComponent type="enemy_near_comp" method="advancing"/>
+	</State>
+	<State name="Trot" final="0">
+		<Action type="set_property" property="pref_speed" dist="c" value="0.5" exit_reset="1"/>
+		<VelModifier type="turn"/>
+		<GoalSelector type="explicit" goal_set="0" goal="1"/>
+		<VelComponent type="goal" />
+	</State>
+	<!-- Infantry -->
+	<State name="Idle" final="0">
+		<GoalSelector type="identity"/>
+		<VelComponent type="goal" />
+	</State>
+
+	<Transition from="HorseCharge" to="Trot" >
+		<Condition type="enemy_near" is_close="0" dist="10" />
+	</Transition>
+	<Transition from="Trot" to="HorseCharge" >
+		<Condition type="enemy_near" dist="10" />
+	</Transition>
+
+
+</BFSM>

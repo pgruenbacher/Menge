@@ -39,6 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Math/Geometry2D.h"
 #include "MengeCore/Agents/Obstacle.h"
+#include "MengeCore/Core.h"
 #include <algorithm>
 
 namespace Menge {
@@ -222,10 +223,8 @@ namespace Menge {
 
 		float BaseAgent::getTurnRadius() const {
     	const float prefVel = abs(_vel);
-	    // const float minTurnVel = 0.5;
 	    float rotationSpeedInRadians = _maxAngVel;
-	    float radius = prefVel / rotationSpeedInRadians / 0.1;
-	    // return 3.0;
+	    float radius = prefVel / rotationSpeedInRadians;
 	    return radius;
 		}
 
