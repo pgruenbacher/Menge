@@ -70,6 +70,11 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   virtual ~NearestEnemComponent() {}
   // VelComponent* parseVelComponent(TiXmlElement* node,
   //                                 const std::string& behaveFldr);
+  void setAdvancingVelocity(const BaseAgent* enem, const BaseAgent* agent, PrefVelocity& pVel, float distSq) const;
+  void setWithdrawingVelocity(const BaseAgent* enem, const BaseAgent* agent,
+                              PrefVelocity& pVel, float distSq) const;
+  void setIdleVelocity(const BaseAgent* agent, const Goal* goal,
+                               PrefVelocity& pVel, Vector2& target) const;
 
  public:
 
@@ -81,13 +86,13 @@ class MENGE_API NearestEnemComponent : public VelComponent {
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;
-  void setIdleVelocity(const BaseAgent* agent, const Goal* goal,
-                               PrefVelocity& pVel, Vector2& target) const;
 
   // virtual std::string getStringId() const = 0;
   virtual std::string getStringId() const { return NAME; }
 
   ActionType _actionType;
+  // whether unit should slow to arrive when approaching enemy. (cavalry)
+  bool _slowToArrive;
   /*! The unique identifier used to register this type with run-time components.
    */
   static const std::string NAME;
@@ -105,7 +110,8 @@ class MENGE_API NearestEnemComponentFactory : public VelCompFactory {
 
  protected:
   VelComponent* instance() const { return new NearestEnemComponent(); }
-  size_t _method;
+  size_t _methodID;
+  size_t _slowToArriveID;
   virtual bool setFromXML(VelComponent* vc, TiXmlElement* node,
                           const std::string& behaveFldr) const;
 

@@ -12,7 +12,7 @@
 		<VelModifier type="turn"/>
 		<!-- <GoalSelector type="explicit" goal_set="0" goal="0" /> -->
 		<!-- <VelComponent type="goal" /> -->
-    <VelComponent type="enemy_near_comp" method="advancing"/>
+    <VelComponent type="enemy_near_comp" slow_to_arrive="0" method="advancing"/>
 	</State>
 	<State name="Trot" final="0">
 		<Action type="set_property" property="pref_speed" dist="c" value="0.5" exit_reset="1"/>

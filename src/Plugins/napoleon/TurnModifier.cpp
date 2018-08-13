@@ -99,7 +99,7 @@ namespace Napoleon {
       // go current vel
       // if (ct < 0.0) {
         pVel.setSingle(newPref);
-        pVel.setSpeed(abs(agent->_vel));
+        // pVel.setSpeed(abs(agent->_vel));
         return;
       // } else {
       //   // this means that the target is relatively forward of us, so we should slow down to turn to approach..

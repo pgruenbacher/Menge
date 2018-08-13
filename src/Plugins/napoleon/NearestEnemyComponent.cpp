@@ -124,6 +124,60 @@ namespace Napoleon {
       pVel.setTarget( target );
   }
 
+  void NearestEnemComponent::setWithdrawingVelocity(const BaseAgent* enem,
+                                                  const BaseAgent* agent,
+                                                  PrefVelocity& pVel,
+                                                  float distSq) const {
+    Vector2 target = enem->_pos;
+    Vector2 disp = target - agent->_pos;
+    Vector2 dir(0.0, 0.0);
+    if ( distSq > 1e-8 ) {
+      // Distant enough that I can normalize the direction.
+      dir.set( disp / sqrtf( distSq ) );
+    } else {
+      dir.set( 0.f, 0.f );
+    }
+    pVel.setSingle(-dir);
+    pVel.setSpeed(0.1);
+    pVel.setTarget(target);
+    return;
+
+  }
+
+  void NearestEnemComponent::setAdvancingVelocity(const BaseAgent* enem,
+                                                  const BaseAgent* agent,
+                                                  PrefVelocity& pVel,
+                                                  float distSq) const {
+    Vector2 target = enem->_pos;
+    Vector2 disp = target - agent->_pos;
+    Vector2 dir(0.0, 0.0);
+    if ( distSq > 1e-8 ) {
+      // Distant enough that I can normalize the direction.
+      dir.set( disp / sqrtf( distSq ) );
+    } else {
+      dir.set( 0.f, 0.f );
+    }
+    pVel.setTarget(target);
+    float speed = agent->_prefSpeed;
+    if (distSq <= (agent->getMeleeRange() - 0.2) && _slowToArrive) {
+      // I've basically arrived -- speed should be zero.
+      speed = 0.f;
+    } else {
+      const float speedSq = speed * speed;
+      const float TS_SQD = Menge::SIM_TIME_STEP * Menge::SIM_TIME_STEP;
+      if (distSq / speedSq < TS_SQD && _slowToArrive) {
+        // The distance is less than I would travel in a single time step.
+        speed = sqrtf(distSq) / Menge::SIM_TIME_STEP;
+      } else {
+        // std:: cout << "?? " << distSq / speedSq << " " << TS_SQD << " " <<
+        // SIM_TIME_STEP << std::endl; speed = agent->_prefSpeed;
+      }
+    }
+    // std::cout << "SPEED " << speed << std::endl;
+    pVel.setSingle(dir);
+    pVel.setSpeed(speed);
+  }
+
   const NearAgent NearestEnemComponent::getTargetEnem(const BaseAgent* agent) const {
     float distSq = 1000.f * 1000.f;
     NearAgent targetEnem(distSq, 0x0);
@@ -152,50 +206,15 @@ namespace Napoleon {
     }
     const NearAgent targetEnem = getTargetEnem(agent);
     if (targetEnem.agent == 0x0) return;
-    target = targetEnem.agent->_pos;
+    // target = targetEnem.agent->_pos;
     float distSq = targetEnem.distanceSquared;
 
-    // target + displacement - agent position
-    Vector2 disp = target - agent->_pos;
-    Vector2 dir(0.0, 0.0);
-    if ( distSq > 1e-8 ) {
-      // Distant enough that I can normalize the direction.
-      dir.set( disp / sqrtf( distSq ) );
-    } else {
-      dir.set( 0.f, 0.f );
-    }
-    pVel.setSingle(dir);
-    // float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
-    // float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
-    // std::cout << "ENEM SIZE " << sumEnem << " " << sumFriend << std::endl;
     if (_actionType == WITHDRAWING) {
-    // if (agent->_nearEnems.size() > agent->_nearFriends.size() + 1) {
-      pVel.setSingle(-dir);
-      pVel.setSpeed(0.1);
-      pVel.setTarget(target);
-      return;
-
+      return setWithdrawingVelocity(targetEnem.agent, agent, pVel, distSq);
     } else if (_actionType == IDLE) {
       return setIdleVelocity(agent, goal, pVel, target);
     } else {
-      pVel.setTarget(target);
-      float speed = agent->_prefSpeed;
-      if ( distSq <= (agent->getMeleeRange() - 0.2) ) {
-        // I've basically arrived -- speed should be zero.
-        speed = 0.f;
-      } else {
-        const float speedSq = speed * speed;
-        const float TS_SQD = Menge::SIM_TIME_STEP * Menge::SIM_TIME_STEP;
-        if ( distSq / speedSq < TS_SQD ) {
-          // The distance is less than I would travel in a single time step.
-          speed = sqrtf( distSq ) / Menge::SIM_TIME_STEP;
-          // std::cout << "DO REDUCE" << std::endl;
-        } else {
-          // std:: cout << "?? " << distSq / speedSq << " " << TS_SQD << " " << SIM_TIME_STEP << std::endl;
-          // speed = agent->_prefSpeed;
-        }
-      }
-      pVel.setSpeed( speed );
+      return setAdvancingVelocity(targetEnem.agent, agent, pVel, distSq);
     }
   }
 
@@ -206,7 +225,8 @@ namespace Napoleon {
 
   /////////////////////////////////////////////////////////////////////
   NearestEnemComponentFactory::NearestEnemComponentFactory() : VelCompFactory() {
-    _method = _attrSet.addStringAttribute("method", true /* required */);
+    _methodID = _attrSet.addStringAttribute("method", true /* required */);
+    _slowToArriveID = _attrSet.addBoolAttribute("slow_to_arrive", false, false);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -219,13 +239,13 @@ namespace Napoleon {
       assert( nearestEnemComp != 0x0 &&
       "Trying to set property component properties on an incompatible object" );
 
-    if (_attrSet.getString(_method).empty()) {
+    if (_attrSet.getString(_methodID).empty()) {
       logger << Logger::ERR_MSG << "Require method for velocity component";
       logger.close();
       throw Menge::BFSM::VelCompFatalException( "Require method for velocity component." );
     }
 
-    std::string _typeString = _attrSet.getString(_method);
+    std::string _typeString = _attrSet.getString(_methodID);
     if (_typeString == "advancing") {
       nearestEnemComp->_actionType = NearestEnemComponent::ADVANCING;
     } else if (_typeString == "withdrawing") {
@@ -236,6 +256,7 @@ namespace Napoleon {
       logger << Logger::ERR_MSG << "Should be advancing or withdrawing got: '" << _typeString << "' instead...";
       return false;
     }
+    nearestEnemComp->_slowToArrive = _attrSet.getBool(_slowToArriveID);
     if ( ! VelCompFactory::setFromXML( nearestEnemComp, node, behaveFldr ) ) return false;
     return true;
   }
