@@ -108,6 +108,9 @@ namespace Menge {
 				// then just cancel adding this current task.
 				for ( size_t i = 0; i < _tasks.size(); ++i ) {
 					if ( task->isEquivalent( _tasks[i] ) ) {
+						// actually I don't want to destroy - paul
+						// i just want it to skip the pointer.
+						if (task == _tasks[i]) return;
 						task->destroy();
 						return;
 					}

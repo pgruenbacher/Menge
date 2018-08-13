@@ -118,6 +118,15 @@ namespace Menge {
 			dir.normalize();
 			// std::cout << "DIR " << dir << " " << "_orient " << _orient << std::endl;
 			float dotProduct = dir * _orient;
+
+			float dotVel = _vel * dir;
+			// std::cout << "DOT VEL " << dotVel << " " << (_vel) << std::endl;
+			// if charging and moving towards opponent...
+			if (abs(_vel) > 0.5 && dotVel > 0) {
+				std::cout << "HIT CHANCE class " << _class << std::endl;
+				hitChance += 50.0;
+			}
+
 			if (std::abs(dotProduct) < 0.5) {
 				// sideways
 				// std::cout << "SIDE " << dotProduct << " " << std::abs(dotProduct) << std::endl;

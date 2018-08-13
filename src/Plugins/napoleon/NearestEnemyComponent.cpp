@@ -236,7 +236,7 @@ namespace Napoleon {
       logger << Logger::ERR_MSG << "Should be advancing or withdrawing got: '" << _typeString << "' instead...";
       return false;
     }
-    if ( ! VelCompFactory::setFromXML( nearestEnemComp, node, behaveFldr ) ) return false;
+    // if ( ! VelCompFactory::setFromXML( nearestEnemComp, node, behaveFldr ) ) return false;
     return true;
   }
 } // namespace Formations

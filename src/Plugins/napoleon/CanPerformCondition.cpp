@@ -63,7 +63,7 @@ namespace Napoleon {
     ///////////////////////////////////////////////////////////////////////////
     void CanPerformCondition::transitionWillPerform(BaseAgent* agent) {
       // std::cout << "?? will " << std::endl;
-      _triggerTimes[agent->_id] = Menge::SIM_TIME + 5.f;
+      _triggerTimes[agent->_id] = Menge::SIM_TIME + _duration;
     }
 
     bool CanPerformCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
@@ -82,6 +82,7 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     CanPerformCondFactory::CanPerformCondFactory() : ConditionFactory() {
+      _durationID = _attrSet.addFloatAttribute("duration", false, 5.f);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,8 @@ namespace Napoleon {
           "object" );
 
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
+      float duration = _attrSet.getFloat(_durationID);
+      tCond->_duration = duration;
 
       return true;
     }
