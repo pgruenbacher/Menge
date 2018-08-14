@@ -32,7 +32,7 @@
 		<Generator type="rect_grid"
 				anchor_x="-10" anchor_y="10"
 				offset_x="-.5" offset_y="-0.5"
-				count_x="3" count_y="3"
+				count_x="5" count_y="5"
 				/>
     </AgentGroup>
 
@@ -42,7 +42,7 @@
         <Generator type="rect_grid"
                 anchor_x="0" anchor_y="0"
                 offset_x="-.5" offset_y="-0.5"
-                count_x="10" count_y="10"
+                count_x="6" count_y="6"
                 />
     </AgentGroup>
 

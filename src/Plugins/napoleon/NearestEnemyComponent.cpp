@@ -257,7 +257,6 @@ namespace Napoleon {
       return false;
     }
     nearestEnemComp->_slowToArrive = _attrSet.getBool(_slowToArriveID);
-    if ( ! VelCompFactory::setFromXML( nearestEnemComp, node, behaveFldr ) ) return false;
     return true;
   }
 } // namespace Formations

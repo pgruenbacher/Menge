@@ -49,6 +49,7 @@ namespace Napoleon {
       CanPerformCondition * copy();
       void transitionWillPerform(BaseAgent* agent) override;
       void onEnter( BaseAgent * agent ) override;
+      float _duration;
   };
 
   /*!
@@ -68,6 +69,8 @@ namespace Napoleon {
     }
 
   protected:
+    size_t _durationID;
+
     virtual Condition * instance() const { return new CanPerformCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
                  const std::string & behaveFldr ) const;

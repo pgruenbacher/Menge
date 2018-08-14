@@ -32,12 +32,10 @@
     </State>
 
     <State name="Dying" final="1">
-        <GoalSelector type="identity"/>
-        <VelComponent type="goal"/>
+        <VelComponent type="idle"/>
     </State>
     <State name="Dead" final="1">
-        <GoalSelector type="identity"/>
-        <VelComponent type="goal"/>
+        <VelComponent type="idle"/>
     </State>
 
 
