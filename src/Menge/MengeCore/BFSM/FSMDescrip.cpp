@@ -54,6 +54,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierDatabase.h"
 #include "MengeCore/Runtime/Logger.h"
 
+#include <regex>
+
 namespace Menge {
 
 	namespace BFSM {
@@ -237,6 +239,21 @@ namespace Menge {
 				tmpName = tmpName.substr( n + 1 );
 				n = tmpName.find_first_of( ',' );
 			}
+
+			// // paul test
+			// std::regex pattern(name);
+			// if (name.find("!") != std::string::npos) {
+			// 	for (StateDescrip* s : _states) {
+			// 		// std::string stateName = _states[i]->_name;
+			// 		std::string stateName = s->_name;
+			// 		if (std::regex_match(stateName, pattern)) {
+			// 			std::cout << "MATCH " << stateName << " name: " << name << std::endl;
+			// 		} else {
+			// 			std::cout << "NO MATCH " << stateName << " name: " << name << std::endl;
+			// 		}
+			// 	}
+
+			// }
 
 			_transitions[ tmpName ].push_back( trans );
 		}

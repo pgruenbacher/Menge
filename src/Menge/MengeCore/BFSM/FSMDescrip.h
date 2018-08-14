@@ -195,6 +195,11 @@ namespace Menge {
 			 */
 			std::string		_behaviorFldr;
 
+
+			// utility by paul to connect all states but the ones listed below...
+			// useful for
+			std::string _includeAllBut;
+
 		};
 	}	// namespace BFSM
 }	// namespace Menge
