@@ -73,8 +73,8 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   void setAdvancingVelocity(const BaseAgent* enem, const BaseAgent* agent, PrefVelocity& pVel, float distSq) const;
   void setWithdrawingVelocity(const BaseAgent* enem, const BaseAgent* agent,
                               PrefVelocity& pVel, float distSq) const;
-  void setIdleVelocity(const BaseAgent* agent, const Goal* goal,
-                               PrefVelocity& pVel, Vector2& target) const;
+  void setIdleVelocity(const BaseAgent* enem, const BaseAgent* agent, const Goal* goal,
+                               PrefVelocity& pVel) const;
 
  public:
 

@@ -96,10 +96,10 @@ namespace Napoleon {
   NearestEnemComponent::NearestEnemComponent() : VelComponent() {
   }
 
-  void NearestEnemComponent::setIdleVelocity(const BaseAgent * agent, const Goal * goal,
-                      PrefVelocity & pVel, Vector2& target ) const {
+  void NearestEnemComponent::setIdleVelocity(const BaseAgent* enem, const BaseAgent * agent, const Goal * goal,
+                      PrefVelocity & pVel ) const {
       using Menge::SIM_TIME_STEP;
-
+      Vector2 target = enem->_pos;
       goal->setDirections( agent->_pos, agent->_radius, pVel );
 
       // speed
@@ -202,7 +202,10 @@ namespace Napoleon {
       // returnToOrig.normalize();
       // pVel.setSingle(returnToOrig);
       // std::cout << "no modify! fix! " << agent->_id << "GOAL" << goal << " " << std::endl;
-      return setIdleVelocity(agent, goal, pVel, target);
+      // return setIdleVelocity(agent, goal, pVel);
+      goal->setDirections(agent->_pos, agent->_radius, pVel);
+      // goal.
+      return;
     }
     const NearAgent targetEnem = getTargetEnem(agent);
     if (targetEnem.agent == 0x0) return;
@@ -212,7 +215,7 @@ namespace Napoleon {
     if (_actionType == WITHDRAWING) {
       return setWithdrawingVelocity(targetEnem.agent, agent, pVel, distSq);
     } else if (_actionType == IDLE) {
-      return setIdleVelocity(agent, goal, pVel, target);
+      return setIdleVelocity(targetEnem.agent, agent, goal, pVel);
     } else {
       return setAdvancingVelocity(targetEnem.agent, agent, pVel, distSq);
     }
