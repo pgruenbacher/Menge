@@ -56,6 +56,7 @@ namespace Napoleon {
       NearestEnemData d = t->getCurrentTarget(agent);
       if (d.agent == 0x0) return false;
       Vector2 dir = d.agent->_pos - agent->_pos;
+      dir.normalize();
       if ((dir * agent->_orient) > 0.5) {
         return true;
       }

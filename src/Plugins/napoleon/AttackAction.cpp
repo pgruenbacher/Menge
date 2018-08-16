@@ -43,6 +43,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/BFSM/Actions/PropertyAction.h"
 #include "MengeCore/BFSM/GoalSet.h"
+#include "NearestEnemTask.h"
 
 #include <iostream>
 #include <limits>
@@ -73,17 +74,19 @@ namespace Napoleon {
         Menge::Math::Vector2 target(0.f, 0.f);
         size_t maxId = std::numeric_limits<size_t>::max();
         // size_t agentId = maxId;
-        const BaseAgent* finalEnem = 0;
-        for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-          if (enem.distanceSquared < distSq) {
-            distSq = enem.distanceSquared;
-            target = enem.agent->_pos;
-            // agentId = enem.agent->_id;
-            finalEnem = enem.agent;
-            // NearAgent.agent is const so we have
-            // to grab agent from the fsm.
-          }
-        }
+        NearestEnemData d = NearestEnemTask::getSingleton()->getCurrentTarget(agent);
+        BaseAgent* finalEnem = d.agent;
+        // const BaseAgent* finalEnem = 0;
+        // for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+        //   if (enem.distanceSquared < distSq) {
+        //     distSq = enem.distanceSquared;
+        //     target = enem.agent->_pos;
+        //     // agentId = enem.agent->_id;
+        //     finalEnem = enem.agent;
+        //     // NearAgent.agent is const so we have
+        //     // to grab agent from the fsm.
+        //   }
+        // }
 
         if (finalEnem == 0) return;
 

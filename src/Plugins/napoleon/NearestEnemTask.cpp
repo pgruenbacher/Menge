@@ -104,7 +104,7 @@ namespace Napoleon {
     NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
     NearestEnemDataMap::iterator it = _nearEnems.find(agt->_id);
     if (it == _nearEnems.end()) {
-      std::cout << "WARNING!!!!" << std::endl;
+      // std::cout << "WARNING!!!!" << std::endl;
     } else {
       d = it->second;
     }
@@ -126,8 +126,9 @@ namespace Napoleon {
       d.timeout = Menge::SIM_TIME + delay;
       _nearEnems.insert(NearestEnemDataMap::value_type(agt->_id, d));
       // return d;
-    } else if (it->second.timeout > Menge::SIM_TIME ||
+    } else if (it->second.timeout < Menge::SIM_TIME ||
                it->second.agent->isDead()) {
+      // std::cout << "DELAY" << it->second.timeout << " " << Menge::SIM_TIME << std::endl;
       d = _getNearestTarget(agt);
       d.timeout = Menge::SIM_TIME + delay;
       it->second = d;
