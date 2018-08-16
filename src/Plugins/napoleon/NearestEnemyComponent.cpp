@@ -44,6 +44,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/PrefVelocity.h"
 #include "MengeCore/BFSM/Goals/Goal.h"
 #include "MengeCore/Runtime/os.h"
+#include "NearestEnemTask.h"
 
 const float sumNearAgentWeights(const std::vector<Menge::Agents::NearAgent>& nearAgents, float checkDist = 3.0) {
   // return nearAgents.size();
@@ -179,15 +180,19 @@ namespace Napoleon {
   }
 
   const NearAgent NearestEnemComponent::getTargetEnem(const BaseAgent* agent) const {
-    float distSq = 1000.f * 1000.f;
-    NearAgent targetEnem(distSq, 0x0);
-    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-      if (enem.distanceSquared < distSq) {
-        distSq = enem.distanceSquared;
-        targetEnem = enem;
-      }
-    }
-    return targetEnem;
+    // float distSq = 1000.f * 1000.f;
+    // NearAgent targetEnem(distSq, 0x0);
+    // for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+    //   if (enem.distanceSquared < distSq) {
+    //     distSq = enem.distanceSquared;
+    //     targetEnem = enem;
+    //   }
+    // }
+
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    NearAgent d = task->getTarget(agent);
+
+    return d;
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -207,7 +212,7 @@ namespace Napoleon {
       // goal.
       return;
     }
-    const NearAgent targetEnem = getTargetEnem(agent);
+    const NearestEnemData targetEnem = getTargetEnem(agent);
     if (targetEnem.agent == 0x0) return;
     // target = targetEnem.agent->_pos;
     float distSq = targetEnem.distanceSquared;
@@ -221,9 +226,9 @@ namespace Napoleon {
     }
   }
 
-  // Task * NearestEnemComponent::getTask(){
-  //   // return new FormationsTask( _formation );
-  // };
+  Task * NearestEnemComponent::getTask(){
+    return NearestEnemTask::getSingleton();
+  };
 
 
   /////////////////////////////////////////////////////////////////////

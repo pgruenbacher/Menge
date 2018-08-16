@@ -11,6 +11,7 @@
 #include "TurnModifier.h"
 #include "NearestEnemCompContext.h"
 #include "IdleComponent.h"
+#include "FacingTargetEnem.h"
 // #include "VisAttackElement.h"
 
 using MengeVis::PluginEngine::VisPluginEngine;
@@ -49,6 +50,7 @@ extern "C" {
     engine->registerConditionFactory( new Napoleon::CanPerformCondFactory());
     engine->registerActionFactory( new Napoleon::AttackActionFactory());
     engine->registerConditionFactory ( new Napoleon::DeadCondFactory() );
+    engine->registerConditionFactory ( new Napoleon::FacingTargetEnemCondFactory() );
     engine->registerVelModFactory ( new Napoleon::TurnModifierFactory() );
     engine->registerVelCompFactory( new Napoleon::IdleComponentFactory() );
   }

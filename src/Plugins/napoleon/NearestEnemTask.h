@@ -27,8 +27,10 @@
 #include "MengeCore/BFSM/fsmCommon.h"
 #include "MengeCore/BFSM/Tasks/Task.h"
 #include "MengeCore/BFSM/Tasks/TaskFactory.h"
-
+#include "MengeCore/Runtime/ReadersWriterLock.h"
+#include "MengeCore/Agents/BaseAgent.h"
 #include <string>
+#include <map>
 
 #include "thirdParty/tinyxml.h"
 
@@ -37,8 +39,28 @@ namespace Napoleon {
     /*!
    *  @brief  Task responsible for updating agent data for maintaining a formation.
    */
+    struct NearestEnemData : public Menge::Agents::NearAgent {
+        // const BaseAgent* enem;
+        // float distSquared;
+        float timeout;
+
+        NearestEnemData(const Menge::Agents::NearAgent obj);
+    };
+
+typedef std::map<size_t, NearestEnemData> NearestEnemDataMap;
+
   class NearestEnemTask : public Menge::BFSM::Task {
+    Menge::ReadersWriterLock _lock;
+
+    NearestEnemDataMap _nearEnems;
+    // internally track the number of enems targeting each agent
+    // which may be useful.
+    std::map<size_t, int> _numTargetedBy;
+    static NearestEnemTask* TASK_PTR;
+    Menge::Agents::NearAgent _getNearestTarget(const Menge::Agents::BaseAgent* agt);
+
   public:
+    static NearestEnemTask* getSingleton();
     /*!
      *  @brief    Constructor
      *
@@ -54,6 +76,9 @@ namespace Napoleon {
      *        should arrest execution of the simulation.
      */
     virtual void doWork( const Menge::BFSM::FSM * fsm ) throw( Menge::BFSM::TaskException );
+
+    NearestEnemData getTarget(const Menge::Agents::BaseAgent* agt);
+    NearestEnemData getCurrentTarget(const Menge::Agents::BaseAgent* agt);
 
     /*!
      *  @brief    String representation of the task

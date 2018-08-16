@@ -54,6 +54,7 @@
     <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Attack">
         <Condition type="can_perform"/>
         <Condition type="enemy_near" dist="1.0"/>
+        <Condition type="facing_enemy"/>
     </Transition>
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">

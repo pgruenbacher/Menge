@@ -38,6 +38,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "NearestEnemTask.h"
 #include "MengeCore/BFSM/FSM.h"
+#include "MengeCore/Core.h"
+#include <algorithm>
 
 namespace Napoleon {
 
@@ -45,6 +47,8 @@ namespace Napoleon {
   using Menge::BFSM::Task;
   using Menge::BFSM::TaskException;
   using Menge::BFSM::TaskFactory;
+  using Menge::Agents::BaseAgent;
+  using Menge::Agents::NearAgent;
 
   /////////////////////////////////////////////////////////////////////
   //                   Implementation of NearestEnemTask
@@ -55,7 +59,24 @@ namespace Napoleon {
 
   /////////////////////////////////////////////////////////////////////
 
+  NearestEnemTask* NearestEnemTask::TASK_PTR = 0x0;
+
+  NearestEnemData::NearestEnemData(const Menge::Agents::NearAgent obj )
+    : NearAgent(obj) {}
+
+  NearestEnemTask* NearestEnemTask::getSingleton() {
+    if (TASK_PTR == 0x0) {
+      TASK_PTR = new NearestEnemTask();
+    }
+    return TASK_PTR;
+  }
+
   void NearestEnemTask::doWork( const FSM * fsm ) throw( TaskException ) {
+    _numTargetedBy.clear();
+    NearestEnemDataMap::iterator it;
+    for (it = _nearEnems.begin(); it != _nearEnems.end(); it++) {
+      _numTargetedBy[it->second.agent->_id] += 1;
+    }
   }
   /////////////////////////////////////////////////////////////////////
 
@@ -63,6 +84,63 @@ namespace Napoleon {
     return "NearestEnem Task";
   }
 
+  NearAgent NearestEnemTask::_getNearestTarget(const BaseAgent* agent) {
+    float distSq = 1000.f * 1000.f;
+    NearAgent targetEnem(distSq, 0x0);
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      if (enem.distanceSquared < distSq) {
+        distSq = enem.distanceSquared;
+        targetEnem = enem;
+      }
+    }
+    return targetEnem;
+  }
+
+  NearestEnemData NearestEnemTask::getCurrentTarget(const BaseAgent* agt) {
+    const float delay = 1.f;
+
+    // Not sure if we really need the lock safety
+    // _lock.lockWrite();
+    NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
+    NearestEnemDataMap::iterator it = _nearEnems.find(agt->_id);
+    if (it == _nearEnems.end()) {
+      std::cout << "WARNING!!!!" << std::endl;
+    } else {
+      d = it->second;
+    }
+    return d;
+  }
+
+  NearestEnemData NearestEnemTask::getTarget(const BaseAgent* agt) {
+    const float delay = 1.f;
+
+    // Not sure if we really need the lock safety
+    // _lock.lockWrite();
+    NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
+    NearestEnemDataMap::iterator it = _nearEnems.find(agt->_id);
+
+    if (it == _nearEnems.end()) {
+      // since we construct from NearAgent, we can do this
+      // for NearestEnemData
+      d = _getNearestTarget(agt);
+      d.timeout = Menge::SIM_TIME + delay;
+      _nearEnems.insert(NearestEnemDataMap::value_type(agt->_id, d));
+      // return d;
+    } else if (it->second.timeout > Menge::SIM_TIME ||
+               it->second.agent->isDead()) {
+      d = _getNearestTarget(agt);
+      d.timeout = Menge::SIM_TIME + delay;
+      it->second = d;
+      // return d;
+    } else {
+      d = it->second;
+    }
+    // _lock.releaseWrite();
+    if (d.agent == 0x0) {
+      std::cout << "WARNING!!!!" << std::endl;
+    }
+    return d;
+  }
   /////////////////////////////////////////////////////////////////////
 
   bool NearestEnemTask::isEquivalent( const Task * task ) const {
