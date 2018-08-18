@@ -74,7 +74,7 @@ namespace Formations {
 		 *
 		 *  @param	name		The name of the file containing the target formation.
 		 */
-		FreeFormation(const std::string & name);
+		FreeFormation(const std::string& name);
 
 		/*!
 		 *	@brief		Destructor
@@ -101,7 +101,7 @@ namespace Formations {
 		 *				invalid.
 		 */
 		static Menge::Resource * load( const std::string & fileName );
-
+		static Menge::Resource * make( const std::string & name) { return new FreeFormation(name);}
 		/*!
 		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.

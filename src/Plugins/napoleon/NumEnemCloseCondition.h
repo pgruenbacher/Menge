@@ -39,13 +39,15 @@ namespace Napoleon {
   // i.e. overwhelming.
 
   class MENGE_API NumEnemyCloseCondition : public Condition {
-    float _distSquared;
+    float _friendDistSquared;
+    float _enemDistSquared;
     public:
       // bool _isClose;
       NumEnemyCloseCondition();
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
       NumEnemyCloseCondition * copy();
-      void setDist(float dist);
+      void setEnemDist(float dist);
+      void setFriendDist(float dist);
       bool _inverse;
   };
 
@@ -69,7 +71,8 @@ namespace Napoleon {
     virtual Condition * instance() const { return new NumEnemyCloseCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
                  const std::string & behaveFldr ) const;
-    size_t _distID;
+    size_t _friendDistID;
+    size_t _enemDistID;
     size_t _inverseID;
   };
 } // namespace Napoleon

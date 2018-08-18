@@ -119,8 +119,8 @@ namespace Menge {
 			 *
 			 *	@param		name		The name of this state.
 			 */
-			State( const std::string & name );
-			State( const std::string & name, const std::string & typeName, size_t classId );
+			State( const std::string& name );
+			State( const std::string& name, const std::string&  typeName, size_t classId );
 
 			/*!
 			 *	@brief		Destructor.
@@ -150,7 +150,7 @@ namespace Menge {
 			 *	@param		isFinal		If true, the state is set to be final, if false, not.
 			 */
 			inline void setFinal( bool isFinal ) { _final = isFinal; }
-			inline void setType( std::string type ) { std::cout << "SET TYPE " << type << std::endl; _type = type; }
+			// inline void setType( std::string type ) { std::cout << "SET TYPE " << type << std::endl; _type = type; }
 			inline void setClassId( size_t classId ) { _classId = classId; }
 
 			/*!
@@ -324,7 +324,7 @@ namespace Menge {
 			std::vector< VelModifier * > velModifiers_;
 
 			/*!
-			 *	@brief		Actions to take upon entering and leaving the state.
+			 *	@brief		Actions to take upon entering and leaving theFnew state.
 			 */
 			std::vector< Action * > actions_;
 
@@ -346,7 +346,7 @@ namespace Menge {
 			/*!
 			 *	@brief		The name of the state.
 			 */
-			std::string _name;
+			const std::string _name;
 
 			/*!
 			 *	@brief		The globally unique id of state
@@ -357,7 +357,7 @@ namespace Menge {
 			// agents of the same classId.
 			size_t _classId;
 			// likewise groups states of different classIds to same type
-			std::string _type;
+			const std::string _type;
 
 			/*!
 			 *	@brief		The lock for accessing the goals.

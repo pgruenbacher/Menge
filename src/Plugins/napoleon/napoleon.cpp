@@ -9,12 +9,12 @@
 #include "AttackAction.h"
 #include "DeadCondition.h"
 #include "TurnModifier.h"
-#include "NearestEnemCompContext.h"
+// #include "NearestEnemCompContext.h"
 #include "IdleComponent.h"
 #include "FacingTargetEnem.h"
 // #include "VisAttackElement.h"
 
-using MengeVis::PluginEngine::VisPluginEngine;
+// using MengeVis::PluginEngine::VisPluginEngine;
 using Menge::PluginEngine::CorePluginEngine;
 
 extern "C" {
@@ -55,7 +55,7 @@ extern "C" {
     engine->registerVelCompFactory( new Napoleon::IdleComponentFactory() );
   }
 
-  EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {
-    engine->registerVCContext( new MengeVis::Runtime::VCContext::TargetVelContext() );
-  }
+  // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {
+  //   engine->registerVCContext( new Napoleon::TargetVelContext() );
+  // }
 }

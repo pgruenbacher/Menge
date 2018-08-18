@@ -68,7 +68,8 @@ namespace Napoleon {
     ///////////////////////////////////////////////////////////////////////////
 
     NumEnemyCloseCondition::NumEnemyCloseCondition() {
-      _distSquared = 0.5 * 0.5;
+      _friendDistSquared = 4.0 * 4.0;
+      _enemDistSquared = 4.0 * 4.0;
       // _isClose = true;
       _inverse = false;
     }
@@ -93,15 +94,18 @@ namespace Napoleon {
     // void EnemyNearCondition::onLeave( BaseAgent * agent ) {
     // }
 
-    void NumEnemyCloseCondition::setDist(float dist) {
-      _distSquared = dist * dist;
+    void NumEnemyCloseCondition::setFriendDist(float dist) {
+      _friendDistSquared = dist * dist;
+    }
+    void NumEnemyCloseCondition::setEnemDist(float dist) {
+      _enemDistSquared = dist * dist;
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
     bool NumEnemyCloseCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
-      float sumEnem = sumNearAgentWeights(agent->_nearEnems, 2.0);
-      float sumFriend = sumNearAgentWeights(agent->_nearFriends, 5.0);
+      float sumEnem = sumNearAgentWeights(agent->_nearEnems, _enemDistSquared);
+      float sumFriend = sumNearAgentWeights(agent->_nearFriends, _friendDistSquared);
       if (_inverse) {
         return !(sumEnem > (sumFriend));
       }
@@ -119,7 +123,8 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     NumEnemyCloseCondFactory::NumEnemyCloseCondFactory() : ConditionFactory() {
-      _distID = _attrSet.addFloatAttribute( "dist", true, 1.0f);
+      _friendDistID = _attrSet.addFloatAttribute( "enem_dist", false, 4.0f);
+      _enemDistID = _attrSet.addFloatAttribute( "friend_dist", false, 4.0f);
       // _isCloseID = _attrSet.addBoolAttribute( "is_close", false, true);
       _inverseID = _attrSet.addBoolAttribute("inverse", false, false);
     }
@@ -135,10 +140,12 @@ namespace Napoleon {
 
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
 
-      float dist = _attrSet.getFloat(_distID);
+      float friendDist = _attrSet.getFloat(_friendDistID);
+      float enemDist = _attrSet.getFloat(_enemDistID);
       // bool isClose = _attrSet.getBool(_isCloseID);
       bool inverse = _attrSet.getBool(_inverseID);
-      tCond->setDist(dist);
+      tCond->setFriendDist(friendDist);
+      tCond->setEnemDist(enemDist);
       tCond->_inverse = inverse;
       // tCond->_isClose = isClose;
       return true;

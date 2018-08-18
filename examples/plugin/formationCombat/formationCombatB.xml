@@ -59,11 +59,11 @@
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <Condition type="enemy_proximity" dist="4.9"/>
+        <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9"/>
     </Transition>
     <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
-        <Condition type="enemy_proximity" dist="4.9" inverse="1"/>
+        <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9" inverse="1"/>
     </Transition>
 
     <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">

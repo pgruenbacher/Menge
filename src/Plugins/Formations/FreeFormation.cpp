@@ -78,7 +78,7 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
-	FreeFormation::FreeFormation(const std::string & name) : Resource(name){
+	FreeFormation::FreeFormation(const std::string& name) : Resource(name){
 		_speed = 0.0f;
 		_direction = Vector2(1,0);
 		_pos = Vector2(0, 0);
@@ -91,7 +91,7 @@ namespace Formations {
 	FreeFormation::~FreeFormation(){
 		//we're certainly not allowed to delete the agents!
 		//but we should clear the vectors we control.
-
+		std::cout << "DETLET FOREE FROMATION " << std::endl;
 		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
 		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
 			delete *fpIter;

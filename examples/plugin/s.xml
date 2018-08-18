@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="napoleon/simpleS.xml" 
+	behavior="napoleon/simpleB.xml" 
+	view="napoleon/simpleV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

@@ -15,11 +15,11 @@
 		</State>
 		<State name="Stop" final="1" />
 
-    <Transition from="Walk" to="SquareFormation-formation-state"  >
+<!--     <Transition from="Walk" to="SquareFormation-formation-state"  >
         <Condition type="goal_reached" distance=".25" />
     </Transition>
     <Transition from="Walk2" to="SquareFormation-formation-state"  >
         <Condition type="goal_reached" distance=".25" />
-    </Transition>
+    </Transition> -->
 
 </BFSM>

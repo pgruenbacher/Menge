@@ -213,12 +213,11 @@ namespace Menge {
 
 		}
 
-		////////////////////////////////////////////////////////////////
+		////////////////////////////////////////// //////////////////////
 
 		template < class Agent >
 		bool SimulatorBase<Agent>::initSpatialQuery() {
 			assert( _spatialQuery != 0x0 && "Can't run without a spatial query instance defined" );
-
 			const size_t AGT_COUNT = _agents.size();
 			std::vector< BaseAgent * > agtPointers( AGT_COUNT );
 			for ( size_t a = 0; a < AGT_COUNT; ++a ) {

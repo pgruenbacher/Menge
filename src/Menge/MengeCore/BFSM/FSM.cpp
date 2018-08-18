@@ -43,6 +43,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/Events/EventSystem.h"
 #include "MengeCore/Agents/PrefVelocity.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
+#include <algorithm>
 #if 0
 #include "MengeCore/Agents/StateContext.h"
 #include "MengeCore/BFSM/FsmContext.h"
@@ -67,6 +68,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		FSM::~FSM() {
+			std::cout << "DELETING FSM" << std::endl;
 			if ( _currNode ) {
 				delete [] _currNode;
 			}
@@ -79,6 +81,19 @@ namespace Menge {
 				_tasks[ i ]->destroy();
 			}
 			_tasks.clear();
+
+			// added by paul. let's delete the states
+			std::cout << "NODES SIZE " << _nodes.size() << std::endl;
+			for (auto it : _nodes) {
+				std::cout << it << std::endl;
+			}
+			for (auto it : _nodes) {
+				std::cout << " POINTER " << it << std::endl;
+				delete it;
+				std::cout << " POINTER DELETED " << std::endl;
+			}
+			// _nodes.clear();
+			// _stateNameMap.clear();
 		}
 
 		/////////////////////////////////////////////////////////////////////

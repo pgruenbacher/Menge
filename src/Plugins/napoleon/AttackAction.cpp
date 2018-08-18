@@ -71,26 +71,14 @@ namespace Napoleon {
 
     void AttackAction::onEnter( BaseAgent * agent ) {
         float distSq = 1000.f * 1000.f;
-        Menge::Math::Vector2 target(0.f, 0.f);
         size_t maxId = std::numeric_limits<size_t>::max();
         // size_t agentId = maxId;
         NearestEnemData d = NearestEnemTask::getSingleton()->getCurrentTarget(agent);
-        BaseAgent* finalEnem = d.agent;
-        // const BaseAgent* finalEnem = 0;
-        // for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-        //   if (enem.distanceSquared < distSq) {
-        //     distSq = enem.distanceSquared;
-        //     target = enem.agent->_pos;
-        //     // agentId = enem.agent->_id;
-        //     finalEnem = enem.agent;
-        //     // NearAgent.agent is const so we have
-        //     // to grab agent from the fsm.
-        //   }
-        // }
+        Menge::Math::Vector2 target = d.agent->_pos;
+        const BaseAgent* finalEnem = d.agent;
 
         if (finalEnem == 0) return;
 
-        // BaseAgent* finalEnem = Menge::SIMULATOR->getAgent(agentId);
         if (finalEnem->isDead()) {
             // i'm not sure why this is happening
             // the task should be happening before the next

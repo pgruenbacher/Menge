@@ -59,29 +59,41 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		State::State( const std::string & name ) : _velComponent( 0x0 ), transitions_(),
+		State::State( const std::string&  name ) : _velComponent( 0x0 ), transitions_(),
 												   actions_(), _final( false ),
-												   _goalSelector( 0x0 ), _goals(), _name( name ), _type("") {
+												   _goalSelector( 0x0 ), _goals(), _name( (name) ), _type(""), _classId(0) {
+			// std::cout << " NEW STATE return" << name << " " << _name << std::endl;
 			_id = COUNT++;
+			// _type = "";
+			std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
 		}
 
-		State::State( const std::string & name, const std::string & typeName, size_t classId ) : _velComponent( 0x0 ), transitions_(),
+		State::State( const std::string&  name, const std::string& typeName, size_t classId ) : _velComponent( 0x0 ), transitions_(),
 												   actions_(), _final( false ),
-												   _goalSelector( 0x0 ), _goals(), _name( name ), _type(typeName), _classId(classId) {
+												   _goalSelector( 0x0 ), _goals(), _name( (name) ), _type(typeName), _classId(classId) {
+			// std::cout << " NEW STATE return" << name << " " << _name << std::endl;
 			_id = COUNT++;
+			std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
 		}
 
 		/////////////////////////////////////////////////////////////////////
 
 		State::~State() {
+			std::cout << "STATE DESTROY " << _name << std::endl;
 			for ( size_t i = 0; i < actions_.size(); ++i ) {
 				actions_[i]->destroy();
 			}
+			std::cout << "VEL DESTROY" << std::endl;
 			_velComponent->destroy();
+			std::cout << "VEL DESTROYED" << std::endl;
 			if ( _goalSelector ) {
 				_goalSelector->destroy();
 				_goalSelector = 0x0;
 			}
+			std::cout << "DES??" << std::endl;
+
+			std::cout << "CLEARED MEM " << _goalSelector << std::endl;
+			std::cout << "CLEARED MEM " << _goalSelector << std::endl;
 		}
 
 		/////////////////////////////////////////////////////////////////////

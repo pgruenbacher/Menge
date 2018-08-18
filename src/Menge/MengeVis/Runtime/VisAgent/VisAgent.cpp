@@ -122,6 +122,7 @@ namespace MengeVis {
 		void VisAgent::drawAttack() {
 			if (_agent == 0x0) return;
 			if (_agent->isAttacking) {
+				// std::cout << "ATTACKING " << _agent->attacking << std::endl;
 				float r = 0.5f, g = 0.5f, b = 0.5f;
 				getColor(r,g,b);
 				Menge::Math::Vector3 _p0(_agent->_pos.x() + 0.1f, _agent->_pos.y(), 2.2f);
