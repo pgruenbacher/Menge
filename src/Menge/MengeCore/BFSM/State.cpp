@@ -59,21 +59,31 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		State::State( const std::string&  name ) : _velComponent( 0x0 ), transitions_(),
+		State::State( const std::string  name ) : _velComponent( 0x0 ), transitions_(),
 												   actions_(), _final( false ),
 												   _goalSelector( 0x0 ), _goals(), _name( (name) ), _type(""), _classId(0) {
 			// std::cout << " NEW STATE return" << name << " " << _name << std::endl;
 			_id = COUNT++;
 			// _type = "";
-			std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
+			// std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
 		}
 
-		State::State( const std::string&  name, const std::string& typeName, size_t classId ) : _velComponent( 0x0 ), transitions_(),
+		// State::State() : _velComponent( 0x0 ), transitions_(),
+		// 										   actions_(), _final( false ), _name("name"), _type("typeName"),
+		// 										   _goalSelector( 0x0 ), _goals(), _classId(0) {
+		// 	// _name("aa");
+		// 	// _type("abb");
+		// 	std::cout << " NEW STATE return" << " " << _name << std::endl;
+		// 	_id = COUNT++;
+		// 	// std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
+		// }
+
+		State::State( const std::string  name, const std::string typeName, size_t classId ) : _velComponent( 0x0 ), transitions_(),
 												   actions_(), _final( false ),
 												   _goalSelector( 0x0 ), _goals(), _name( (name) ), _type(typeName), _classId(classId) {
 			// std::cout << " NEW STATE return" << name << " " << _name << std::endl;
 			_id = COUNT++;
-			std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
+			// std::cout << " _ID ++ " << _name << " " << _id << " " << COUNT << std::endl;
 		}
 
 		/////////////////////////////////////////////////////////////////////

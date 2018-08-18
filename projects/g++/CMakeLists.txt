@@ -4,7 +4,7 @@ project(FULL_MENGE_PED_SIM)
 if(APPLE)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 enable_testing()
 # Model dlls
 ADD_SUBDIRECTORY(Menge)

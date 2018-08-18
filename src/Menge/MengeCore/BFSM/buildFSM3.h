@@ -11,10 +11,12 @@ namespace Menge {
 namespace BFSM {
   class FSMBuilder {
   public:
+    FSMBuilder();
+    ~FSMBuilder();
     FSM* build(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim,
                bool VERBOSE);
     bool add_dynamic_states(FSM* fsm);
-    void add_state(State * s) { _states.push_back(s); };
+    void add_state(State * s);
   protected:
 
       /*!

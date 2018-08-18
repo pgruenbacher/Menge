@@ -270,6 +270,7 @@ bool initializeTransitions(FSM* fsm, FSMDescrip& fsmDescrip,
     tList.clear();
   }
   fsmDescrip.getTransitions().clear();
+  // fsmDescrip.getStateNameMap().clear();
   return true;
 }
 
@@ -312,6 +313,21 @@ bool connectSharedGoalSelectors(FSM* fsm, FSMDescrip& fsmDescrip,
     }
   }
   return true;
+}
+
+FSMBuilder::FSMBuilder() {
+}
+
+void FSMBuilder::add_state(State* state) {
+  // Menge::BFSM::State* st = new Menge::BFSM::State("SquareFormation-formation-state", "Class", 1);
+  // st->setFinal(false);
+  // st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+  // st->setVelComponent(new Menge::BFSM::ZeroVelComponent());
+  _states.push_back(state);
+}
+
+FSMBuilder::~FSMBuilder() {
+  std::cout << "DELTE FSM BUILDER " << std::endl;
 }
 
 void copyToFSM(FSMDescrip& fsmDescrip, FSM* fsm) {

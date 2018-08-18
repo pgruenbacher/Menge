@@ -121,9 +121,9 @@ namespace Menge {
 	////////////////////////////////////////////////////////////////////////////
 
 	BFSM::FSM * SimulatorDBEntry::initFSM( const std::string & behaveFile,
-										   Agents::SimulatorInterface * sim, BFSM::FSMBuilder& builder, bool VERBOSE ) {
+										   Agents::SimulatorInterface * sim, BFSM::FSMBuilder& builder, BFSM::FSMDescrip& fsmDescrip, bool VERBOSE ) {
 		logger.line();
-		BFSM::FSMDescrip fsmDescrip;
+		// BFSM::FSMDescrip fsmDescrip;
 
 		if ( ! fsmDescrip.loadFromXML( behaveFile, VERBOSE ) ) {
 			logger << Logger::ERR_MSG << "Problems loading behavior specification!";

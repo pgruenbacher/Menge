@@ -196,7 +196,7 @@ namespace Menge {
 		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
 							 bool VERBOSE );
 		BFSM::FSM * initFSM( const std::string & behaveFile, Agents::SimulatorInterface * sim,
-							BFSM::FSMBuilder& builder,
+							BFSM::FSMBuilder& builder, BFSM::FSMDescrip& fsmDescrip,
 							 bool VERBOSE );
 		/*!
 		 *	@brief		Finalizes the finite state machine and simulator in preparation for

@@ -119,8 +119,10 @@ namespace Menge {
 			 *
 			 *	@param		name		The name of this state.
 			 */
-			State( const std::string& name );
-			State( const std::string& name, const std::string&  typeName, size_t classId );
+			State( const std::string name );
+			State( const std::string name, const std::string  typeName, size_t classId );
+			// godot compatible... for mixing between libraries.
+			// State();
 
 			/*!
 			 *	@brief		Destructor.
