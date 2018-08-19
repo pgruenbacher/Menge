@@ -120,9 +120,8 @@ namespace Menge {
 			 *	@param		name		The name of this state.
 			 */
 			State( const std::string name );
+			// godot can't instnaitate the class with strings...idk why..
 			State( const std::string name, const std::string  typeName, size_t classId );
-			// godot compatible... for mixing between libraries.
-			// State();
 
 			/*!
 			 *	@brief		Destructor.

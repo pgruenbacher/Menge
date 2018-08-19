@@ -54,6 +54,8 @@ namespace Formations {
   using Menge::Math::Vector2;
   using Menge::logger;
 
+Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId);
+
 class MENGE_API FormationComponent : public VelComponent {
  public:
   /*!
@@ -80,6 +82,8 @@ class MENGE_API FormationComponent : public VelComponent {
   void registerAgent(const BaseAgent* agent);
   void unregisterAgent(const BaseAgent* agent);
   void setFormation(FormationPtr form);
+  FormationPtr getStaticGoalForAgent() { return _formation; }
+  FormationPtr getFormation() { return _formation; }
   void setDisplacement(Vector2 v);
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,

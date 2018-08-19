@@ -75,6 +75,7 @@ namespace Menge {
 		HASH_MAP< std::string, Agents::AgentInitializer* > &profiles,
 		const std::string & sceneFileName, bool VERBOSE )
 	{
+		std::cout << "INIT SIMULATOR PAUL " << sceneFileName << std::endl;
 		Agents::SimulatorInterface * sim = getNewSimulator();
 		Agents::AgentInitializer * agentInit = getAgentInitalizer();
 		Agents::SimXMLLoader loader( sim );

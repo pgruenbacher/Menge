@@ -68,7 +68,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		FSM::~FSM() {
-			std::cout << "DELETING FSM" << std::endl;
+			// std::cout << "DELETING FSM" << std::endl;
 			if ( _currNode ) {
 				delete [] _currNode;
 			}
@@ -83,14 +83,14 @@ namespace Menge {
 			_tasks.clear();
 
 			// added by paul. let's delete the states
-			std::cout << "NODES SIZE " << _nodes.size() << std::endl;
+			// std::cout << "NODES SIZE " << _nodes.size() << std::endl;
+			// for (auto it : _nodes) {
+			// 	std::cout << it << std::endl;
+			// }
 			for (auto it : _nodes) {
-				std::cout << it << std::endl;
-			}
-			for (auto it : _nodes) {
-				std::cout << " POINTER " << it << std::endl;
+				// std::cout << " POINTER " << it << std::endl;
 				delete it;
-				std::cout << " POINTER DELETED " << std::endl;
+				// std::cout << " POINTER DELETED " << std::endl;
 			}
 			// _nodes.clear();
 			// _stateNameMap.clear();

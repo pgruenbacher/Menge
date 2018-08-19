@@ -42,8 +42,10 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/Core.h"
 #include "MengeCore/Agents/BaseAgent.h"
+#include "MengeCore/BFSM/State.h"
 #include "MengeCore/Agents/PrefVelocity.h"
 #include "MengeCore/BFSM/Goals/Goal.h"
+#include "MengeCore/BFSM/GoalSelectors/GoalSelectorIdentity.h"
 #include "MengeCore/Runtime/os.h"
 #include "FormationsTask.h"
 
@@ -154,6 +156,22 @@ namespace Formations {
     return new FormationsTask( _formation );
   };
 
+  Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId) {
+    Menge::BFSM::State* st = new Menge::BFSM::State("Formation" + std::to_string(uniqueIndex), "FormState", classId);
+    st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+    st->setFinal(false);
+    std::string resourceName = "freeFormation" + std::to_string(uniqueIndex);
+    Resource * rsrc = ResourceManager::getResource( resourceName, &FreeFormation::make, FreeFormation::LABEL );
+    if ( rsrc == 0x0 ) {
+      logger << Logger::ERR_MSG << "No resource available.";
+      throw ResourceException();
+    }
+    FreeFormation * form = dynamic_cast< FreeFormation * >( rsrc );
+    FormationComponent* fComp = new FormationComponent();
+    fComp->setFormation(FormationPtr( form ));
+    st->setVelComponent(fComp);
+    return st;
+  }
 
   /////////////////////////////////////////////////////////////////////
   FormationComponentFactory::FormationComponentFactory() : VelCompFactory() {
