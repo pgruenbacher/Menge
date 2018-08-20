@@ -87,6 +87,9 @@ namespace Menge {
 
 		void BaseAgent::initialize() {
 			_orient = _velPref.getPreferred();
+			if (_orient.x() == 0 && _orient.y() == 0) {
+				_orient = Vector2(1.f, 0.f);
+			}
 		}
 
 		////////////////////////////////////////////////////////////////
@@ -123,7 +126,6 @@ namespace Menge {
 			// std::cout << "DOT VEL " << dotVel << " " << (_vel) << std::endl;
 			// if charging and moving towards opponent...
 			if (abs(_vel) > 0.5 && dotVel > 0) {
-				std::cout << "HIT CHANCE class " << _class << std::endl;
 				hitChance += 50.0;
 			}
 
@@ -156,6 +158,9 @@ namespace Menge {
 			//  The transition function is designd such that the transition from movement direction
 			//  to preferred movement direction falls off slowly (initially) and rapidly at low
 			// speeds.
+			if (_orient.x() == 0 && _orient.y() == 0) {
+				_orient.set(Vector2(1.f, 0.f));
+			}
 			float speed = abs( _vel );
 			const float speedThresh = _prefSpeed / 3.f;
 			Vector2 prefDir = _velPref.getPreferred();
@@ -165,6 +170,7 @@ namespace Menge {
 			Vector2 targetDir = _velPref.getTarget() - _pos;
 			if ( speed >= speedThresh ) {
 				newOrient = moveDir;
+				newOrient.normalize();
 			} else if (speed == 0.0 && hasMinPrefDir) {
 				newOrient = prefDir;
 				newOrient.normalize();
@@ -184,18 +190,20 @@ namespace Menge {
 				// }
 			}
 
+
 			// TODO(curds01): At low speeds, small movement perturbations cause radically different
 			// orientation changes.  It seems *reasonable* to scale maximum angular velocity
 			// by the travel speed (in some sense) to prevent this.  HOWEVER, this would break
 			// agents that have a sense of facing direction that they actively control.
-
+			// std::cout << " MAX ANGLE VEL " << _maxAngVel;
 			// Now limit angular velocity.
 			const float MAX_ANGLE_CHANGE = timeStep * _maxAngVel;
-			float maxCt = cos( MAX_ANGLE_CHANGE );
 			float ct = newOrient * _orient;
-			if ( ct < maxCt ) {
+			if ( cos(ct) > MAX_ANGLE_CHANGE ) {
+				// std::cout << "ACOS " << _maxAngVel << std::endl;
 				// changing direction at a rate greater than _maxAngVel
 				float maxSt = sin( MAX_ANGLE_CHANGE );
+				float maxCt = cos( MAX_ANGLE_CHANGE );
 				if ( det( _orient, newOrient ) > 0.f ) {
 					// rotate _orient left
 					_orient.set( maxCt * _orient._x - maxSt * _orient._y,
@@ -208,6 +216,9 @@ namespace Menge {
 			} else {
 				_orient.set( newOrient );
 			}
+			// if (_orient.x() == 0 && _orient.y() == 0) {
+			// 	std::cout << " NE W ORIENT ZERO! " << newOrient << _orient << " " << " I " << _id << std::endl;
+			// }
 		}
 
 		////////////////////////////////////////////////////////////////

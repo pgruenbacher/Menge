@@ -256,6 +256,7 @@ namespace Menge {
 			 *	@returns	A pointer to the agent's current state.
 			 */
 			State * getCurrentState( const Agents::BaseAgent * agt ) const;
+			State * getCurrentState( size_t agentId ) const {return _currNode[agentId];};
 
 			/*!
 			 *	@brief		Reports the state the given agent is currently in.
