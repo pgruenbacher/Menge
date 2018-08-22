@@ -42,6 +42,9 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Core.h"
 #include <algorithm>
 
+// may want to remove this when integrating with godot...
+// #include "MengeVis/SceneGraph/Select.h"
+
 namespace Menge {
 
 	namespace Agents {
@@ -189,6 +192,11 @@ namespace Menge {
 				// 	newOrient.normalize();
 				// }
 			}
+			// unsigned int name = MengeVis::SceneGraph::Selectable::getSelectedName();
+			// if (name == _id) {
+			// 	std::cout << "SELECTED " << _id << std::endl;
+			// 	std::cout << "NEW ORIENT " << newOrient << " cur " << _orient << std::endl;
+			// }
 
 
 			// TODO(curds01): At low speeds, small movement perturbations cause radically different
@@ -199,7 +207,7 @@ namespace Menge {
 			// Now limit angular velocity.
 			const float MAX_ANGLE_CHANGE = timeStep * _maxAngVel;
 			float ct = newOrient * _orient;
-			if ( cos(ct) > MAX_ANGLE_CHANGE ) {
+			if ( acos(ct) > MAX_ANGLE_CHANGE ) {
 				// std::cout << "ACOS " << _maxAngVel << std::endl;
 				// changing direction at a rate greater than _maxAngVel
 				float maxSt = sin( MAX_ANGLE_CHANGE );
