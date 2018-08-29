@@ -269,6 +269,8 @@ namespace Formations {
 			_pos += agt->_pos * _agentWeights[agt->_id];
 			totalWeight += _agentWeights[agt->_id];
 			//see if we have a cache
+			// doesn't look like we actually use _agentPrefDirs itself...
+			// just he agentPrefVels, we'll keep just in case though.
 			if (_agentPrefDirs.find(agt->_id) == _agentPrefDirs.end()){
 				_direction += agt->_velPref.getPreferredVel();
 			} else {

@@ -131,7 +131,8 @@ namespace Formations {
 		 *	@param		fsm		A pointer to the FSM.
 		 *
 		 */
-		void mapAgentsToFormation( const Menge::BFSM::FSM * fsm );
+		// allow child classes to override.
+		virtual void mapAgentsToFormation( const Menge::BFSM::FSM * fsm );
 
 		/*!
 		 *	@brief		Provides an intermediate goal for the agent.
@@ -166,6 +167,7 @@ namespace Formations {
 		 */
 		std::vector< FormationPoint * >  _formationPoints;
 		void setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount);
+		std::map< size_t, size_t > getFormationPointAgent() {return _formationPoint_agent;}
 	protected:
 
 		/*!

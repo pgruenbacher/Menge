@@ -48,6 +48,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/GoalSelectors/GoalSelectorIdentity.h"
 #include "MengeCore/Runtime/os.h"
 #include "FormationsTask.h"
+#include "SteadyFormation.h"
 
 
 namespace Formations {
@@ -157,16 +158,17 @@ namespace Formations {
   };
 
   Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId) {
+    // godot specific.
     Menge::BFSM::State* st = new Menge::BFSM::State("Formation" + std::to_string(uniqueIndex), "FormState", classId);
     st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
     st->setFinal(false);
     std::string resourceName = "freeFormation" + std::to_string(uniqueIndex);
-    Resource * rsrc = ResourceManager::getResource( resourceName, &FreeFormation::make, FreeFormation::LABEL );
+    Resource * rsrc = ResourceManager::getResource( resourceName, &SteadyFormation::make, SteadyFormation::LABEL );
     if ( rsrc == 0x0 ) {
       logger << Logger::ERR_MSG << "No resource available.";
       throw ResourceException();
     }
-    FreeFormation * form = dynamic_cast< FreeFormation * >( rsrc );
+    SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
     FormationComponent* fComp = new FormationComponent();
     fComp->setFormation(FormationPtr( form ));
     st->setVelComponent(fComp);
