@@ -159,6 +159,8 @@ namespace Formations {
 
   Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId) {
     // godot specific.
+    // uses SteadyFormation instead of FreeFormation,
+    // which means it won't update mapAgentsToPoitns continuously.
     Menge::BFSM::State* st = new Menge::BFSM::State("Formation" + std::to_string(uniqueIndex), "FormState", classId);
     st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
     st->setFinal(false);
