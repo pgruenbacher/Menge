@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <Project
+  random="10a"
 	scene="formationCombatS.xml"
 	behavior="formationCombatB.xml"
 	view="formationCombatV.xml"

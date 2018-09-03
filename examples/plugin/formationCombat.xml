@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
-<Project 
-    scene="formationCombat/formationCombatS.xml" 
-    behavior="formationCombat/formationCombatB.xml" 
-    view="formationCombat/formationCombatV.xml" 
+<Project
+    random="10"
+    scene="formationCombat/formationCombatS.xml"
+    behavior="formationCombat/formationCombatB.xml"
+    view="formationCombat/formationCombatV.xml"
 	model="orca"
 	dumpPath="images/test"
 />

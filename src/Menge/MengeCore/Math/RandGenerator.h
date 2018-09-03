@@ -54,7 +54,7 @@ namespace Menge {
 		 *	@brief		Allows the global random number seed value to be set.
 		 *
 		 *	This allows a bit more control over the random number generator.  Setting
-		 *	the global seed value to zero will cause the default seed value to be 
+		 *	the global seed value to zero will cause the default seed value to be
 		 *	"randomly" generated from the system clock.  This will cause repeated
 		 *	executions of the program to vary.
 		 *
@@ -95,13 +95,13 @@ namespace Menge {
 			 *	This *must* be overridden by each derived class to provide a string format
 			 *	of the float generator.
 			 *
-			 *	This method is used instead of the traditional method of writing a 
+			 *	This method is used instead of the traditional method of writing a
 			 *	friend overloaded operator (>>).  The reason for this is that using pointers to
 			 *	this base class to refer to derived classes would need to be derefenced to pass
-			 *	(as objects) to the output stream and dereferencing them precludes the use of 
+			 *	(as objects) to the output stream and dereferencing them precludes the use of
 			 *	polymorphism in the format.
 			 *
-			 *	This could be overcome by writing the streaming operator to operate on 
+			 *	This could be overcome by writing the streaming operator to operate on
 			 *	a pointer to the base class, which in turn calls a virtual function.  But this
 			 *	approach removes one level of indirection, and preserves the ability to output
 			 *	pointer addresses for the sake of debugging.
@@ -118,7 +118,7 @@ namespace Menge {
 			 *	@return		A float value.
 			 */
 			virtual float getValue() const = 0;
-			
+
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
 			 *				in a thread-safe manner.
@@ -128,8 +128,8 @@ namespace Menge {
 			 *	@return		A float value.
 			 */
 			virtual float getValueConcurrent() const = 0;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	This is the basic functionality that must be overwridden by derived classes.
@@ -140,7 +140,7 @@ namespace Menge {
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual FloatGenerator * copy() const = 0;	
+			virtual FloatGenerator * copy() const = 0;
 		};
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ namespace Menge {
 			 *	@return		A constant float value.
 			 */
 			virtual float getValue() const { return _value; }
-			
+
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
 			 *				in a thread-safe manner.
@@ -180,15 +180,15 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual FloatGenerator * copy() const;	
+			virtual FloatGenerator * copy() const;
 
 			/*!
 			 *	@brief		Friend function for writing string representation to an output stream
@@ -256,14 +256,14 @@ namespace Menge {
 			 *							distribution, maxVal >= mean + 3 * stddev.
 			 */
 			void set( float mean, float stddev, float minVal, float maxVal );
-			
+
 			/*!
 			 *	@brief		Return a value based on the float generation rules.
 			 *
 			 *	@return		A clamped, normally-distributed float value.
 			 */
 			virtual float getValue() const;
-			
+
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
 			 *				in a thread-safe manner.
@@ -280,15 +280,15 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual FloatGenerator * copy() const;	
+			virtual FloatGenerator * copy() const;
 
 			/*!
 			 *	@brief		Friend function for writing string representation to an output stream
@@ -381,7 +381,8 @@ namespace Menge {
 			 *	@return		A clamped, uniformly-distributed float value.
 			 */
 			virtual float getValue() const;
-			
+			virtual float getValue(size_t agentId) const;
+
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
 			 *				in a thread-safe manner.
@@ -398,15 +399,15 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual FloatGenerator * copy() const;	
+			virtual FloatGenerator * copy() const;
 
 			/*!
 			 *	@brief		Friend function for writing string representation to an output stream
@@ -423,7 +424,7 @@ namespace Menge {
 			 *	@returns	The lower end of the valid range.
 			 */
 			float getMin() const { return _min; }
-			
+
 			/*!
 			 *	@brief		Reports the upper end of the valid range.
 			 *
@@ -485,7 +486,7 @@ namespace Menge {
 			 *	@return		An integer value.
 			 */
 			virtual int getValue() const = 0;
-			
+
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
 			 *				in a thread-safe manner.
@@ -495,7 +496,7 @@ namespace Menge {
 			 *	@return		A integer value.
 			 */
 			virtual int getValueConcurrent() const = 0;
-			
+
 			/*!
 			 *	@brief		Function for converting the generator to a string on a output stream.
 			 *
@@ -505,8 +506,8 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const = 0;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	This is the basic functionality that must be overwridden by derived classes.
@@ -515,7 +516,7 @@ namespace Menge {
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual IntGenerator * copy() const = 0;	
+			virtual IntGenerator * copy() const = 0;
 		};
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -538,7 +539,7 @@ namespace Menge {
 			 *	@return		A constant integer value.
 			 */
 			virtual int getValue() const { return _value; }
-			
+
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
 			 *				in a thread-safe manner.
@@ -548,15 +549,15 @@ namespace Menge {
 			 *	@return		A integer value.
 			 */
 			virtual int getValueConcurrent() const { return _value; }
-			
+
 			/*!
 			 *	@brief		Function for converting the generator to a string on a output stream.
 			 *
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	This is the basic functionality that must be overwridden by derived classes.
@@ -576,7 +577,7 @@ namespace Menge {
 			 */
 			friend Logger & operator<<( Logger & out, const ConstIntGenerator & gen );
 
-			
+
 		protected:
 			/*!
 			 *	@brief		The generator's constant value.
@@ -619,7 +620,7 @@ namespace Menge {
 			 *	@return		A uniformly distributed integer value.
 			 */
 			virtual int getValue() const;
-			
+
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
 			 *				in a thread-safe manner.
@@ -636,8 +637,8 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	This is the basic functionality that must be overwridden by derived classes.
@@ -662,7 +663,7 @@ namespace Menge {
 			 *	@brief		The lower end of the valid range.
 			 */
 			int _min;
-			
+
 			/*!
 			 *	@brief		The size of the valid range.
 			 */
@@ -705,7 +706,7 @@ namespace Menge {
 			 *	@return		A 2D float value.
 			 */
 			virtual Vector2 getValue() const = 0;
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
 			 *				in a thread-safe manner.
@@ -725,8 +726,8 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const = 0;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	This is the basic functionality that must be overwridden by derived classes.
@@ -735,7 +736,7 @@ namespace Menge {
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual Vec2DGenerator * copy() const = 0;	
+			virtual Vec2DGenerator * copy() const = 0;
 		};
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -751,7 +752,7 @@ namespace Menge {
 			 *	@return		A 2D zero vector.
 			 */
 			virtual Vector2 getValue() const { return Vector2(0.f, 0.f); }
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
 			 *				in a thread-safe manner.
@@ -761,8 +762,8 @@ namespace Menge {
 			 *	@return		A 2D float value.
 			 */
 			virtual Vector2 getValueConcurrent() const { return Vector2(0.f, 0.f); }
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
@@ -777,7 +778,7 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
+
 			/*!
 			 *	@brief		Friend function for writing string representation to an output stream
 			 *
@@ -801,14 +802,14 @@ namespace Menge {
 			 *	@param		val		The value to be returned.
 			 */
 			Const2DGenerator( const Vector2 & val ): Vec2DGenerator(), _value(val) {}
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules.
 			 *
 			 *	@return		A constat 2D value.
 			 */
 			virtual Vector2 getValue() const { return _value; }
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
 			 *				in a thread-safe manner.
@@ -818,15 +819,15 @@ namespace Menge {
 			 *	@return		A 2D float value.
 			 */
 			virtual Vector2 getValueConcurrent() const { return _value; }
-			
+
 			/*!
 			 *	@brief		Function for converting the generator to a string on a output stream.
 			 *
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
@@ -868,7 +869,7 @@ namespace Menge {
 			 *							the particular seed will be used.
 			 */
 			AABBUniformPosGenerator( const Vector2 & minPt, const Vector2 & maxPt, int seed=0 );
-			
+
 			/*!
 			 *	@brief		Copy constructor.
 			 *
@@ -882,7 +883,7 @@ namespace Menge {
 			 *	@return		A constat position uniformly samples from an AAB.
 			 */
 			virtual Vector2 getValue() const;
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
 			 *				in a thread-safe manner.
@@ -893,7 +894,7 @@ namespace Menge {
 			 */
 			virtual Vector2 getValueConcurrent() const;
 
-			/*! 
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
@@ -922,7 +923,7 @@ namespace Menge {
 			 *	@brief		The random selector for the x-position of the return value.
 			 */
 			UniformFloatGenerator	_xRand;
-			
+
 			/*!
 			 *	@brief		The random selector for the y-position of the return value.
 			 */
@@ -952,7 +953,7 @@ namespace Menge {
 			 */
 			OBBUniformPosGenerator( const Vector2 & minPt, const Vector2 & size, float theta,
 									int seed=0 );
-			
+
 			/*!
 			 *	@brief		Copy constructor.
 			 *
@@ -966,7 +967,7 @@ namespace Menge {
 			 *	@return		A constat position uniformly samples from an OB.
 			 */
 			virtual Vector2 getValue() const;
-			
+
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
 			 *				in a thread-safe manner.
@@ -984,7 +985,7 @@ namespace Menge {
 			 */
 			virtual void print( Logger & out ) const;
 
-			/*! 
+			/*!
 			 *	@brief		Create a copy of itself
 			 *
 			 *	@returns	A pointer to a new generator which is a copy of this one.
@@ -1019,12 +1020,12 @@ namespace Menge {
 			 *	@brief		The anchor point of the OB.
 			 */
 			Vector2	_minPt;
-			
+
 			/*!
 			 *	@brief		The cosine of the OB's rotation.
 			 */
 			float	_cosTheta;
-			
+
 			/*!
 			 *	@brief		The sine of the OB's rotation.
 			 */
@@ -1101,7 +1102,7 @@ namespace Menge {
 			 *	@return		An integer value drawn from a set with weighted probabilities.
 			 */
 			virtual int getValue() const;
-			
+
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
 			 *				in a thread-safe manner.
@@ -1126,8 +1127,8 @@ namespace Menge {
 			 *	@param		out		The output stream to write the string representation to.
 			 */
 			virtual void print( Logger & out ) const;
-			
-			/*! 
+
+			/*!
 			 *	@brief		Create a copy of itself.
 			 *
 			 *	This should only be called after the generator has been finalized.
@@ -1137,8 +1138,8 @@ namespace Menge {
 			 *				The caller of this function is responsible for freeing up the
 			 *				memory for the copy.
 			 */
-			virtual IntGenerator * copy() const;	
-			
+			virtual IntGenerator * copy() const;
+
 			/*!
 			 *	@brief		Friend function for writing string representation to an output stream
 			 *
@@ -1147,7 +1148,7 @@ namespace Menge {
 			 *	@returns	Reference to the input output stream.
 			 */
 			friend Logger & operator<<( Logger & out, const WeightedIntGenerator & gen );
-			
+
 			/*!
 			 *	@brief		Finalizes the generator so that it can generate values.
 			 *
@@ -1184,7 +1185,7 @@ namespace Menge {
 		 *	@param		node		The tiny XML node containing the definition of a scalar float
 		 *							generator.
 		 *	@param		scale		Optional argument for changing the units of the input value.
-		 *							(e.g., specification commonly describes angles as degrees, 
+		 *							(e.g., specification commonly describes angles as degrees,
 		 *							but internal representation is in radians).
 		 *	@param		prefix		An optional prefix which may be affixed to the float generator
 		 *							keywords.
@@ -1219,14 +1220,14 @@ namespace Menge {
 		 *	@param		node		The tiny XML node containing the definition of a vector float
 		 *							generator.
 		 *	@param		scale		Optional argument for changing the units of the input value.
-		 *							(e.g., specification commonly describes angles as degrees, 
+		 *							(e.g., specification commonly describes angles as degrees,
 		 *							but internal representation is in radians).
 		 *	@returns	A pointer to a vector generator, consistent with the XML definition.
 		 *				If there is an error in the definition, NULL is returned.
 		 */
 		MENGE_API Vec2DGenerator * create2DGenerator( TiXmlElement * node, float scale=1.f );
 
-		
+
 	}	// namespace Math
 }	// namespace Menge
 #endif	// __RAND_GENERATOR_H__

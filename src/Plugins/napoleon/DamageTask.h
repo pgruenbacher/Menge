@@ -33,6 +33,7 @@
 
 #include "thirdParty/tinyxml.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
+#include "MengeCore/Math/RandGenerator.h"
 
 using namespace Menge;
 namespace Napoleon {
@@ -43,12 +44,25 @@ class DamageTask : public Menge::BFSM::Task {
 private:
   ReadersWriterLock _lock;
   std::map<size_t, float> _damages;
+  // it will also mantain the combat
+  // random generator to be updated serially in parallel.
+  // agent random values will be a combination of the random value per sim step
+  // + the agent's id.
+  Menge::Math::UniformFloatGenerator _randGenerator;
+  float _step_rand_value;
+
     static DamageTask* DAMAGE_TASK2;
  public:
   /*!
    *  @brief    Constructor
    *
    */
+  DamageTask();
+
+  float getAgentAttackValue(size_t agentId) const {
+    // it's ok for concurrent reading...
+    return _randGenerator.getValue(agentId);
+  }
 
   void adjustHealth(size_t agentId, float health);
 

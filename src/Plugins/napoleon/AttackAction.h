@@ -71,7 +71,7 @@ namespace Napoleon {
 
   protected:
     Menge::SimpleLock _lock;
-    Menge::Math::UniformFloatGenerator _randGenerator;
+    // Menge::Math::UniformFloatGenerator _randGenerator;
   };
 
   class MENGE_API AttackActionFactory : public Menge::BFSM::ActionFactory {

@@ -59,7 +59,7 @@ namespace Napoleon {
     //                   Implementation of PropertyXAction
     /////////////////////////////////////////////////////////////////////
 
-    AttackAction::AttackAction() : Action(), _randGenerator(-100.f, 0.f) {
+    AttackAction::AttackAction() : Action() {
     }
 
     /////////////////////////////////////////////////////////////////////
@@ -70,6 +70,7 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     void AttackAction::onEnter( BaseAgent * agent ) {
+        return;
         float distSq = 1000.f * 1000.f;
         size_t maxId = std::numeric_limits<size_t>::max();
         // size_t agentId = maxId;
@@ -94,7 +95,7 @@ namespace Napoleon {
         // actually no. we should task it so that we can
         // monitor damage through signals or events.
 
-        float hitChance = _randGenerator.getValue();
+        float hitChance = DamageTask::getSingleton()->getAgentAttackValue(agent->_id);
         hitChance += agent->getDefaultHitRate();
         // std::cout << " THREAD ID " << omp_get_thread_num() << std::endl;
         // std::cout << "BEFORE " << hitChance << std::endl;

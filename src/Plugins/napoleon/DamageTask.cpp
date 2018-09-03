@@ -57,8 +57,8 @@ namespace Napoleon {
   //                   Implementation of NearestEnemTask
   /////////////////////////////////////////////////////////////////////
 
-  // NearestEnemTask::NearestEnemTask() : Task(),{
-  // }
+  DamageTask::DamageTask() : Menge::BFSM::Task(), _randGenerator(-100.f, 0.f) {
+  }
 
   /////////////////////////////////////////////////////////////////////
   DamageTask* DamageTask::getSingleton() {
@@ -79,11 +79,16 @@ namespace Napoleon {
   }
 
   void DamageTask::doWork( const FSM * fsm ) throw( TaskException ) {
+    // update the rand generator each timestep
+    _randGenerator.getValue();
+    // std::cout << " GET AGENT ATATC " << getAgentAttackValue(15) << std::endl;
+
     Menge::Agents::BaseAgent* finalEnem;
     for (auto entry : _damages) {
       size_t agentId = entry.first;
       float health = entry.second;
       finalEnem  = Menge::SIMULATOR->getAgent(agentId);
+      std::cout << "ADJUST " << finalEnem->_id << " TIME " << Menge::SIM_TIME << std::endl;
       finalEnem->adjustHealth(health);
     }
     _damages.clear();

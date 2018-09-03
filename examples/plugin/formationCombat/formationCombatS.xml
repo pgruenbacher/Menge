@@ -45,7 +45,7 @@
 		<Generator type="rect_grid"
     		anchor_x="-9" anchor_y="-12"
     		offset_x="0.8" offset_y="0.8"
-    		count_x="6" count_y="36"
+    		count_x="6" count_y="5"
     		displace_dist="u" displace_min="0.0" displace_max="0.0"
     		/>
     </AgentGroup>
@@ -55,7 +55,7 @@
         <Generator type="rect_grid"
             anchor_x="9" anchor_y="-12.5"
             offset_x="0.8" offset_y="0.8"
-            count_x="6" count_y="36"
+            count_x="6" count_y="5"
             displace_dist="u" displace_min="0.0" displace_max="0.0"
             />
     </AgentGroup>

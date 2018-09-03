@@ -46,6 +46,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeVis/SceneGraph/Select.h"
 #include "MengeVis/SceneGraph/graphCommon.h"
 #include "MengeVis/SceneGraph/shapes.h"
+#include "MengeCore/Core.h"
 
 #include <sstream>
 #include <iomanip>
@@ -354,6 +355,7 @@ namespace MengeVis {
 			ss << "\n(P)ref. Velocity: " << agt->_velPref.getPreferredVel();
 			ss << "(" << agt->_velPref.getSpeed() << ")";
 			ss << "\nPriority: " << agt->_priority;
+			ss << "\nTime: " << Menge::SIM_TIME;
 			ss << "\nClass: " << agt->_class;
 			/*
 				// Unused properties of a BaseAgent
