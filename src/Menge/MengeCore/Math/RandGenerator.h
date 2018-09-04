@@ -43,6 +43,9 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
+
+const int MAX_AGENT_INDEX = 10000;
 
 // Forward Declarations
 class	TiXmlElement;
@@ -120,6 +123,17 @@ namespace Menge {
 			virtual float getValue() const = 0;
 
 			/*!
+			 *	@brief		Return a value based on the float generation rules.
+			 *
+			 *	This is the basic functionality that must be overwridden by derived classes.
+			 *  It accepts an agent id which will allow for more deterministic random generation
+			 *  when in parallel mode.
+			 *
+			 *	@return		A float value.
+			 */
+			virtual float getValue(size_t agentId) const = 0;
+
+			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
 			 *				in a thread-safe manner.
 			 *
@@ -163,6 +177,7 @@ namespace Menge {
 			 *	@return		A constant float value.
 			 */
 			virtual float getValue() const { return _value; }
+			virtual float getValue(size_t agentId) const { return _value; }
 
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
@@ -263,6 +278,7 @@ namespace Menge {
 			 *	@return		A clamped, normally-distributed float value.
 			 */
 			virtual float getValue() const;
+			virtual float getValue(size_t agentId) const;
 
 			/*!
 			 *	@brief		Return a value based on the float generation rules - performed
@@ -338,6 +354,10 @@ namespace Menge {
 			 *	@brief		A seed for the random number generator.
 			 */
 			mutable int	  _seed;
+
+			// eh we'll add this when we need it.
+			mutable std::array<int, MAX_AGENT_INDEX> _agent_seeds; // for deterministic random generator in multi-threaded.
+			mutable std::array<float, MAX_AGENT_INDEX> _agent_second; // for deterministic random generator in multi-threaded.
 
 			/*!
 			 *	@brief		The lock for guaranteeing threadsafe random number generation.
@@ -454,6 +474,7 @@ namespace Menge {
 			 *	@brief		A seed for the random number generator.
 			 */
 			mutable int	  _seed;
+			mutable std::array<int, MAX_AGENT_INDEX> _agent_seeds; // for deterministic random generator in multi-threaded.
 
 			/*!
 			 *	@brief		The lock for guaranteeing threadsafe random number generation.
@@ -486,6 +507,7 @@ namespace Menge {
 			 *	@return		An integer value.
 			 */
 			virtual int getValue() const = 0;
+			virtual int getValue(size_t agentId) const = 0;
 
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
@@ -539,6 +561,7 @@ namespace Menge {
 			 *	@return		A constant integer value.
 			 */
 			virtual int getValue() const { return _value; }
+			virtual int getValue(size_t agentId) const { return _value; }
 
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
@@ -620,6 +643,7 @@ namespace Menge {
 			 *	@return		A uniformly distributed integer value.
 			 */
 			virtual int getValue() const;
+			virtual int getValue(size_t agentId) const;
 
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed
@@ -673,6 +697,7 @@ namespace Menge {
 			 *	@brief		A seed for the random number generator.
 			 */
 			mutable int _seed;
+			mutable std::array<int, MAX_AGENT_INDEX> _agent_seeds; // for deterministic random generator in multi-threaded.
 
 			/*!
 			 *	@brief		The lock for guaranteeing threadsafe random number generation.
@@ -706,6 +731,7 @@ namespace Menge {
 			 *	@return		A 2D float value.
 			 */
 			virtual Vector2 getValue() const = 0;
+			virtual Vector2 getValue(size_t agentId) const = 0;
 
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
@@ -752,6 +778,7 @@ namespace Menge {
 			 *	@return		A 2D zero vector.
 			 */
 			virtual Vector2 getValue() const { return Vector2(0.f, 0.f); }
+			virtual Vector2 getValue(size_t agentId) const { return Vector2(0.f, 0.f); }
 
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
@@ -809,6 +836,7 @@ namespace Menge {
 			 *	@return		A constat 2D value.
 			 */
 			virtual Vector2 getValue() const { return _value; }
+			virtual Vector2 getValue(size_t agentId) const { return _value; }
 
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
@@ -883,6 +911,7 @@ namespace Menge {
 			 *	@return		A constat position uniformly samples from an AAB.
 			 */
 			virtual Vector2 getValue() const;
+			virtual Vector2 getValue(size_t agentId) const;
 
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
@@ -967,6 +996,7 @@ namespace Menge {
 			 *	@return		A constat position uniformly samples from an OB.
 			 */
 			virtual Vector2 getValue() const;
+			virtual Vector2 getValue(size_t agentId) const;
 
 			/*!
 			 *	@brief		Return a value based on the 2D float generation rules - performed
@@ -1102,6 +1132,7 @@ namespace Menge {
 			 *	@return		An integer value drawn from a set with weighted probabilities.
 			 */
 			virtual int getValue() const;
+			virtual int getValue(size_t agentId) const;
 
 			/*!
 			 *	@brief		Return a value based on the integer generation rules - performed

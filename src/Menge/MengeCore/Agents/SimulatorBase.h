@@ -200,14 +200,12 @@ namespace Menge {
 			int AGT_COUNT = static_cast< int >( _agents.size() );
 			#pragma omp parallel for
 			for (int i = 0; i < AGT_COUNT; ++i) {
-				// #pragma omp ordered
-				{computeNeighbors( &(_agents[i]) );
-								_agents[i].computeNewVelocity();}
+				computeNeighbors( &(_agents[i]) );
+				_agents[i].computeNewVelocity();
 			}
 
 			#pragma omp parallel for
 			for (int i = 0; i < AGT_COUNT; ++i) {
-				// #pragma omp ordered
 			  _agents[i].update( TIME_STEP );
 			}
 

@@ -119,6 +119,7 @@ namespace Menge {
 			 *	@brief		The generator for determining the per-agent duration.
 			 */
 			FloatGenerator * _durGen;
+			std::map< size_t, FloatGenerator*> _durGens;
 
 			/*!
 			 *	@brief		Lock to protect _triggerTimes;

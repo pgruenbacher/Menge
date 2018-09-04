@@ -300,7 +300,7 @@ namespace Menge {
 			size_t exceptionCount = 0;
 
 			// eh get rid of the exception reduction...
-			#pragma omp parallel for ordered
+			#pragma omp parallel for
 			for ( int a = 0; a < agtCount; ++a ) {
 				// #pragma omp ordered
 				// {

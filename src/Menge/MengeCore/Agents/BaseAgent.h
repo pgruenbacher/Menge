@@ -313,11 +313,6 @@ namespace Menge {
 			size_t _class;
 
 			/*!
-			 *	@brief		A seed for the rand number generator.
-			 */
-			mutable int	  _seed;
-
-			/*!
 			 *	@brief		A mask indicating the obstacles with compatible ids which
 			 *				this agent can see.
 			 *

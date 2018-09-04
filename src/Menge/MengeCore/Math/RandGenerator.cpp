@@ -63,7 +63,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 		//                   Implementation of Default Seed Generator
 		/////////////////////////////////////////////////////////////////////
-
+		const float _NULL_SECOND_FLOAT = 9000.0;
 		/*!
 		 *	@brief		The global seed for the number generators.
 		 *
@@ -163,6 +163,19 @@ namespace Menge {
 			} else {
 				_seed = seed;
 			}
+
+			_agent_seeds[0] = _seed;
+			_agent_second.fill(_NULL_SECOND_FLOAT);
+			for (size_t i = 1; i < _agent_seeds.size(); i++) {
+				// initialize the agent seed values upon initialization.
+				_agent_seeds[i] = _agent_seeds[i - 1];
+				// after copying previous seed, update it with new seed so taht each
+				// agent doesn't start with the same seed.
+				float val;
+				float val2;
+				// no need to set agent second yet...
+				r4_normalR( _mean, _std, val, val2, &(_agent_seeds[i]) );
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -186,6 +199,26 @@ namespace Menge {
 				val = _second;
 			}
 			++_calls;
+
+			if ( val < _min ) val = _min;
+			else if ( val > _max ) val = _max;
+
+			return val;
+		}
+
+		float NormalFloatGenerator::getValue(size_t	agentId) const {
+			float val;
+			// may want to initailzie with something other than 0.0... but eh...
+			// like a const float value like 90000
+			if ( _agent_second[agentId] != _NULL_SECOND_FLOAT) {	// Generate new values
+				_agent_second[agentId] = _NULL_SECOND_FLOAT;
+				return _agent_second[agentId];
+
+			} else {					// simply return second value
+				float second;
+				r4_normalR( _mean, _std, val, second, &(_agent_seeds[agentId]) );
+				_agent_second[agentId] = second;
+			}
 
 			if ( val < _min ) val = _min;
 			else if ( val > _max ) val = _max;
@@ -233,6 +266,15 @@ namespace Menge {
 			} else {
 				_seed = seed;
 			}
+
+			_agent_seeds[0] = _seed;
+			for (size_t i = 1; i < _agent_seeds.size(); i++) {
+				// initialize the agent seed values upon initialization.
+				_agent_seeds[i] = _agent_seeds[i - 1];
+				// after copying previous seed, update it with new seed so taht each
+				// agent doesn't start with the same seed.
+				r4_uniform_01( &(_agent_seeds[i]) );
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -251,7 +293,8 @@ namespace Menge {
 			// std::cout << "SEED? " << agentId << " " << _seed << " Time? " << Menge::SIM_TIME << std::endl;
 			// std::cout << " GET VALUE " << agentId << " " << r4_uniform_01(int(Menge::SIM_TIME) + agentId) << std::endl;
 			// return _min + (( float ) ( _seed + agentId ) * 4.656612875E-10f) * _size;
-			return _min + r4_uniform_01(_seed) * _size;
+			int* seed = &(_agent_seeds[agentId]);
+			return _min + r4_uniform_01( seed ) * _size;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -315,12 +358,28 @@ namespace Menge {
 			} else {
 				_seed = seed;
 			}
+
+			_agent_seeds[0] = _seed;
+			for (size_t i = 1; i < _agent_seeds.size(); i++) {
+				// initialize the agent seed values upon initialization.
+				_agent_seeds[i] = _agent_seeds[i - 1];
+				// after copying previous seed, update it with new seed so taht each
+				// agent doesn't start with the same seed.
+				r4_uniform_01( &(_agent_seeds[i]) );
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
 
 		int UniformIntGenerator::getValue() const {
 			int randVal = static_cast< int >( r4_uniform_01( &_seed ) *
+											  std::numeric_limits<int>::max() );
+			int val = randVal % _size;
+			return _min + val;
+		}
+
+		int UniformIntGenerator::getValue(size_t agentId) const {
+			int randVal = static_cast< int >( r4_uniform_01( &(_agent_seeds[agentId]) ) *
 											  std::numeric_limits<int>::max() );
 			int val = randVal % _size;
 			return _min + val;
@@ -402,6 +461,11 @@ namespace Menge {
 			return Vector2( _xRand.getValue(), _yRand.getValue() );
 		}
 
+		Vector2 AABBUniformPosGenerator::getValue(size_t agentId) const {
+			// more deterministic per agentId
+			return Vector2( _xRand.getValue(agentId), _yRand.getValue(agentId) );
+		}
+
 		/////////////////////////////////////////////////////////////////////
 
 		Vector2 AABBUniformPosGenerator::getValueConcurrent() const {
@@ -461,6 +525,15 @@ namespace Menge {
 
 		Vector2 OBBUniformPosGenerator::getValue() const {
 			Vector2 inRect( _xRand.getValue(), _yRand.getValue() );
+			// rotate
+			const float x = inRect.x() * _cosTheta - inRect.y() * _sinTheta + _minPt.x();
+			const float y = inRect.y() * _cosTheta + inRect.x() * _sinTheta + _minPt.y();
+			return Vector2( x, y );
+		}
+
+		Vector2 OBBUniformPosGenerator::getValue(size_t agentId) const {
+			// use agent ID to get more determinsitic random numbers per agent.
+			Vector2 inRect( _xRand.getValue(agentId), _yRand.getValue(agentId) );
 			// rotate
 			const float x = inRect.x() * _cosTheta - inRect.y() * _sinTheta + _minPt.x();
 			const float y = inRect.y() * _cosTheta + inRect.x() * _sinTheta + _minPt.y();
@@ -527,6 +600,19 @@ namespace Menge {
 		int WeightedIntGenerator::getValue() const {
 			size_t pCount = _pairs.size();
 			float t = _dice.getValue();
+			float start = 0.f;
+			for ( size_t i = 0; i < pCount; ++i ) {
+				float end = _pairs[i]._wt;
+				if ( t >= start && t < end ) {
+					return _pairs[i]._val;
+				}
+			}
+			return _pairs[ pCount - 1 ]._val;
+		}
+
+		int WeightedIntGenerator::getValue(size_t agentId) const {
+			size_t pCount = _pairs.size();
+			float t = _dice.getValue(agentId);
 			float start = 0.f;
 			for ( size_t i = 0; i < pCount; ++i ) {
 				float end = _pairs[i]._wt;

@@ -68,10 +68,10 @@ namespace Menge {
 		///////////////////////////////////////////////////////////////////////////
 
 		void TimerCondition::onEnter( Agents::BaseAgent * agent ) {
-			// #pragma omp ordered
-			{_lock.lockWrite();
-				_triggerTimes[ agent->_id ] = Menge::SIM_TIME + _durGen->getValue();
-				_lock.releaseWrite();}
+			_lock.lockWrite();
+			// use agent id to get random value to be deterministic regardless of thread order.
+			_triggerTimes[ agent->_id ] = Menge::SIM_TIME + _durGen->getValue(agent->_id);
+			_lock.releaseWrite();
 		}
 
 		///////////////////////////////////////////////////////////////////////////

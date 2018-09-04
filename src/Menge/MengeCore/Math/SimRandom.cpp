@@ -191,10 +191,11 @@ namespace Menge {
 		  return r;
 		}
 
-		float r4_uniform_01 ( int seed ) {
-			// we take address, but hte function should
-			// have already copied hte int value...
-			return r4_uniform_01(&seed);
-		}
+		// void r4_uniform_01 ( int seed , int& dest_seed) {
+		// 	// we take address, but hte function should
+		// 	// have already copied hte int value...
+		// 	// we do this so we can can have the updated seed be used somewhere else if desired.
+		// 	r4_uniform_01(&seed);
+		// }
 	}	 // namespace Math
 }	// namespace Menge
