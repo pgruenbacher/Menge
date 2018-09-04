@@ -38,6 +38,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/Math/RandGenerator.h"
 #include "MengeCore/Math/SimRandom.h"
+#include "MengeCore/Core.h"
 
 #include "tinyxml/tinyxml.h"
 
@@ -247,7 +248,10 @@ namespace Menge {
 		}
 
 		float UniformFloatGenerator::getValue(size_t agentId) const {
-			return _min + (( float ) ( _seed + agentId ) * 4.656612875E-10f) * _size;
+			// std::cout << "SEED? " << agentId << " " << _seed << " Time? " << Menge::SIM_TIME << std::endl;
+			// std::cout << " GET VALUE " << agentId << " " << r4_uniform_01(int(Menge::SIM_TIME) + agentId) << std::endl;
+			// return _min + (( float ) ( _seed + agentId ) * 4.656612875E-10f) * _size;
+			return _min + r4_uniform_01(_seed) * _size;
 		}
 
 		/////////////////////////////////////////////////////////////////////

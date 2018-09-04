@@ -59,10 +59,12 @@
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
         <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9"/>
     </Transition>
     <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
         <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9" inverse="1"/>
     </Transition>
 
@@ -75,6 +77,7 @@
 
     <Transition from="Attack" to="AdvancingEnemy">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
     </Transition>
 
 

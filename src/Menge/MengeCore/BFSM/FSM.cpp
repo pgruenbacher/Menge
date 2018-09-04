@@ -298,20 +298,34 @@ namespace Menge {
 			EVENT_SYSTEM->evaluateEvents();
 			int agtCount = (int)this->_sim->getNumAgents();
 			size_t exceptionCount = 0;
-			#pragma omp parallel for reduction(+:exceptionCount)
+
+			// eh get rid of the exception reduction...
+			#pragma omp parallel for ordered
 			for ( int a = 0; a < agtCount; ++a ) {
-				Agents::BaseAgent * agt = this->_sim->getAgent( a );
-				try {
+				// #pragma omp ordered
+				// {
+					Agents::BaseAgent * agt = this->_sim->getAgent( a );
+					// #pragma omp ordered
 					advance( agt );
 					this->computePrefVelocity( agt );
-				} catch ( StateException & e ) {
-					logger << Logger::ERR_MSG << e.what() << "\n";
-					++exceptionCount;
-				}
+				// }
 			}
-			if ( exceptionCount > 0 ) {
-				throw FSMFatalException();
-			}
+
+			// #pragma omp parallel for ordered reduction(+:exceptionCount)
+			// for ( int a = 0; a < agtCount; ++a ) {
+			// 	#pragma omp ordered
+			// 	{Agents::BaseAgent * agt = this->_sim->getAgent( a );
+			// 	try {
+			// 		advance( agt );
+			// 		this->computePrefVelocity( agt );
+			// 	} catch ( StateException & e ) {
+			// 		logger << Logger::ERR_MSG << e.what() << "\n";
+			// 		++exceptionCount;
+			// 	}}
+			// }
+			// if ( exceptionCount > 0 ) {
+			// 	throw FSMFatalException();
+			// }
 			return this->allFinal();
 		}
 

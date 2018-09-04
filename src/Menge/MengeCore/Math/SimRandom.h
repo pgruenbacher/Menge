@@ -32,7 +32,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Generates a quasi-thread-safe, normally distributed random number.
 		 *
-		 *	This algorithm generates two normally distributed values at a time. 
+		 *	This algorithm generates two normally distributed values at a time.
 		 *	To be thread-safe, it could simply dismiss every second value.  Alternatively,
 		 *	we can provide both values an place the burden on the caller to handle both.
 		 *
@@ -43,7 +43,7 @@ namespace Menge {
 		 *	@param		seed	A seed for the random number generator.
 		 *						The value in this integer changes with every call.
 		 */
-		void r4_normalR ( float a, float b, float & val1, float & val2, int *seed );	
+		void r4_normalR ( float a, float b, float & val1, float & val2, int *seed );
 
 		/*!
 		 *	@brief		The Box-Muller method for computing two normally distributed
@@ -63,6 +63,9 @@ namespace Menge {
 		 *	@returns	The uniformly distributed number.
 		 */
 		float r4_uniform_01 ( int *seed );
+
+		// read-only version. won't modify original seed - paul
+		float r4_uniform_01 ( int seed );
 
 	}	// namespace Math
 }	// namespace Menge

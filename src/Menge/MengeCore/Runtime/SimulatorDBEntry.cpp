@@ -149,8 +149,9 @@ namespace Menge {
 		int agtCount = (int)sim->getNumAgents();
 		#pragma omp parallel for
 		for ( int a = 0; a < agtCount; ++a ) {
-			Agents::BaseAgent * agt = sim->getAgent( a );
-			fsm->computePrefVelocity( agt );
+			// #pragma omp ordered
+			{Agents::BaseAgent * agt = sim->getAgent( a );
+						fsm->computePrefVelocity( agt );}
 		}
 		try {
 			sim->finalize();

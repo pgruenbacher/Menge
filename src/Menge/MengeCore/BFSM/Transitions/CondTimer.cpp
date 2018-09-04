@@ -68,9 +68,10 @@ namespace Menge {
 		///////////////////////////////////////////////////////////////////////////
 
 		void TimerCondition::onEnter( Agents::BaseAgent * agent ) {
-			_lock.lockWrite();
-			_triggerTimes[ agent->_id ] = Menge::SIM_TIME + _durGen->getValue();
-			_lock.releaseWrite();
+			// #pragma omp ordered
+			{_lock.lockWrite();
+				_triggerTimes[ agent->_id ] = Menge::SIM_TIME + _durGen->getValue();
+				_lock.releaseWrite();}
 		}
 
 		///////////////////////////////////////////////////////////////////////////

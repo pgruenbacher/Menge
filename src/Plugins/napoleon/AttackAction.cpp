@@ -70,7 +70,6 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     void AttackAction::onEnter( BaseAgent * agent ) {
-        return;
         float distSq = 1000.f * 1000.f;
         size_t maxId = std::numeric_limits<size_t>::max();
         // size_t agentId = maxId;

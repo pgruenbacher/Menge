@@ -223,8 +223,6 @@ namespace Menge {
 			void adjustHealth(int v) { _health += v; }
 			bool isDead() const { return _health < 0; }
 			bool visible;
-			float currentTiltAngle;
-			float maxTiltAngle;
 			Math::Vector2 getTurnCircleDelta() const;
 			float getTurnRadius() const;
 			bool targetInTurnCircle(const Math::Vector2& v) const;
@@ -313,6 +311,11 @@ namespace Menge {
 			 *	Used to define behavior and visualization properties.
 			 */
 			size_t _class;
+
+			/*!
+			 *	@brief		A seed for the rand number generator.
+			 */
+			mutable int	  _seed;
 
 			/*!
 			 *	@brief		A mask indicating the obstacles with compatible ids which
