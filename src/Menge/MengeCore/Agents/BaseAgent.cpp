@@ -177,13 +177,15 @@ namespace Menge {
 			} else if (speed == 0.0 && hasMinPrefDir) {
 				newOrient = prefDir;
 				newOrient.normalize();
-			} else if (speed == 0.0 && _velPref.hasTarget()) {
+			} else if (speed < speedThresh && _velPref.hasTarget() && !(targetDir.x() == 0 && targetDir.y() == 0)) {
+				// if slow enough, face target.
+				// make sure we're not already on the target...
 				newOrient = targetDir;
 				newOrient.normalize();
 			} else {
-				// if slow enough, face target.
-				newOrient = targetDir;
-				newOrient.normalize();
+				newOrient = _orient;
+				// newOrient = targetDir;
+				// newOrient.normalize();
 				// prefDir *can* be zero if we've arrived at goal.  Only use it if it's non-zero.
 				// if ( hasMinPrefDir ) {
 				// 	// so if travelling backwards...
@@ -192,6 +194,16 @@ namespace Menge {
 				// 	newOrient.normalize();
 				// }
 			}
+
+			// if (_id == 40) {
+			// 	std::cout << "NEW ORI " << newOrient.x() << " " << newOrient.y() << std::endl;
+			// 	std::cout << "ORI " << _orient.x() << " " << _orient.y() << std::endl;
+			// 	std::cout << "hasMin " << int(hasMinPrefDir) << std::endl;
+			// 	std::cout << "hasMin " << int(_velPref.hasTarget()) << std::endl;
+			// 	std::cout << "targetDir " << targetDir.x() << " " << targetDir.y() << std::endl;
+			// 	std::cout << "Ve " << _vel.x() << " " << _vel.y() << std::endl;
+			// 	std::cout << "CT " << newOrient * _orient << std::endl;
+			// }
 			// unsigned int name = MengeVis::SceneGraph::Selectable::getSelectedName();
 			// if (name == _id) {
 			// 	std::cout << "SELECTED " << _id << std::endl;
