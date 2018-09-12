@@ -24,80 +24,84 @@
 #ifndef __NEAREST_ENEM_TASK_H__
 #define __NEAREST_ENEM_TASK_H__
 
-#include "MengeCore/BFSM/fsmCommon.h"
+#include <map>
+#include <string>
+#include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/BFSM/Tasks/Task.h"
 #include "MengeCore/BFSM/Tasks/TaskFactory.h"
+#include "MengeCore/BFSM/fsmCommon.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
-#include "MengeCore/Agents/BaseAgent.h"
-#include <string>
-#include <map>
 
 #include "thirdParty/tinyxml.h"
 
 using namespace Menge;
 namespace Napoleon {
-    /*!
-   *  @brief  Task responsible for updating agent data for maintaining a formation.
-   */
-    struct NearestEnemData : public Menge::Agents::NearAgent {
-        // const BaseAgent* enem;
-        // float distSquared;
-        float timeout;
+/*!
+* @brief  Task responsible for updating agent data for maintaining a formation.
+*/
+struct NearestEnemData : public Menge::Agents::NearAgent {
+  // const BaseAgent* enem;
+  // float distSquared;
+  float timeout;
 
-        NearestEnemData(const Menge::Agents::NearAgent obj);
-    };
+  NearestEnemData(const Menge::Agents::NearAgent obj);
+};
 
 typedef std::map<size_t, NearestEnemData> NearestEnemDataMap;
 
-  class NearestEnemTask : public Menge::BFSM::Task {
-    Menge::ReadersWriterLock _lock;
+class NearestEnemTask : public Menge::BFSM::Task {
+  Menge::ReadersWriterLock _lock;
 
-    NearestEnemDataMap _nearEnems;
-    // internally track the number of enems targeting each agent
-    // which may be useful.
-    std::map<size_t, int> _numTargetedBy;
-    static NearestEnemTask* TASK_PTR;
-    Menge::Agents::NearAgent _getNearestTarget(const Menge::Agents::BaseAgent* agt);
+  NearestEnemDataMap _nearEnems;
+  // internally track the number of enems targeting each agent
+  // which may be useful.
+  std::map<size_t, int> _numTargetedBy;
+  static NearestEnemTask* TASK_PTR;
+  Menge::Agents::NearAgent _getNearestTarget(
+      const Menge::Agents::BaseAgent* agt);
 
-  public:
-    static NearestEnemTask* getSingleton();
-    /*!
-     *  @brief    Constructor
-     *
-     */
+ public:
+  static NearestEnemTask* getSingleton();
+  /*!
+   *  @brief    Constructor
+   *
+   */
 
-    /*!
-     *  @brief    The work performed by the task.
-     *
-     *  @param    fsm   The finite state machine for the task to operate on.
-     *  @throws   A TaskException if there was some non-fatal error
-     *        in execution.  It should be logged.
-     *  @throws   A TaskFatalException if there is a fatal error that
-     *        should arrest execution of the simulation.
-     */
-    virtual void doWork( const Menge::BFSM::FSM * fsm ) throw( Menge::BFSM::TaskException );
+  /*!
+   *  @brief    The work performed by the task.
+   *
+   *  @param    fsm   The finite state machine for the task to operate on.
+   *  @throws   A TaskException if there was some non-fatal error
+   *        in execution.  It should be logged.
+   *  @throws   A TaskFatalException if there is a fatal error that
+   *        should arrest execution of the simulation.
+   */
+  virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
+      Menge::BFSM::TaskException);
 
-    NearestEnemData getTarget(const Menge::Agents::BaseAgent* agt);
-    NearestEnemData getCurrentTarget(const Menge::Agents::BaseAgent* agt);
+  bool getTarget(const Menge::Agents::BaseAgent* agt,
+                 Menge::Agents::NearAgent& result);
+  bool getCurrentTarget(const Menge::Agents::BaseAgent* agt,
+                        Menge::Agents::NearAgent& result);
 
-    /*!
-     *  @brief    String representation of the task
-     *
-     *  @returns  A string containing task information.
-     */
-    virtual std::string toString() const;
+  /*!
+   *  @brief    String representation of the task
+   *
+   *  @returns  A string containing task information.
+   */
+  virtual std::string toString() const;
 
-    /*!
-     *  @brief    Reports if this task is "equivalent" to the given task.
-     *        This makes it possible for a task to be redundantly added
-     *        to the fsm without fear of duplication as the equivalent
-     *        duplicates will be culled.
-     *
-     *  @param    task    The task to test against this one.
-     *  @returns  A boolean reporting if the two tasks are equivalent (true)
-     *        or unique (false).
-     */
-    virtual bool isEquivalent( const Menge::BFSM::Task * task ) const;
-  };
-} // namespace Napoleon
-#endif // __NEAREST_ENEM_TASK_H__
+  /*!
+   *  @brief    Reports if this task is "equivalent" to the given task.
+   *        This makes it possible for a task to be redundantly added
+   *        to the fsm without fear of duplication as the equivalent
+   *        duplicates will be culled.
+   *
+   *  @param    task    The task to test against this one.
+   *  @returns  A boolean reporting if the two tasks are equivalent (true)
+   *        or unique (false).
+   */
+  virtual bool isEquivalent(const Menge::BFSM::Task* task) const;
+};
+}  // namespace Napoleon
+#endif  // __NEAREST_ENEM_TASK_H__

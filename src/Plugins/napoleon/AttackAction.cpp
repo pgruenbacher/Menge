@@ -73,7 +73,10 @@ namespace Napoleon {
         float distSq = 1000.f * 1000.f;
         size_t maxId = std::numeric_limits<size_t>::max();
         // size_t agentId = maxId;
-        NearestEnemData d = NearestEnemTask::getSingleton()->getCurrentTarget(agent);
+        Menge::Agents::NearAgent d(100, 0x0);
+        if (!NearestEnemTask::getSingleton()->getCurrentTarget(agent, d)) {
+            return;
+        }
         Menge::Math::Vector2 target = d.agent->_pos;
         const BaseAgent* finalEnem = d.agent;
 

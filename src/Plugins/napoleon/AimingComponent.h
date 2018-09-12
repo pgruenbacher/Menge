@@ -20,8 +20,8 @@
  *  @file   VelComponent.h
  *  @brief    The definition of how preferred velocity is computed in a state.
  */
-#ifndef _NEAREST_ENEM_COMP_H_
-#define _NEAREST_ENEM_COMP_H_
+#ifndef _AIMING_COMPONENT_H_
+#define _AIMING_COMPONENT_H_
 
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
@@ -45,19 +45,13 @@ namespace Napoleon {
   using Menge::logger;
   using Menge::Agents::NearAgent;
 
-class MENGE_API NearestEnemComponent : public VelComponent {
+class MENGE_API AimingComponent : public VelComponent {
 
  public:
   /*!
    *  @brief    Default constructor.
    */
-  NearestEnemComponent();
-  enum ActionType {
-    ADVANCING,
-    WITHDRAWING,
-    IDLE,
-  };
-
+  AimingComponent();
 
  protected:
   /*!
@@ -66,15 +60,10 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   // Menge::ReadersWriterLock _lock;
   // std::map< size_t, const Menge::Agents::BaseAgent * > _agents;
   // std::map< size_t, const Menge::Agents::BaseAgent * > _to_enem_agents;
+  std::vector<float> _angles;
+  const float defaultAngle = 30.f;
 
-  virtual ~NearestEnemComponent() {}
-  // VelComponent* parseVelComponent(TiXmlElement* node,
-  //                                 const std::string& behaveFldr);
-  void setAdvancingVelocity(const BaseAgent* enem, const BaseAgent* agent, PrefVelocity& pVel, float distSq) const;
-  void setWithdrawingVelocity(const BaseAgent* enem, const BaseAgent* agent,
-                              PrefVelocity& pVel, float distSq) const;
-  void setIdleVelocity(const BaseAgent* enem, const BaseAgent* agent, const Goal* goal,
-                               PrefVelocity& pVel) const;
+  virtual ~AimingComponent() {}
 
  public:
 
@@ -90,32 +79,25 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   // virtual std::string getStringId() const = 0;
   virtual std::string getStringId() const { return NAME; }
 
-  ActionType _actionType;
-  // whether unit should slow to arrive when approaching enemy. (cavalry)
-  bool _slowToArrive;
-  /*! The unique identifier used to register this type with run-time components.
-   */
   static const std::string NAME;
   virtual Task * getTask();
   void loadSetFormation(const std::string& fname);
 };
 
-class MENGE_API NearestEnemComponentFactory : public VelCompFactory {
+class MENGE_API AimingComponentFactory : public VelCompFactory {
  public:
-  NearestEnemComponentFactory();
+  AimingComponentFactory();
 
-  virtual const char* name() const { return NearestEnemComponent::NAME.c_str(); }
+  virtual const char* name() const { return AimingComponent::NAME.c_str(); }
 
   virtual const char* description() const { return "Aiming component"; };
 
  protected:
-  VelComponent* instance() const { return new NearestEnemComponent(); }
-  size_t _methodID;
-  size_t _slowToArriveID;
+  VelComponent* instance() const { return new AimingComponent(); }
   virtual bool setFromXML(VelComponent* vc, TiXmlElement* node,
                           const std::string& behaveFldr) const;
 
 };
 }  // namespace Napoleon
 
-#endif  // _NEAREST_ENEM_COMP_H_
+#endif  // _AIMING_COMPONENT_H_

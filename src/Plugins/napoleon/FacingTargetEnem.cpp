@@ -53,7 +53,8 @@ namespace Napoleon {
 
     bool FacingTargetEnem::conditionMet( BaseAgent * agent, const Goal * goal ) {
       NearestEnemTask* t = NearestEnemTask::getSingleton();
-      NearestEnemData d = t->getCurrentTarget(agent);
+      Menge::Agents::NearAgent d(100, 0x0);
+      if (!t->getCurrentTarget(agent, d)) return false;
       if (d.agent == 0x0) return false;
       Vector2 dir = d.agent->_pos - agent->_pos;
       dir.normalize();
