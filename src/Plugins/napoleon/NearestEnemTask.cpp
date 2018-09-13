@@ -62,7 +62,7 @@ namespace Napoleon {
   NearestEnemTask* NearestEnemTask::TASK_PTR = 0x0;
 
   NearestEnemData::NearestEnemData(const Menge::Agents::NearAgent obj )
-    : NearAgent(obj) {}
+    : NearAgent(obj), doWork(false), timeout(0.f) {}
 
   NearestEnemTask* NearestEnemTask::getSingleton() {
     if (TASK_PTR == 0x0) {
@@ -75,7 +75,13 @@ namespace Napoleon {
     _numTargetedBy.clear();
     NearestEnemDataMap::iterator it;
     for (it = _nearEnems.begin(); it != _nearEnems.end(); it++) {
-      _numTargetedBy[it->second.agent->_id] += 1;
+      if (!it->second.doWork) continue;
+      if (_getTarget(it->first, it->second)) {
+        if (it->second.agent == 0x0) {
+          std::cout << " !!!!!??!?!?!" << std::endl;
+        }
+        _numTargetedBy[it->second.agent->_id] += 1;
+      }
     }
   }
   /////////////////////////////////////////////////////////////////////
@@ -84,69 +90,81 @@ namespace Napoleon {
     return "NearestEnem Task";
   }
 
-  NearAgent NearestEnemTask::_getNearestTarget(const BaseAgent* agent) {
+  void NearestEnemTask::_getNearestTarget(const BaseAgent* agent, NearAgent& result) const {
     float distSq = 1000.f * 1000.f;
-    NearAgent targetEnem(distSq, 0x0);
+    // NearAgent targetEnem(distSq, 0x0);
     for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
       if (enem.distanceSquared < distSq) {
         distSq = enem.distanceSquared;
-        targetEnem = enem;
+        result = enem;
+        // targetEnem = enem;
+        // result.agent = enem;
+        // result.distanceSquared = distSq
       }
     }
-    return targetEnem;
+    return;
   }
 
-  bool NearestEnemTask::getCurrentTarget(const BaseAgent* agt, NearAgent& result) {
+  bool NearestEnemTask::getCurrentTarget(const BaseAgent* agt, NearAgent& result) const {
     const float delay = 1.f;
 
     // Not sure if we really need the lock safety
     // _lock.lockWrite();
     NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
-    NearestEnemDataMap::iterator it = _nearEnems.find(agt->_id);
+    NearestEnemDataMap::const_iterator it = _nearEnems.find(agt->_id);
     if (it == _nearEnems.end()) {
       // std::cout << "WARNING!!!!" << std::endl;
       return false;
     } else {
-      d = it->second;
+      result = it->second;
     }
-    result.agent = d.agent;
-    result.distanceSquared = d.distanceSquared;
+    // result.agent = d.agent;
+    // result.distanceSquared = d.distanceSquared;
     return true;
   }
 
-  bool NearestEnemTask::getTarget(const BaseAgent* agt, NearAgent& result) {
-    const float delay = 1.f;
-
-    // Not sure if we really need the lock safety
-    // _lock.lockWrite();
-    NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
-    NearestEnemDataMap::iterator it = _nearEnems.find(agt->_id);
-
+  void NearestEnemTask::addAgent(size_t id) {
+    _lock.lockWrite();
+    NearestEnemDataMap::iterator it = _nearEnems.find(id);
     if (it == _nearEnems.end()) {
-      // since we construct from NearAgent, we can do this
-      // for NearestEnemData
-      d = _getNearestTarget(agt);
-      d.timeout = Menge::SIM_TIME + delay;
-      _nearEnems.insert(NearestEnemDataMap::value_type(agt->_id, d));
-      // return d;
-    } else if (it->second.timeout < Menge::SIM_TIME ||
-               it->second.agent->isDead()) {
-      // std::cout << "DELAY" << it->second.timeout << " " << Menge::SIM_TIME << std::endl;
-      d = _getNearestTarget(agt);
-      d.timeout = Menge::SIM_TIME + delay;
-      it->second = d;
-      // return d;
+      NearestEnemData d = NearestEnemData(NearAgent(1000, 0x0));
+      d.doWork = true;
+      _nearEnems.insert(NearestEnemDataMap::value_type(id, d));
     } else {
-      d = it->second;
+      it->second.doWork = true;
+      // it->secon
     }
-    // _lock.releaseWrite();
-    if (d.agent == 0x0) {
+    _lock.releaseWrite();
+  }
+
+  void NearestEnemTask::removeAgent(size_t id) {
+    _lock.lockWrite();
+    // _nearEnems.erase(id);
+    NearestEnemDataMap::iterator it = _nearEnems.find(id);
+    if (it != _nearEnems.end()) {
+      it->second.doWork = false;
+    }
+    _lock.releaseWrite();
+  }
+
+  bool NearestEnemTask::_getTarget(size_t agent_id, NearestEnemData& result) const {
+    const float delay = 1.f;
+    BaseAgent* agent = Menge::SIMULATOR->getAgent(agent_id);
+
+    if (result.agent == 0x0) {
+      _getNearestTarget(agent, result);
+      result.timeout = Menge::SIM_TIME + delay;
+    } else if (result.timeout < Menge::SIM_TIME || result.agent->isDead()) {
+      _getNearestTarget(agent, result);
+      result.timeout = Menge::SIM_TIME + delay;
+    } else {
+      // no need to update.
+    }
+
+    if (result.agent == 0x0) {
       // std::cout << "WARNING!!!!" << std::endl;
       return false;
     }
-    // update the result.
-    result.agent = d.agent;
-    result.distanceSquared = d.distanceSquared;
     return true;
   }
   /////////////////////////////////////////////////////////////////////

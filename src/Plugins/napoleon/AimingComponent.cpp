@@ -18,21 +18,38 @@ namespace Napoleon {
   //                   Implementation of GoalVelComponent
   /////////////////////////////////////////////////////////////////////
 
-  const std::string AimingComponent::NAME = "aiming_component";
+  const std::string AimingComponent::NAME = "aiming";
 
-
+  // void setDirections(const Vector2 & q,  Agents::PrefVelocity & directions) {
+  //   Vector2 disp = _position - q;
+  //   const float distSq = absSq( disp );
+  //   Vector2 dir;
+  //   if ( distSq > 1e-8 ) {
+  //     // Distant enough that I can normalize the direction.
+  //     dir.set( disp / sqrtf( distSq ) );
+  //   } else {
+  //     dir.set( 0.f, 0.f );
+  //   }
+  //   directions.setSingle(dir);
+  //   directions.setTarget(_position);
+  // }
   /////////////////////////////////////////////////////////////////////
 
   void AimingComponent::onEnter(BaseAgent* agent) {
     // dynamically resize angles based on number of agents
     // without worrying about the sim->getNumAgents.
-    if (agent->_id > _angles.size()) {
-      _angles.resize(agent->_id, defaultAngle);
-    }
     // _lock.lockWrite();
-    //   // _formation->addAgent(agent);
-    // _agents[agent->_id] = agent;
+    // if (agent->_id > _angles.size()) {
+    //   _angles.resize(agent->_id, defaultAngle);
+    //   // _hold_positions[agent->_id] = agent->_pos;
+    // }
+    // //   // _formation->addAgent(agent);
+    // // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
+    AimingTask* task = AimingTask::getSingleton();
+    // NearAgent d(100, 0x0);
+    return task->addAgent(agent->_id);
+
   }
 
   void AimingComponent::onExit(BaseAgent* agent) {
@@ -40,6 +57,9 @@ namespace Napoleon {
     //   // _formation->addAgent(agent);
     // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
+    AimingTask* task = AimingTask::getSingleton();
+    // NearAgent d(100, 0x0);
+    return task->removeAgent(agent->_id);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -48,34 +68,28 @@ namespace Napoleon {
   }
 
 
-  const NearAgent AimingComponent::getTargetEnem(const BaseAgent* agent) const {
+  bool AimingComponent::getTargetEnem(const BaseAgent* agent, NearAgent& result) const {
     AimingTask* task = AimingTask::getSingleton();
-    NearAgent d(100, 0x0);
-    task->getTarget(agent, d);
-    return d;
+    // NearAgent d(100, 0x0);
+    return task->getCurrentTarget(agent, result);
+    // return d;
   }
 
   /////////////////////////////////////////////////////////////////////
 
   void AimingComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,
                       PrefVelocity & pVel ) const {
-    // bool modify = agent->_nearEnems.size() > 0;
-    // Vector2 target(0.f, 0.f);
-    // if ( !modify ) {
-    //   // pVel.setSpeed(agent->_prefSpeed);
-    //   // Vector2 returnToOrig = (agent->_pos) * -1;
-    //   // returnToOrig.normalize();
-    //   // pVel.setSingle(returnToOrig);
-    //   // std::cout << "no modify! fix! " << agent->_id << "GOAL" << goal << " " << std::endl;
-    //   // return setIdleVelocity(agent, goal, pVel);
-    //   goal->setDirections(agent->_pos, agent->_radius, pVel);
-    //   // goal.
-    //   return;
-    // }
-    // const NearestEnemData targetEnem = getTargetEnem(agent);
-    // if (targetEnem.agent == 0x0) return;
-    // // target = targetEnem.agent->_pos;
-    // float distSq = targetEnem.distanceSquared;
+    NearAgent aimEnem(10000, 0x0);
+    // setDirections(pVel);
+    // assume the goal is a identity goal
+    goal->setDirections(agent->_pos, agent->_radius, pVel);
+    if (getTargetEnem(agent, aimEnem)) {
+      // pVel.setSpeed(0);
+      if (aimEnem.agent == 0x0) {
+        return;
+      }
+      pVel.setTarget(aimEnem.agent->_pos);
+    }
   }
 
   Task * AimingComponent::getTask(){

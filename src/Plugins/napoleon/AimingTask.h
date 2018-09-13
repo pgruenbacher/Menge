@@ -59,13 +59,13 @@ typedef std::map<size_t, AimingEnemData> AimingEnemDataMap;
 
   class AimingTask : public Menge::BFSM::Task {
     Menge::ReadersWriterLock _lock;
-
-    AimingEnemDataMap _nearEnems;
     // internally track the number of enems targeting each agent
     // which may be useful.
+    AimingEnemDataMap _nearEnems;
     std::map<size_t, int> _numTargetedBy;
     static AimingTask* TASK_PTR;
-    bool _updateTarget(const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result, float max_angle = 30.f);
+    bool _updateTarget(const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result, float max_angle = 2 * 3.15) const;
+    bool _getTarget(size_t agent_id, AimingEnemData& result, float max_angle = 2 * 3.15) const;
 
   public:
     static AimingTask* getSingleton();
@@ -84,10 +84,9 @@ typedef std::map<size_t, AimingEnemData> AimingEnemDataMap;
      *        should arrest execution of the simulation.
      */
     virtual void doWork( const Menge::BFSM::FSM * fsm ) throw( Menge::BFSM::TaskException );
-
-    bool getTarget(const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result, float max_angle = 30.f);
-    bool getCurrentTarget(const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result);
-
+    bool getCurrentTarget(const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result) const;
+    void addAgent(size_t agent_id);
+    void removeAgent(size_t agent_id);
     /*!
      *  @brief    String representation of the task
      *

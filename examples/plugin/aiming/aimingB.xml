@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<BFSM>
+  <GoalSet id="0">
+    <Goal type="point" id="0" x="-10" y="0.0"/>
+    <Goal type="point" id="1" x="10" y="0.0"/>
+        <Goal type="point" id="2" x="-10" y="0.0"/>
+        <Goal type="point" id="3" x="10" y="0.0"/>
+  </GoalSet>
+
+    <State name="WalkRight" final="0" type="ChargeState" class="1">
+        <GoalSelector type="explicit" goal_set="0" goal="1" persistent="0" />
+        <VelComponent type="goal" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare.txt" /> -->
+    </State>
+
+    <State name="WalkLeft" final="0" type="ChargeState" class="2">
+        <GoalSelector type="explicit" goal_set="0" goal="0" persistent="0" />
+        <VelComponent type="goal" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
+    </State>
+
+    <State name="Idle" final="0">
+        <GoalSelector type="identity"/>
+        <VelComponent type="goal"/>
+    </State>
+
+    <State name="Aiming" final="0">
+        <GoalSelector type="identity"/>
+        <VelComponent type="aiming"/>
+    </State>
+
+
+    <Transition from="Aiming" to="Idle">
+        <Condition type="timer" dist="c" per_agent="1" value="10"/>
+    </Transition>
+    <Transition from="Idle" to="Aiming">
+        <Condition type="timer" dist="c" per_agent="1" value="2"/>
+    </Transition>
+
+
+    <Transition from="WalkRight,WalkLeft" to="Aiming">
+        <Condition type="enemy_near" dist="15"/>
+    </Transition>
+
+</BFSM>

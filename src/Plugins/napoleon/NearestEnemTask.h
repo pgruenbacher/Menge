@@ -31,6 +31,7 @@
 #include "MengeCore/BFSM/Tasks/TaskFactory.h"
 #include "MengeCore/BFSM/fsmCommon.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
+#include "MengeCore/Agents/SimulatorInterface.h"
 
 #include "thirdParty/tinyxml.h"
 
@@ -43,6 +44,7 @@ struct NearestEnemData : public Menge::Agents::NearAgent {
   // const BaseAgent* enem;
   // float distSquared;
   float timeout;
+  bool doWork;
 
   NearestEnemData(const Menge::Agents::NearAgent obj);
 };
@@ -57,8 +59,10 @@ class NearestEnemTask : public Menge::BFSM::Task {
   // which may be useful.
   std::map<size_t, int> _numTargetedBy;
   static NearestEnemTask* TASK_PTR;
-  Menge::Agents::NearAgent _getNearestTarget(
-      const Menge::Agents::BaseAgent* agt);
+  void _getNearestTarget(
+      const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result) const;
+  bool _getTarget(size_t agent_id,
+                 NearestEnemData& result) const;
 
  public:
   static NearestEnemTask* getSingleton();
@@ -79,10 +83,8 @@ class NearestEnemTask : public Menge::BFSM::Task {
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
       Menge::BFSM::TaskException);
 
-  bool getTarget(const Menge::Agents::BaseAgent* agt,
-                 Menge::Agents::NearAgent& result);
   bool getCurrentTarget(const Menge::Agents::BaseAgent* agt,
-                        Menge::Agents::NearAgent& result);
+                        Menge::Agents::NearAgent& result) const;
 
   /*!
    *  @brief    String representation of the task
@@ -90,6 +92,8 @@ class NearestEnemTask : public Menge::BFSM::Task {
    *  @returns  A string containing task information.
    */
   virtual std::string toString() const;
+  void addAgent(size_t agent_id);
+  void removeAgent(size_t agent_id);
 
   /*!
    *  @brief    Reports if this task is "equivalent" to the given task.

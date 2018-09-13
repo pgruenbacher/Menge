@@ -83,6 +83,8 @@ namespace Napoleon {
     //   // _formation->addAgent(agent);
     // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    task->addAgent(agent->_id);
   }
 
   void NearestEnemComponent::onExit(BaseAgent* agent) {
@@ -90,6 +92,8 @@ namespace Napoleon {
     //   // _formation->addAgent(agent);
     // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    task->removeAgent(agent->_id);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -191,7 +195,7 @@ namespace Napoleon {
 
     NearestEnemTask* task = NearestEnemTask::getSingleton();
     NearAgent d(100, 0x0);
-    task->getTarget(agent, d);
+    task->getCurrentTarget(agent, d);
 
     return d;
   }

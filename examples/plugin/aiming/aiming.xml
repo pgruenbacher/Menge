@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<Project
+  random="10"
+  scene="aimingS.xml"
+  behavior="aimingB.xml"
+  view="aimingV.xml"
+  model="orca"
+  dumpPath="images/test"
+/>

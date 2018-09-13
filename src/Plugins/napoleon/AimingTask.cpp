@@ -45,6 +45,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 namespace Napoleon {
 
+  const int MAX_TARGETED = 8;
+
   using Menge::BFSM::FSM;
   using Menge::BFSM::Task;
   using Menge::BFSM::TaskException;
@@ -77,7 +79,12 @@ namespace Napoleon {
     _numTargetedBy.clear();
     AimingEnemDataMap::iterator it;
     for (it = _nearEnems.begin(); it != _nearEnems.end(); it++) {
-      _numTargetedBy[it->second.agent->_id] += 1;
+      if (_getTarget(it->first, it->second)) {
+        if (it->second.agent == 0x0) {
+          std::cout << " !!!!!??!?!?!" << std::endl;
+        }
+        _numTargetedBy[it->second.agent->_id] += 1;
+      }
     }
   }
   /////////////////////////////////////////////////////////////////////
@@ -86,71 +93,66 @@ namespace Napoleon {
     return "Aiming Task";
   }
 
-  bool AimingTask::getCurrentTarget(const BaseAgent* agt, NearAgent& result) {
-    const float delay = 1.f;
+  void AimingTask::addAgent(size_t id) {
+    _lock.lockWrite();
+    _nearEnems.insert(NearestEnemDataMap::value_type(id, AimingEnemData(NearAgent(1000, 0x0))));
+    _lock.releaseWrite();
+  }
 
+  void AimingTask::removeAgent(size_t id) {
+    _lock.lockWrite();
+    _nearEnems.erase(id);
+    _lock.releaseWrite();
+  }
+
+  bool AimingTask::getCurrentTarget(const BaseAgent* agt, NearAgent& result) const {
+    // const float delay = 1.f;
     // Not sure if we really need the lock safety
     // _lock.lockWrite();
-    AimingEnemData d(Menge::Agents::NearAgent(100, 0x0));
-    AimingEnemDataMap::iterator it = _nearEnems.find(agt->_id);
+    // AimingEnemData d(Menge::Agents::NearAgent(100, 0x0));
+    AimingEnemDataMap::const_iterator it = _nearEnems.find(agt->_id);
     if (it == _nearEnems.end()) {
       // std::cout << "WARNING!!!!" << std::endl;
       return false;
     } else {
-      d = it->second;
+      result.agent = it->second.agent;
+      result.distanceSquared = it->second.distanceSquared;
     }
-    result.agent = d.agent;
-    result.distanceSquared = d.distanceSquared;
     return true;
   }
 
-  bool AimingTask::getTarget(const BaseAgent* agent, NearAgent& result, float max_angle) {
+  bool AimingTask::_getTarget(size_t agent_id, AimingEnemData& result, float max_angle) const {
     const float delay = 1.f;
+    BaseAgent* agent = Menge::SIMULATOR->getAgent(agent_id);
 
-    // Not sure if we really need the lock safety
-    // _lock.lockWrite();
-    AimingEnemData d(Menge::Agents::NearAgent(100, 0x0));
-    AimingEnemDataMap::iterator it = _nearEnems.find(agent->_id);
-
-    if (it == _nearEnems.end()) {
-      // since we construct from NearAgent, we can do this
-      // for NearestEnemData
-      _updateTarget(agent, d, max_angle);
-      d.timeout = Menge::SIM_TIME + delay;
-      _nearEnems.insert(NearestEnemDataMap::value_type(agent->_id, d));
-      // return d;
-    } else if (it->second.timeout < Menge::SIM_TIME ||
-               it->second.agent->isDead()) {
-      // std::cout << "DELAY" << it->second.timeout << " " << Menge::SIM_TIME << std::endl;
-      _updateTarget(agent, d, max_angle);
-      d.timeout = Menge::SIM_TIME + delay;
-      it->second = d;
-      // return d;
+    if (result.agent == 0x0) {
+      _updateTarget(agent, result, max_angle);
+      result.timeout = Menge::SIM_TIME + delay;
+    } else if (result.timeout < Menge::SIM_TIME || result.agent->isDead()) {
+      _updateTarget(agent, result, max_angle);
+      result.timeout = Menge::SIM_TIME + delay;
     } else {
-      d = it->second;
+      // no need to update.
     }
-    // _lock.releaseWrite();
-    if (d.agent == 0x0) {
+
+    if (result.agent == 0x0) {
       // std::cout << "WARNING!!!!" << std::endl;
       return false;
     }
-    // update the result.
-    result.agent = d.agent;
-    result.distanceSquared = d.distanceSquared;
     return true;
 
   }
 
-  bool AimingTask::_updateTarget(const BaseAgent* agent, NearAgent& result, float max_angle) {
+  bool AimingTask::_updateTarget(const BaseAgent* agent, NearAgent& result, float max_angle) const {
 
     // we can try nearest enemies first...
     NearestEnemTask* task = NearestEnemTask::getSingleton();
-    // NearAgent d(1000000, 0x0);
     Vector2 dir;
     Vector2 pref_dir = agent->_velPref.getPreferred();
     float pref_angle = atan2(pref_dir.x(), pref_dir.y());
     // float max_angle = _angles[agent->_id];
-    if (task->getTarget(agent, result)) {
+    // std::cout << "GET TASK "<< std::endl;
+    if (task->getCurrentTarget(agent, result)) {
       dir = result.agent->_pos - agent->_pos;
       float angle = atan2(dir.y(), dir.x());
       if (std::abs(angle - pref_angle) < max_angle) {
@@ -163,6 +165,9 @@ namespace Napoleon {
     // since this only needs to be called once per agent when entering aiming
     // state, we don't need to optimize this with kdtree or anything, just iterate.
     // i don't think parallel is necessary either.
+
+    int num_targeted = 0;
+
     const BaseAgent* agt;
     for (size_t i = 0; i < Menge::SIMULATOR->getNumAgents(); ++i) {
       agt = Menge::SIMULATOR->getAgent(i);
@@ -171,12 +176,17 @@ namespace Napoleon {
       dir = agt->_pos - agent->_pos;
       float angle = atan2(dir.y(), dir.x());
       if (std::abs(angle - pref_angle) < max_angle) {
-        if (absSq(dir) < result.distanceSquared) {
+        if (_numTargetedBy.count(agt->_id) > 0) {
+          num_targeted = _numTargetedBy.find(agt->_id)->second;
+        }
+        if (absSq(dir) < result.distanceSquared && num_targeted < MAX_TARGETED) {
           result.agent = agt;
           result.distanceSquared = absSq(dir);
         }
       }
     }
+
+    if (result.agent == 0x0) return false;
 
     return true;
   }

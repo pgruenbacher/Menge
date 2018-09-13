@@ -57,9 +57,9 @@ class MENGE_API AimingComponent : public VelComponent {
   /*!
    *  @brief    Virtual destructor.
    */
-  // Menge::ReadersWriterLock _lock;
+  Menge::ReadersWriterLock _lock;
   // std::map< size_t, const Menge::Agents::BaseAgent * > _agents;
-  // std::map< size_t, const Menge::Agents::BaseAgent * > _to_enem_agents;
+  // std::map< size_t, Vector2 > _hold_positions;
   std::vector<float> _angles;
   const float defaultAngle = 30.f;
 
@@ -71,7 +71,7 @@ class MENGE_API AimingComponent : public VelComponent {
   virtual void onExit(BaseAgent* agent);
   void registerAgent(const BaseAgent* agent);
   void unregisterAgent(const BaseAgent* agent);
-  const NearAgent getTargetEnem(const BaseAgent* agent) const;
+  bool getTargetEnem(const BaseAgent* agent, NearAgent& result) const;
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;

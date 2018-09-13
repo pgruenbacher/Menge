@@ -9,6 +9,7 @@
 #include "AttackAction.h"
 #include "DeadCondition.h"
 #include "TurnModifier.h"
+#include "AimingComponent.h"
 // #include "NearestEnemCompContext.h"
 #include "IdleComponent.h"
 #include "FacingTargetEnem.h"
@@ -53,6 +54,7 @@ extern "C" {
     engine->registerConditionFactory ( new Napoleon::FacingTargetEnemCondFactory() );
     engine->registerVelModFactory ( new Napoleon::TurnModifierFactory() );
     engine->registerVelCompFactory( new Napoleon::IdleComponentFactory() );
+    engine->registerVelCompFactory( new Napoleon::AimingComponentFactory() );
   }
 
   // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {
