@@ -42,6 +42,7 @@ namespace Napoleon {
       // FacingTargetEnem();
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
       FacingTargetEnem * copy();
+      float _threshold;
   };
 
   /*!
@@ -61,6 +62,7 @@ namespace Napoleon {
     }
 
   protected:
+    size_t _thresholdID;
     virtual Condition * instance() const { return new FacingTargetEnem(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
                  const std::string & behaveFldr ) const;

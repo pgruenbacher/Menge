@@ -40,13 +40,20 @@ namespace Napoleon {
 /*!
 * @brief  Task responsible for updating agent data for maintaining a formation.
 */
+enum NearestEnemMethod {
+  MELEE,
+  AIMING
+};
+
 struct NearestEnemData : public Menge::Agents::NearAgent {
   // const BaseAgent* enem;
   // float distSquared;
   float timeout;
   bool doWork;
+  NearestEnemMethod method;
 
   NearestEnemData(const Menge::Agents::NearAgent obj);
+  bool isStillRecent();
 };
 
 typedef std::map<size_t, NearestEnemData> NearestEnemDataMap;
@@ -61,8 +68,9 @@ class NearestEnemTask : public Menge::BFSM::Task {
   static NearestEnemTask* TASK_PTR;
   void _getNearestTarget(
       const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result) const;
-  bool _getTarget(size_t agent_id,
+  bool _doWorkData(size_t agent_id,
                  NearestEnemData& result) const;
+  void _updateAimingTarget(const Menge::Agents::BaseAgent* agent, Menge::Agents::NearAgent& result, float max_angle = 3.14 * 2) const;
 
  public:
   static NearestEnemTask* getSingleton();
@@ -92,7 +100,7 @@ class NearestEnemTask : public Menge::BFSM::Task {
    *  @returns  A string containing task information.
    */
   virtual std::string toString() const;
-  void addAgent(size_t agent_id);
+  void addAgent(size_t agent_id, NearestEnemMethod method = MELEE);
   void removeAgent(size_t agent_id);
 
   /*!

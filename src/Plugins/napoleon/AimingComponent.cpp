@@ -8,7 +8,7 @@
 #include "MengeCore/Runtime/os.h"
 #include "NearestEnemTask.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
-#include "AimingTask.h"
+#include "NearestEnemTask.h"
 
 
 namespace Napoleon {
@@ -46,9 +46,9 @@ namespace Napoleon {
     // //   // _formation->addAgent(agent);
     // // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
-    AimingTask* task = AimingTask::getSingleton();
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
     // NearAgent d(100, 0x0);
-    return task->addAgent(agent->_id);
+    return task->addAgent(agent->_id, AIMING);
 
   }
 
@@ -57,7 +57,7 @@ namespace Napoleon {
     //   // _formation->addAgent(agent);
     // _agents[agent->_id] = agent;
     // _lock.releaseWrite();
-    AimingTask* task = AimingTask::getSingleton();
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
     // NearAgent d(100, 0x0);
     return task->removeAgent(agent->_id);
   }
@@ -69,7 +69,7 @@ namespace Napoleon {
 
 
   bool AimingComponent::getTargetEnem(const BaseAgent* agent, NearAgent& result) const {
-    AimingTask* task = AimingTask::getSingleton();
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
     // NearAgent d(100, 0x0);
     return task->getCurrentTarget(agent, result);
     // return d;
@@ -82,18 +82,20 @@ namespace Napoleon {
     NearAgent aimEnem(10000, 0x0);
     // setDirections(pVel);
     // assume the goal is a identity goal
-    goal->setDirections(agent->_pos, agent->_radius, pVel);
+    // goal->setDirections(agent->_pos, agent->_radius, pVel);
     if (getTargetEnem(agent, aimEnem)) {
       // pVel.setSpeed(0);
       if (aimEnem.agent == 0x0) {
         return;
       }
+      pVel.setSpeed(0.f);
+      pVel.setSingle(Vector2(0.f, 0.f));
       pVel.setTarget(aimEnem.agent->_pos);
     }
   }
 
   Task * AimingComponent::getTask(){
-    return AimingTask::getSingleton();
+    return NearestEnemTask::getSingleton();
   };
 
 

@@ -58,7 +58,7 @@ namespace Napoleon {
       if (d.agent == 0x0) return false;
       Vector2 dir = d.agent->_pos - agent->_pos;
       dir.normalize();
-      if ((dir * agent->_orient) > 0.5) {
+      if ((dir * agent->_orient) > _threshold) {
         return true;
       }
       return false;
@@ -75,6 +75,7 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     FacingTargetEnemCondFactory::FacingTargetEnemCondFactory() : ConditionFactory() {
+      _thresholdID = _attrSet.addFloatAttribute("threshold", false, 0.5);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -88,6 +89,8 @@ namespace Napoleon {
 
       if ( !ConditionFactory::setFromXML( condition, node, behaveFldr ) ) return false;
 
+      float threshold = _attrSet.getFloat(_thresholdID);
+      tCond->_threshold = (threshold);
 
 
       return true;

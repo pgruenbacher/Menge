@@ -64,6 +64,11 @@ namespace Napoleon {
   NearestEnemData::NearestEnemData(const Menge::Agents::NearAgent obj )
     : NearAgent(obj), doWork(false), timeout(0.f) {}
 
+  bool NearestEnemData::isStillRecent() {
+    if (Menge::SIM_TIME - timeout < 5.f) return true;
+    return false;
+  }
+
   NearestEnemTask* NearestEnemTask::getSingleton() {
     if (TASK_PTR == 0x0) {
       TASK_PTR = new NearestEnemTask();
@@ -76,7 +81,7 @@ namespace Napoleon {
     NearestEnemDataMap::iterator it;
     for (it = _nearEnems.begin(); it != _nearEnems.end(); it++) {
       if (!it->second.doWork) continue;
-      if (_getTarget(it->first, it->second)) {
+      if (_doWorkData(it->first, it->second)) {
         if (it->second.agent == 0x0) {
           std::cout << " !!!!!??!?!?!" << std::endl;
         }
@@ -97,9 +102,6 @@ namespace Napoleon {
       if (enem.distanceSquared < distSq) {
         distSq = enem.distanceSquared;
         result = enem;
-        // targetEnem = enem;
-        // result.agent = enem;
-        // result.distanceSquared = distSq
       }
     }
     return;
@@ -123,15 +125,17 @@ namespace Napoleon {
     return true;
   }
 
-  void NearestEnemTask::addAgent(size_t id) {
+  void NearestEnemTask::addAgent(size_t id, NearestEnemMethod method) {
     _lock.lockWrite();
     NearestEnemDataMap::iterator it = _nearEnems.find(id);
     if (it == _nearEnems.end()) {
       NearestEnemData d = NearestEnemData(NearAgent(1000, 0x0));
       d.doWork = true;
+      d.method = method;
       _nearEnems.insert(NearestEnemDataMap::value_type(id, d));
     } else {
       it->second.doWork = true;
+      it->second.method = method;
       // it->secon
     }
     _lock.releaseWrite();
@@ -147,15 +151,20 @@ namespace Napoleon {
     _lock.releaseWrite();
   }
 
-  bool NearestEnemTask::_getTarget(size_t agent_id, NearestEnemData& result) const {
+  bool NearestEnemTask::_doWorkData(size_t agent_id, NearestEnemData& result) const {
     const float delay = 1.f;
     BaseAgent* agent = Menge::SIMULATOR->getAgent(agent_id);
 
-    if (result.agent == 0x0) {
-      _getNearestTarget(agent, result);
-      result.timeout = Menge::SIM_TIME + delay;
-    } else if (result.timeout < Menge::SIM_TIME || result.agent->isDead()) {
-      _getNearestTarget(agent, result);
+    if (
+      result.agent == 0x0 ||
+      result.timeout < Menge::SIM_TIME ||
+      result.agent->isDead()
+    ) {
+      if (result.method == MELEE) {
+        _getNearestTarget(agent, result);
+      } else if (result.method == AIMING) {
+        _updateAimingTarget(agent, result);
+      }
       result.timeout = Menge::SIM_TIME + delay;
     } else {
       // no need to update.
@@ -177,6 +186,64 @@ namespace Napoleon {
     return true;
   }
 
+
+  void NearestEnemTask::_updateAimingTarget(const Menge::Agents::BaseAgent* agent, Menge::Agents::NearAgent& result, float max_angle) const {
+    // we can try nearest enemies first...
+    const int MAX_TARGETED = 8;
+
+    // if ()
+    // NearestEnemTask* task = NearestEnemTask::getSingleton();
+    Vector2 dir;
+    Vector2 pref_dir = agent->_velPref.getPreferred();
+    float pref_angle = atan2(pref_dir.x(), pref_dir.y());
+    // // float max_angle = _angles[agent->_id];
+    // // std::cout << "GET TASK "<< std::endl;
+
+    // First we'll iterate over all nearby agents
+    // and find if any are close enough within the angle.
+    float current_max = max_angle;
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      result = enem;
+      dir = result.agent->_pos - agent->_pos;
+      float angle = atan2(dir.y(), dir.x());
+      float angle_diff = std::abs(angle - pref_angle);
+      if (angle_diff < std::min(current_max, max_angle)) {
+        current_max = angle_diff;
+      }
+    }
+    // success
+    if (result.agent != 0x0) return;
+
+    // no luck? ok we'll need to iterate through all agents then I guess to find
+    // the closest ones that are with the angle of aiming.
+    // since this only needs to be called once per agent when entering aiming
+    // state, we don't need to optimize this with kdtree or anything, just iterate.
+    // i don't think parallel is necessary either.
+
+    int num_targeted = 0;
+
+    const BaseAgent* agt;
+    for (size_t i = 0; i < Menge::SIMULATOR->getNumAgents(); ++i) {
+      agt = Menge::SIMULATOR->getAgent(i);
+      // check that it's enemy
+      if (agt->_class == agent->_class) continue;
+      dir = agt->_pos - agent->_pos;
+      float angle = atan2(dir.y(), dir.x());
+      if (std::abs(angle - pref_angle) < max_angle) {
+        if (_numTargetedBy.count(agt->_id) > 0) {
+          num_targeted = _numTargetedBy.find(agt->_id)->second;
+        }
+        if (absSq(dir) < result.distanceSquared && num_targeted < MAX_TARGETED) {
+          result.agent = agt;
+          result.distanceSquared = absSq(dir);
+        }
+      }
+    }
+
+    // if (result.agent == 0x0) return false;
+
+    // return true;
+  }
   /////////////////////////////////////////////////////////////////////
 
 } // namespace Formations
