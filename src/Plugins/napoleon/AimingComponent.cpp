@@ -83,13 +83,13 @@ namespace Napoleon {
     // setDirections(pVel);
     // assume the goal is a identity goal
     // goal->setDirections(agent->_pos, agent->_radius, pVel);
+    pVel.setSpeed(0.f);
+    pVel.setSingle(Vector2(0.f, 0.f));
     if (getTargetEnem(agent, aimEnem)) {
       // pVel.setSpeed(0);
       if (aimEnem.agent == 0x0) {
         return;
       }
-      pVel.setSpeed(0.f);
-      pVel.setSingle(Vector2(0.f, 0.f));
       pVel.setTarget(aimEnem.agent->_pos);
     }
   }

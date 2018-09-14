@@ -223,23 +223,27 @@ namespace Napoleon {
     int num_targeted = 0;
 
     const BaseAgent* agt;
+    float diff_angle;
+    float localDistSquared = 1e15;
     for (size_t i = 0; i < Menge::SIMULATOR->getNumAgents(); ++i) {
       agt = Menge::SIMULATOR->getAgent(i);
       // check that it's enemy
       if (agt->_class == agent->_class) continue;
       dir = agt->_pos - agent->_pos;
       float angle = atan2(dir.y(), dir.x());
-      if (std::abs(angle - pref_angle) < max_angle) {
+      diff_angle = std::abs(angle - pref_angle);
+      if ( diff_angle < max_angle) {
         if (_numTargetedBy.count(agt->_id) > 0) {
           num_targeted = _numTargetedBy.find(agt->_id)->second;
         }
-        if (absSq(dir) < result.distanceSquared && num_targeted < MAX_TARGETED) {
+        if (absSq(dir) < localDistSquared && num_targeted < MAX_TARGETED) {
           result.agent = agt;
           result.distanceSquared = absSq(dir);
+          localDistSquared = result.distanceSquared;
         }
       }
     }
-
+    // std::cout << "AGENT ? " << result.agent << " " << diff_angle << " " << max_angle << result.distanceSquared << std::endl;
     // if (result.agent == 0x0) return false;
 
     // return true;

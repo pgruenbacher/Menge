@@ -59,6 +59,7 @@ namespace Napoleon {
       curSpeed = curSpeed - agent->_maxAccel * Menge::SIM_TIME_STEP;
       curSpeed = std::max(curSpeed, 0.0f);
     }
+    pVel.setSingle(Menge::Math::Vector2(0,0));
     pVel.setSpeed(curSpeed);
   }
 
