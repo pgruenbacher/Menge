@@ -218,6 +218,9 @@ namespace Menge {
 			// attacking position for visAgent debugging purposes.
 			Math::Vector2 attacking;
 			bool isAttacking;
+			float _currentHeight;
+			void setHeight(float v) { _currentHeight = v; }
+			float getHeight() const { return _currentHeight; }
 			int _health;
 			int getHealth() { return _health; }
 			void adjustHealth(int v) { _health += v; }

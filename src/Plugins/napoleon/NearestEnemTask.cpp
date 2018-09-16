@@ -107,15 +107,25 @@ namespace Napoleon {
     return;
   }
 
+  bool NearestEnemTask::getCurrentTarget(size_t id, NearAgent& result) const {
+    NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
+    NearestEnemDataMap::const_iterator it = _nearEnems.find(id);
+    if (it == _nearEnems.end()) {
+      return false;
+    } else {
+      result = it->second;
+    }
+    return true;
+
+  }
   bool NearestEnemTask::getCurrentTarget(const BaseAgent* agt, NearAgent& result) const {
-    const float delay = 1.f;
+    // const float delay = 1.f;
 
     // Not sure if we really need the lock safety
     // _lock.lockWrite();
     NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
     NearestEnemDataMap::const_iterator it = _nearEnems.find(agt->_id);
     if (it == _nearEnems.end()) {
-      // std::cout << "WARNING!!!!" << std::endl;
       return false;
     } else {
       result = it->second;

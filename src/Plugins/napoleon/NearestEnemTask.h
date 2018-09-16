@@ -35,8 +35,8 @@
 
 #include "thirdParty/tinyxml.h"
 
-using namespace Menge;
 namespace Napoleon {
+using namespace Menge;
 /*!
 * @brief  Task responsible for updating agent data for maintaining a formation.
 */
@@ -91,6 +91,8 @@ class NearestEnemTask : public Menge::BFSM::Task {
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
       Menge::BFSM::TaskException);
 
+  bool getCurrentTarget(size_t id,
+                        Menge::Agents::NearAgent& result) const;
   bool getCurrentTarget(const Menge::Agents::BaseAgent* agt,
                         Menge::Agents::NearAgent& result) const;
 
