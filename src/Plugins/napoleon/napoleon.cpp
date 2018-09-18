@@ -13,6 +13,7 @@
 // #include "NearestEnemCompContext.h"
 #include "IdleComponent.h"
 #include "FacingTargetEnem.h"
+#include "PikeModifier.h"
 // #include "VisAttackElement.h"
 
 // using MengeVis::PluginEngine::VisPluginEngine;
@@ -55,6 +56,8 @@ extern "C" {
     engine->registerVelModFactory ( new Napoleon::TurnModifierFactory() );
     engine->registerVelCompFactory( new Napoleon::IdleComponentFactory() );
     engine->registerVelCompFactory( new Napoleon::AimingComponentFactory() );
+    engine->registerVelModFactory ( new Napoleon::PikeModifierFactory() );
+
   }
 
   // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {

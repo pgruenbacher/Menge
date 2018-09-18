@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<Project
+  random="10"
+	scene="pikeCombatS.xml"
+	behavior="pikeCombatB.xml"
+	view="pikeCombatV.xml"
+	model="orca"
+	dumpPath="images/test"
+/>

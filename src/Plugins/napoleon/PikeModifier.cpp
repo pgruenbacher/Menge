@@ -98,6 +98,9 @@ namespace Napoleon {
   PikeModifierFactory::PikeModifierFactory() : VelModFactory() {
     //no properties yet
   }
+  Menge::BFSM::Task * getTask() {
+    return PikeTask::getSingleton();
+  };
 
   /////////////////////////////////////////////////////////////////////
 

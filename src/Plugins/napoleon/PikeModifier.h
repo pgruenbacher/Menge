@@ -20,8 +20,8 @@
  *  @file   FormationsModifier.h
  *  @brief    definition of a VelocityModifier to enforce formation behavior
  */
-#ifndef _TURN_MODIFIER_H_
-#define _TURN_MODIFIER_H_
+#ifndef _PIKE_MODIFIER_H_
+#define _PIKE_MODIFIER_H_
 
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
@@ -47,6 +47,7 @@ namespace Napoleon {
 
     Menge::BFSM::VelModifier* copy() const;
 
+    Menge::BFSM::Task * getTask() override;
     void adaptPrefVelocity( const Menge::Agents::BaseAgent * agent,
                 Menge::Agents::PrefVelocity & pVel );
 
@@ -87,4 +88,4 @@ namespace Napoleon {
 
   };
 } // namespace Napoleon
-#endif  // _TURN_MODIFIER_H_
+#endif  // _PIKE_MODIFIER_H_
