@@ -61,6 +61,7 @@ namespace Napoleon {
     friend class AttackActionFactory;
 
   protected:
+    Menge::Math::UniformFloatGenerator _randGenerator;
 
     /*!
      *  @brief    The work to do upon state exit.

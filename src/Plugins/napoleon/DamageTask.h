@@ -48,7 +48,7 @@ private:
   // random generator to be updated serially in parallel.
   // agent random values will be a combination of the random value per sim step
   // + the agent's id.
-  Menge::Math::UniformFloatGenerator _randGenerator;
+  // Menge::Math::UniformFloatGenerator _randGenerator;
   float _step_rand_value;
 
     static DamageTask* DAMAGE_TASK2;
@@ -59,10 +59,10 @@ private:
    */
   DamageTask();
 
-  float getAgentAttackValue(size_t agentId) const {
-    // it's ok for concurrent reading...
-    return _randGenerator.getValue(agentId);
-  }
+  // float getAgentAttackValue(size_t agentId) const {
+  //   // it's ok for concurrent reading...
+  //   return _randGenerator.getValue(agentId);
+  // }
 
   void adjustHealth(size_t agentId, float health);
 

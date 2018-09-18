@@ -36,80 +36,81 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
 
-#include "DamageTask.h"
-#include "MengeCore/BFSM/FSM.h"
-#include "MengeCore/Agents/SimulatorInterface.h"
+#include "PikeModifier.h"
 #include "MengeCore/Agents/BaseAgent.h"
-// #include "MengeCore/Core.h"
-// #include "MengeCore/Agents/BaseAgent.h"
+#include "MengeCore/Core.h"
+#include "./PikeTask.h"
 
 namespace Napoleon {
-  DamageTask* DamageTask::DAMAGE_TASK2 = 0x0;
 
-  using Menge::BFSM::FSM;
+  using Menge::logger;
+  using Menge::Logger;
+  using Menge::Agents::BaseAgent;
+  using Menge::Agents::PrefVelocity;
   using Menge::BFSM::Task;
-  using Menge::BFSM::TaskException;
-  using Menge::BFSM::TaskFactory;
-
-  // meant to synchronously apply damage to units.
+  using Menge::BFSM::VelModifier;
+  using Menge::BFSM::VelModFactory;
+  using Menge::Math::Vector2;
 
   /////////////////////////////////////////////////////////////////////
-  //                   Implementation of NearestEnemTask
+  //                   Implementation of PikeModifier
   /////////////////////////////////////////////////////////////////////
 
-  DamageTask::DamageTask() : Menge::BFSM::Task() {
+  PikeModifier::PikeModifier() {
   }
 
   /////////////////////////////////////////////////////////////////////
-  DamageTask* DamageTask::getSingleton() {
-    if (DAMAGE_TASK2 == 0x0) {
-      DAMAGE_TASK2 = new DamageTask();
+
+  PikeModifier::~PikeModifier(){
+  };
+
+  /////////////////////////////////////////////////////////////////////
+
+  VelModifier* PikeModifier::copy() const{
+    return new PikeModifier( );
+  };
+
+  /////////////////////////////////////////////////////////////////////
+
+  void PikeModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
+    const PikeTask* pikeTask = PikeTask::getSingleton();
+    if (pikeTask->isAgentFacingPike(agent)) {
+      pVel.setSpeed(0.f);
     }
-    return DAMAGE_TASK2;
-  }
 
-  void DamageTask::adjustHealth(size_t agentId, float health) {
-    _lock.lockWrite();
-    if (_damages.find(agentId) == _damages.end()) {
-      _damages[agentId] = health;
-    } else {
-      _damages[agentId] += health;
-    }
-    _lock.releaseWrite();
-  }
-
-  void DamageTask::doWork( const FSM * fsm ) throw( TaskException ) {
-    // std::cout << " GET AGENT ATATC " << getAgentAttackValue(15) << std::endl;
-
-    Menge::Agents::BaseAgent* finalEnem;
-    for (auto entry : _damages) {
-      size_t agentId = entry.first;
-      float health = entry.second;
-      finalEnem  = Menge::SIMULATOR->getAgent(agentId);
-      // std::cout << "ADJUST " << finalEnem->_id << " TIME " << Menge::SIM_TIME << std::endl;
-      finalEnem->adjustHealth(health);
-    }
-    _damages.clear();
-  }
-  /////////////////////////////////////////////////////////////////////
-
-  std::string DamageTask::toString() const {
-    return "Damage Task";
   }
 
   /////////////////////////////////////////////////////////////////////
 
-  bool DamageTask::isEquivalent( const Task * task ) const {
-    const DamageTask * other = dynamic_cast< const DamageTask * >( task );
-    if ( other == 0x0 ) {
-      return false;
-    }
-    // if (task == this) {
-    //   std
-    // }
+  // void PikeModifier::registerAgent(const BaseAgent * agent) {
+  // };
+
+  /////////////////////////////////////////////////////////////////////
+
+  // void PikeModifier::unregisterAgent(const BaseAgent * agent){
+
+  // };
+
+  /////////////////////////////////////////////////////////////////////
+  //                   Implementation of FormationModFactory
+  /////////////////////////////////////////////////////////////////////
+
+  PikeModifierFactory::PikeModifierFactory() : VelModFactory() {
+    //no properties yet
+  }
+
+  /////////////////////////////////////////////////////////////////////
+
+  bool PikeModifierFactory::setFromXML( VelModifier * modifier, TiXmlElement * node,
+                         const std::string & behaveFldr ) const {
+    PikeModifier * pikeMod = dynamic_cast<PikeModifier *>(modifier);
+        assert( pikeMod != 0x0 &&
+        "Trying to set property modifier properties on an incompatible object" );
+
+    if ( ! Menge::BFSM::VelModFactory::setFromXML( modifier, node, behaveFldr ) ) return false;
+
     return true;
   }
 
   /////////////////////////////////////////////////////////////////////
-
-} // namespace Formations
+} // namespace Napoleons
