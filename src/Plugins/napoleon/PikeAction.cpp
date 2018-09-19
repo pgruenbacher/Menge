@@ -70,6 +70,12 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     void PikeAction::onEnter( BaseAgent * agent ) {
+        PikeTask* pt = PikeTask::getSingleton();
+        if (lowering) {
+
+        } else {
+
+        }
 
     }
 

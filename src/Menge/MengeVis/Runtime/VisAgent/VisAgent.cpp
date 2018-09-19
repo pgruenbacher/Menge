@@ -40,6 +40,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeVis/SceneGraph/shapes.h"
+#include "Plugins/napoleon/PikeTask.h"
 
 namespace MengeVis {
 	namespace Runtime {
@@ -93,6 +94,7 @@ namespace MengeVis {
 				glPopMatrix();
 
 				drawAttack();
+				drawPike();
 			}
 		}
 
@@ -116,6 +118,27 @@ namespace MengeVis {
 			if ( _agent != 0x0 ) {
 				const Vector2 & pos = _agent->_pos;
         _pos.set( pos.x(), pos.y(), 0.f );
+			}
+		}
+
+		void VisAgent::drawPike() {
+			if (_agent == 0x0) return;
+
+			if (_agent->hasPike) {
+					float r = 1.0, g = 0.8, b =0.6;
+					// getColor(r,g,b);
+					Menge::Math::Vector3 _p0(_agent->_pos.x(), _agent->_pos.y(), 2.2f);
+					Menge::Math::Vector3 _p1(_agent->pikePos.x(), _agent->pikePos.y(), 2.2f);
+		      glPushAttrib( GL_LINE_BIT | GL_ENABLE_BIT );
+		      glDisable( GL_LIGHTING );
+		      glLineWidth( 1.f );
+		      glColor3f( r, g, b );
+		      glBegin( GL_LINES );
+		      glVertex3f( _p0.x(), _p0.y(), _p0.z() );
+		      glVertex3f( _p1.x(), _p1.y(), _p1.z() );
+		      glEnd();
+		      glPopMatrix();
+		      glPopAttrib();
 			}
 		}
 

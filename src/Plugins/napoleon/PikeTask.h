@@ -82,9 +82,10 @@ namespace Napoleon {
    *  @brief  Task responsible for updating agent data for maintaining a formation.
    */
 class PikeTask : public Menge::BFSM::Task {
+public:
+  typedef std::map<size_t, Pike> PikeMap;
 private:
   ReadersWriterLock _lock;
-  typedef std::map<size_t, Pike> PikeMap;
   PikeMap _pikes;
 
     static PikeTask* PIKE_TASK;
@@ -95,13 +96,16 @@ private:
    */
   PikeTask();
 
+  bool hasPike(size_t agentId) const { return _pikes.find(agentId) != _pikes.end(); }
+  Pike getPike(size_t agentId) const { return _pikes.find(agentId)->second; }
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
       Menge::BFSM::TaskException);
 
   virtual std::string toString() const;
-  bool isAgentFacingPike(const Menge::Agents::BaseAgent* agt) const;
+  bool isAgentMovingToPike(const Menge::Agents::BaseAgent* agt, const Menge::Agents::PrefVelocity& pVel) const;
   virtual bool isEquivalent(const Menge::BFSM::Task* task) const;
-  void adjustPike(const Menge::Agents::BaseAgent& agent, bool is_lowered, Vector2 pos, Vector2 dir);
+  void addPike(const Menge::Agents::BaseAgent* agent);
+  void removePike(const Menge::Agents::BaseAgent* agent);
   static PikeTask* getSingleton();
   };
 

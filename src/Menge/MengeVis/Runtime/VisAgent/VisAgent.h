@@ -88,6 +88,7 @@ namespace MengeVis {
 			 */
 			void drawGL( bool select = false );
 			void drawAttack();
+			void drawPike();
 
 			/*!
 			 *	@brief		Returns a Agents::BaseAgent pointer of the associated simulation

@@ -41,6 +41,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"
 
+const float length = 2.f;
+
 namespace Napoleon {
   PikeTask* PikeTask::PIKE_TASK = 0x0;
 
@@ -53,7 +55,8 @@ namespace Napoleon {
 
   // 1.04719 radians == 60 degrees == 0.5 dot product.
   PikeProximityQuery::PikeProximityQuery(Vector2 pos, Vector2 dir) :
-  queryPoint(pos), queryDirection(dir), queryDotProduct(0.5)
+  _maxAgentResults(100),
+  queryPoint(pos), queryDirection(dir), queryDotProduct(0.5), _maxAgentResultDistance(2)
   {}
 
 
@@ -69,12 +72,14 @@ namespace Napoleon {
     //if we have enough agents, just exit cause there's likely some sort of issue
     // going on. the maxAgnetResults is just to make sure we don't overwhelm the list.
     // it should be a big number since we carea bout all agents that are near a pike danger area.
+    // std::cout << "PUSH BACK ?" << distanceSquared << " " << _maxAgentResultDistance << std::endl;
     if (distanceSquared > _maxAgentResultDistance) return;
     if (_agentResults.size() == _maxAgentResults) return;
     Vector2 agentDir = agent->_pos - queryPoint;
     agentDir.normalize();
     // check if dot product. if > 0.5, then pike if facing 60 deg angle of agent.
     if (queryDirection * (agentDir) < queryDotProduct) return;
+    // std::cout << "PUSH BACK " << std::endl;
     _agentResults.push_back(NearAgent(distanceSquared,agent));
 
     // we don't care about hte order of the nearest agents....
@@ -108,16 +113,22 @@ namespace Napoleon {
     return PIKE_TASK;
   }
 
-  void PikeTask::adjustPike(const Menge::Agents::BaseAgent& agent,
-    bool is_lowered, Vector2 pos, Vector2 dir) {
+  void PikeTask::removePike(const Menge::Agents::BaseAgent* agent) {
     _lock.lockWrite();
 
-    PikeMap::iterator it = _pikes.find(agent._id);
-    if (it != _pikes.end() && !is_lowered) {
-      _pikes.erase(agent._id);
+    _pikes.erase(agent->_id);
 
-    } else if (it == _pikes.end()) {
-      _pikes.insert(PikeMap::value_type(agent._id, Pike(pos, dir)));
+    _lock.releaseWrite();
+  }
+
+  void PikeTask::addPike(const Menge::Agents::BaseAgent* agent) {
+    _lock.lockWrite();
+
+    Vector2 dir = agent->_orient;
+    Vector2 pos = agent->_pos + dir * length;
+    PikeMap::iterator it = _pikes.find(agent->_id);
+    if (it == _pikes.end()) {
+      _pikes.insert(PikeMap::value_type(agent->_id, Pike(pos, dir)));
 
     } else {
       it->second = Pike(pos, dir);
@@ -126,7 +137,23 @@ namespace Napoleon {
     _lock.releaseWrite();
   }
 
+  void mapPikePositions(PikeTask::PikeMap& pikeMap) {
+    PikeTask::PikeMap::iterator it = pikeMap.begin();
+    for ( ; it != pikeMap.end(); ++it) {
+      Menge::Agents::BaseAgent* agt = Menge::SIMULATOR->getAgent(it->first);
+      Pike& pike = it->second;
+      pike.pos = agt->_pos + agt->_orient * length;
+      pike.direction = agt->_orient;
+      pike.query = PikeProximityQuery(pike.pos, pike.direction);
+      agt->pikePos = pike.pos;
+      agt->hasPike = true;
+    }
+  }
+
   void PikeTask::doWork( const FSM * fsm ) throw( TaskException ) {
+    // update pike positions
+    mapPikePositions(_pikes);
+
     Menge::Agents::SpatialQuery* sp = Menge::SIMULATOR->getSpatialQuery();
     /* For each iteration we'll get all nearby agents that are within a certain area of the pikes and
     cache the result */
@@ -143,10 +170,15 @@ namespace Napoleon {
     return "Pike Task";
   }
 
-  bool PikeTask::isAgentFacingPike(const Menge::Agents::BaseAgent* agt) const {
+  bool PikeTask::isAgentMovingToPike(const Menge::Agents::BaseAgent* agt, const Menge::Agents::PrefVelocity& pVel) const {
     PikeMap::const_iterator it = _pikes.begin();
     for ( ; it != _pikes.end(); ++it) {
-      if (it->second.query.containsAgent(agt)) return true;
+      const Pike& pike = it->second;
+      if (pike.query.containsAgent(agt)) {
+        if ((pike.direction * pVel.getPreferred()) < 0) {
+          return true;
+        }
+      }
     }
     return false;
   }

@@ -8,6 +8,8 @@
         <Goal type="point" id="3" x="10" y="0.0"/>
 	</GoalSet>
 
+    <VelModifier type="pike_collision"/>
+
     <State name="WalkRight" final="0" type="ChargeState" class="1">
         <GoalSelector type="explicit" goal_set="0" goal="1" persistent="0" />
         <VelComponent type="goal" />
@@ -38,6 +40,16 @@
         <VelComponent type="idle"/>
     </State>
 
+    <State name="Pike" final="0">
+        <Action type="set_property" property="pref_speed" dist="c" value="0.1" exit_reset="0" />
+        <Action type="set_property" property="max_angle_vel" dist="c" value="0.1" exit_reset="0" />
+        <VelComponent type="enemy_near_comp" method="advancing"/>
+        <VelModifier type="pike"/>
+    </State>
+    <State name="PikeAttack" final="0">
+        <Action type="attack_action"/>
+        <VelModifier type="pike"/>
+    </State>
 
     <State name="AdvancingEnemy" final="0">
         <VelComponent type="enemy_near_comp" method="advancing"/>
@@ -56,6 +68,15 @@
         <Condition type="enemy_near" dist="1.1"/>
         <Condition type="facing_enemy"/>
     </Transition>
+    <Transition from="Pike" to="PikeAttack">
+        <Condition type="can_perform"/>
+        <Condition type="enemy_near" dist="2"/>
+        <Condition type="facing_enemy"/>
+    </Transition>
+    <Transition from="PikeAttack" to="Pike">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
+    </Transition>
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
@@ -68,7 +89,7 @@
         <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9" inverse="1"/>
     </Transition>
 
-    <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">
+    <Transition to="Dying" from="Attack,AdvancingEnemy,Pike,TooManyEnemyNear,WalkLeft,WalkRight">
         <Condition type="dead"/>
     </Transition>
     <Transition from="Dying" to="Dead">
@@ -80,8 +101,11 @@
         <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
     </Transition>
 
+    <Transition from="WalkLeft" to="Pike">
+        <Condition type="timer" dist="c" value="1" per_agent="0" />
+    </Transition>
 
-    <Transition from="WalkRight,WalkLeft,Idle" to="AdvancingEnemy">
+    <Transition from="WalkRight,Idle" to="AdvancingEnemy">
         <Condition type="enemy_near" dist="5.9"/>
     </Transition>
 

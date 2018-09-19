@@ -36,7 +36,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
 
-#include "PikeModifier.h"
+#include "PikeCollisionModifier.h"
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Core.h"
 #include "./PikeTask.h"
@@ -53,64 +53,64 @@ namespace Napoleon {
   using Menge::Math::Vector2;
 
   /////////////////////////////////////////////////////////////////////
-  //                   Implementation of PikeModifier
+  //                   Implementation of PikeCollisionModifier
   /////////////////////////////////////////////////////////////////////
 
   /* Pike modifier is used for enemy/ally movements moving around pike positions */
 
-  PikeModifier::PikeModifier() {
+  PikeCollisionModifier::PikeCollisionModifier() {
   }
 
   /////////////////////////////////////////////////////////////////////
 
-  PikeModifier::~PikeModifier(){
+  PikeCollisionModifier::~PikeCollisionModifier(){
   };
 
   /////////////////////////////////////////////////////////////////////
 
-  VelModifier* PikeModifier::copy() const{
-    return new PikeModifier( );
+  VelModifier* PikeCollisionModifier::copy() const{
+    return new PikeCollisionModifier( );
   };
 
   /////////////////////////////////////////////////////////////////////
 
-  void PikeModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
-
-
+  void PikeCollisionModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
+    const PikeTask* pikeTask = PikeTask::getSingleton();
+    if (pikeTask->isAgentMovingToPike(agent, pVel)) {
+      pVel.setSpeed(0.f);
+      pVel.setSingle(Vector2(0.f, 0.f));
+    }
   }
 
-  Menge::BFSM::Task * PikeModifier::getTask() {
+  Menge::BFSM::Task * PikeCollisionModifier::getTask() {
     return PikeTask::getSingleton();
   };
 
+  /////////////////////////////////////////////////////////////////////
+
+  // void PikeCollisionModifier::registerAgent(const BaseAgent * agent) {
+  // };
 
   /////////////////////////////////////////////////////////////////////
 
-  void PikeModifier::registerAgent(const Menge::Agents::BaseAgent* agent) {
-    PikeTask* pikeTask = PikeTask::getSingleton();
-    pikeTask->addPike(agent);
-  };
+  // void PikeCollisionModifier::unregisterAgent(const BaseAgent * agent){
 
-  /////////////////////////////////////////////////////////////////////
-
-  void PikeModifier::unregisterAgent(const Menge::Agents::BaseAgent* agent){
-    PikeTask* pikeTask = PikeTask::getSingleton();
-    pikeTask->removePike(agent);
-
-  };
+  // };
 
   /////////////////////////////////////////////////////////////////////
   //                   Implementation of FormationModFactory
   /////////////////////////////////////////////////////////////////////
 
-  PikeModifierFactory::PikeModifierFactory() : VelModFactory() {
+  PikeCollisionModifierFactory::PikeCollisionModifierFactory() : VelModFactory() {
     //no properties yet
   }
+
+
   /////////////////////////////////////////////////////////////////////
 
-  bool PikeModifierFactory::setFromXML( VelModifier * modifier, TiXmlElement * node,
+  bool PikeCollisionModifierFactory::setFromXML( VelModifier * modifier, TiXmlElement * node,
                          const std::string & behaveFldr ) const {
-    PikeModifier * pikeMod = dynamic_cast<PikeModifier *>(modifier);
+    PikeCollisionModifier * pikeMod = dynamic_cast<PikeCollisionModifier *>(modifier);
         assert( pikeMod != 0x0 &&
         "Trying to set property modifier properties on an incompatible object" );
 

@@ -20,8 +20,8 @@
  *  @file   FormationsModifier.h
  *  @brief    definition of a VelocityModifier to enforce formation behavior
  */
-#ifndef _PIKE_MODIFIER_H_
-#define _PIKE_MODIFIER_H_
+#ifndef _PIKE_COLLISION_MODIFIER_H_
+#define _PIKE_COLLISION_MODIFIER_H_
 
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
@@ -32,16 +32,16 @@ class TiXmlElement;
 
 namespace Napoleon {
 
-  class PikeModifierFactory;
+  class PikeCollisionModifierFactory;
 
-  class MENGE_API PikeModifier : public Menge::BFSM::VelModifier {
+  class MENGE_API PikeCollisionModifier : public Menge::BFSM::VelModifier {
   public:
 
-    PikeModifier();
+    PikeCollisionModifier();
 
   protected:
 
-    virtual ~PikeModifier();
+    virtual ~PikeCollisionModifier();
 
   public:
 
@@ -51,9 +51,8 @@ namespace Napoleon {
     void adaptPrefVelocity( const Menge::Agents::BaseAgent * agent,
                 Menge::Agents::PrefVelocity & pVel );
 
-    void registerAgent(const Menge::Agents::BaseAgent * agent);
-    void unregisterAgent(const Menge::Agents::BaseAgent * agent);
-    friend class PikeModifierFactory;
+
+    friend class PikeCollisionModifierFactory;
 
   protected:
 
@@ -63,24 +62,24 @@ namespace Napoleon {
   ///////////////////////////////////////////////////////////////////////////////
 
   /*!
-   *  @brief    The factory class for the PikeModifier
+   *  @brief    The factory class for the PikeCollisionModifier
    */
-  class MENGE_API PikeModifierFactory : public Menge::BFSM::VelModFactory {
+  class MENGE_API PikeCollisionModifierFactory : public Menge::BFSM::VelModFactory {
   public:
     /*!
      *  @brief    Constructor.
      */
-    PikeModifierFactory();
+    PikeCollisionModifierFactory();
 
-    virtual const char * name() const { return "pike"; }
+    virtual const char * name() const { return "pike_collision"; }
 
     virtual const char * description() const {
-      return "Perform pike movements and actions.";
+      return "Perform collision movmeent with pike points.";
     };
 
   protected:
 
-    Menge::BFSM::VelModifier * instance() const { return new PikeModifier(); }
+    Menge::BFSM::VelModifier * instance() const { return new PikeCollisionModifier(); }
 
 
     virtual bool setFromXML( Menge::BFSM::VelModifier * modifier, TiXmlElement * node,
@@ -89,4 +88,4 @@ namespace Napoleon {
 
   };
 } // namespace Napoleon
-#endif  // _PIKE_MODIFIER_H_
+#endif  // _PIKE_COLLISION_MODIFIER_H_
