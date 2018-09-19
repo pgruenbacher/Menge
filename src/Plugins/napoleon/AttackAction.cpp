@@ -113,11 +113,9 @@ namespace Napoleon {
 
         agent->attacking = target;
         agent->isAttacking = true;
-        // this shouldn't be occurring concurrenlty...
-        // i think...
+        // we use the damage task to apply the cahnge to the agent serially.
         DamageTask* t = DamageTask::getSingleton();
         t->adjustHealth(finalEnem->_id, -10.f);
-        // finalEnem->adjustHealth(-10);
 
     }
 

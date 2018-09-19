@@ -152,6 +152,7 @@ namespace MengeVis {
 			bool	_showNbr;
 			bool	_showEnem;
 			bool	_showFriend;
+			bool _showPikeCollision;
 			bool _showEnemRadius;
 			bool _showTurnCircles;
 

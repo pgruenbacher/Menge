@@ -35,6 +35,7 @@ target_link_libraries ( mengeVis
   mengeCore
   dl
   tinyxml
+  napoleon
   ${OPENGL_LIBRARIES}
   ${SDL2_LIBRARIES}
   ${SDL2IMAGE_LIBRARIES}

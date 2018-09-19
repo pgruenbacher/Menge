@@ -47,6 +47,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeVis/SceneGraph/graphCommon.h"
 #include "MengeVis/SceneGraph/shapes.h"
 #include "MengeCore/Core.h"
+#include "Plugins/napoleon/PikeTask.h"
 
 #include <sstream>
 #include <iomanip>
@@ -74,6 +75,7 @@ namespace MengeVis {
 											   _showEnemRadius( false),
 											   _showEnem(false), _showFriend(false),
 											   _showMaxSpd( false ), _showVel( false ),
+											   _showPikeCollision(false),
 											   _showPrefVel( false ), _showOrient( false ) {}
 
 		////////////////////////////////////////////////////////////////////////////
@@ -101,6 +103,7 @@ namespace MengeVis {
 						_showNbr = !_showNbr;
 						_showEnem = false;
 						_showFriend = false;
+						_showPikeCollision = false;
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_m ) {
 						_showMaxSpd = !_showMaxSpd;
@@ -118,11 +121,20 @@ namespace MengeVis {
 						_showEnem = !_showEnem;
 						_showNbr = false;
 						_showFriend = false;
+						_showPikeCollision = false;
 						result.set( true, true );
 					} else if ( e.key.keysym.sym == SDLK_f ) {
 						_showFriend = !_showFriend;
 						_showEnem = false;
 						_showNbr = false;
+						_showPikeCollision = false;
+						result.set( true, true );
+					} else if ( e.key.keysym.sym == SDLK_l ) {
+						std::cout << " L " << std::endl;
+						_showFriend = false;
+						_showEnem = false;
+						_showNbr = false;
+						_showPikeCollision = !_showPikeCollision;
 						result.set( true, true );
 					} else if (e.key.keysym.sym == SDLK_c) {
 						_showTurnCircles = !_showTurnCircles;
@@ -235,7 +247,7 @@ namespace MengeVis {
 		////////////////////////////////////////////////////////////////////////////
 
 		void BaseAgentContext::drawNeighbors( const BaseAgent * agt ) {
-			if ( _showNbr || _showEnem || _showFriend ) {
+			if ( _showNbr || _showEnem || _showFriend || _showPikeCollision ) {
 
 				std::vector<Menge::Agents::NearAgent> agentList;
 				if (_showNbr) {
@@ -244,6 +256,16 @@ namespace MengeVis {
 					agentList = agt->_nearFriends;
 				} else {
 					agentList = agt->_nearEnems;
+				}
+
+				// std::cout << "DRAW " << std::endl;
+				if (_showPikeCollision) {
+					// std::cout << "SHOW PIKE COLLIS " << std::endl;
+					const Napoleon::PikeTask* pikeTask = Napoleon::PikeTask::getSingleton();
+					if (pikeTask->hasPike(agt->_id)) {
+						pikeTask->getCollidingAgents(agt->_id, agentList);
+						// std::cout << " GET COLLIDING " << std::endl;
+					}
 				}
 
 				// white text.

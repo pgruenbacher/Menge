@@ -67,6 +67,7 @@ namespace Napoleon {
       void startQuery() override {}; // no need to clear or reset anything.
       Vector2 getQueryPoint() override { return queryPoint; };
       bool containsAgent(const Menge::Agents::BaseAgent* agent) const;
+      void getAgentResults(std::vector<Menge::Agents::NearAgent>& list) const { list = _agentResults; }
       // empties
       float getMaxObstacleRange() override {};
       void filterObstacle(const Menge::Agents::Obstacle* obstacle, float distSq) override {};
@@ -95,7 +96,7 @@ private:
    *
    */
   PikeTask();
-
+  void getCollidingAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
   bool hasPike(size_t agentId) const { return _pikes.find(agentId) != _pikes.end(); }
   Pike getPike(size_t agentId) const { return _pikes.find(agentId)->second; }
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(

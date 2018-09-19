@@ -145,8 +145,6 @@ namespace Napoleon {
       pike.pos = agt->_pos + agt->_orient * length;
       pike.direction = agt->_orient;
       pike.query = PikeProximityQuery(pike.pos, pike.direction);
-      agt->pikePos = pike.pos;
-      agt->hasPike = true;
     }
   }
 
@@ -168,6 +166,11 @@ namespace Napoleon {
 
   std::string PikeTask::toString() const {
     return "Pike Task";
+  }
+
+  void PikeTask::getCollidingAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const {
+    Pike pike = getPike(agentId);
+    pike.query.getAgentResults(agentList);
   }
 
   bool PikeTask::isAgentMovingToPike(const Menge::Agents::BaseAgent* agt, const Menge::Agents::PrefVelocity& pVel) const {
