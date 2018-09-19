@@ -70,13 +70,26 @@ namespace Napoleon {
     /////////////////////////////////////////////////////////////////////
 
     void PikeAction::onEnter( BaseAgent * agent ) {
-        PikeTask* pt = PikeTask::getSingleton();
+        PikeTask* pikeTask = PikeTask::getSingleton();
         if (lowering) {
-
+            agent->hasPike = true;
+            pikeTask->addPike(agent);
         } else {
-
+            agent->hasPike = false;
+            pikeTask->removePike(agent);
         }
 
+    }
+
+    void PikeAction::resetAction(BaseAgent * agent ) {
+        PikeTask* pikeTask = PikeTask::getSingleton();
+        if (lowering) {
+            agent->hasPike = false;
+            pikeTask->removePike(agent);
+        } else {
+            agent->hasPike = true;
+            pikeTask->addPike(agent);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////

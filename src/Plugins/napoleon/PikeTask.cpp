@@ -56,7 +56,7 @@ namespace Napoleon {
   // 1.04719 radians == 60 degrees == 0.5 dot product.
   PikeProximityQuery::PikeProximityQuery(Vector2 pos, Vector2 dir) :
   _maxAgentResults(100),
-  queryPoint(pos), queryDirection(dir), queryDotProduct(0.5), _maxAgentResultDistance(2)
+  queryPoint(pos), queryDirection(dir), queryDotProduct(0.5), _maxAgentResultDistance(1)
   {}
 
 

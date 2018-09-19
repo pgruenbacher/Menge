@@ -82,6 +82,9 @@ namespace Menge {
 			_health = 50;
 			visible = true;
 
+			// for MengeVis only!
+			hasPike = false;
+			pikePos = Vector2(0.f, 0.f);
 			isAttacking = false;
 			attacking = Vector2(0.f, 0.f);
 		}

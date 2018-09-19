@@ -54,6 +54,7 @@ namespace Napoleon {
   protected:
 
     void leaveAction( Menge::Agents::BaseAgent * agent );
+    void resetAction(Menge::Agents::BaseAgent * agent) override;
 
   protected:
     Menge::SimpleLock _lock;
@@ -64,13 +65,14 @@ namespace Napoleon {
   public:
     PikeActionFactory();
 
-    virtual const char * name() const { return "pike_action"; }
+    virtual const char * name() const { return "set_pike"; }
 
     virtual const char * description() const {
       return "Sets agents pike status";
     };
 
   protected:
+    // whether or not the lowered pike will be "added" into the scene.
     size_t _loweringID;
 
     Menge::BFSM::Action * instance() const { return new PikeAction(); }

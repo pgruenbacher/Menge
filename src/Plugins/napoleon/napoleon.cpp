@@ -14,6 +14,7 @@
 #include "IdleComponent.h"
 #include "FacingTargetEnem.h"
 #include "PikeModifier.h"
+#include "PikeAction.h"
 #include "PikeCollisionModifier.h"
 // #include "VisAttackElement.h"
 
@@ -59,6 +60,7 @@ extern "C" {
     engine->registerVelCompFactory( new Napoleon::AimingComponentFactory() );
     engine->registerVelModFactory ( new Napoleon::PikeModifierFactory() );
     engine->registerVelModFactory ( new Napoleon::PikeCollisionModifierFactory() );
+    engine->registerActionFactory( new Napoleon::PikeActionFactory() );
 
   }
 
