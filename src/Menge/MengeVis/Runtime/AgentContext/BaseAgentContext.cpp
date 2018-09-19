@@ -374,6 +374,7 @@ namespace MengeVis {
 			ss << "\n(M)ax Speed: " << agt->_maxSpeed;
 			ss << "\n(O)rientation: " << agt->_orient;
 			ss << "\n(V)elocity: " << agt->_vel << "(" << abs( agt->_vel ) << ")";
+			ss << "\n(T)arget: " << agt->_velPref.getTarget();
 			ss << "\n(P)ref. Velocity: " << agt->_velPref.getPreferredVel();
 			ss << "(" << agt->_velPref.getSpeed() << ")";
 			ss << "\nPriority: " << agt->_priority;

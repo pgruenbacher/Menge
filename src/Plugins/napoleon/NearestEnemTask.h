@@ -41,8 +41,12 @@ using namespace Menge;
 * @brief  Task responsible for updating agent data for maintaining a formation.
 */
 enum NearestEnemMethod {
+  // has to be within min dist
   MELEE,
-  AIMING
+  // has to be within angle
+  AIMING,
+  // has to be within angle and min / max.
+  PIKE
 };
 
 struct NearestEnemData : public Menge::Agents::NearAgent {
@@ -70,7 +74,12 @@ class NearestEnemTask : public Menge::BFSM::Task {
       const Menge::Agents::BaseAgent* agt, Menge::Agents::NearAgent& result) const;
   bool _doWorkData(size_t agent_id,
                  NearestEnemData& result) const;
-  void _updateAimingTarget(const Menge::Agents::BaseAgent* agent, Menge::Agents::NearAgent& result, float max_angle = 3.14 * 2) const;
+  void _updateAimingTarget(const Menge::Agents::BaseAgent* agent,
+                           Menge::Agents::NearAgent& result,
+                           float max_angle = 3.14 * 2) const;
+  void _updatePikeTarget(const Menge::Agents::BaseAgent* agent,
+                           Menge::Agents::NearAgent& result,
+                           float max_angle = 3.14 * 2) const;
 
  public:
   static NearestEnemTask* getSingleton();

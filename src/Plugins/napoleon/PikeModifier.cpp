@@ -40,6 +40,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Core.h"
 #include "./PikeTask.h"
+#include "NearestEnemTask.h"
 
 namespace Napoleon {
 
@@ -75,8 +76,16 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void PikeModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
-
-
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    Menge::Agents::NearAgent d(100, 0x0);
+    if (task->getCurrentTarget(agent, d)) {
+      if (d.agent == 0x0) {
+        return;
+      }
+      pVel.setTarget(d.agent->_pos);
+      return;
+    }
+    pVel.setTarget(agent->_pos + Vector2(-2, 0));
   }
 
   Menge::BFSM::Task * PikeModifier::getTask() {
@@ -87,15 +96,16 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void PikeModifier::registerAgent(const Menge::Agents::BaseAgent* agent) {
-    PikeTask* pikeTask = PikeTask::getSingleton();
-    pikeTask->addPike(agent);
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    task->addAgent(agent->_id, PIKE);
+
   };
 
   /////////////////////////////////////////////////////////////////////
 
   void PikeModifier::unregisterAgent(const Menge::Agents::BaseAgent* agent){
-    PikeTask* pikeTask = PikeTask::getSingleton();
-    pikeTask->removePike(agent);
+    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    task->removeAgent(agent->_id);
 
   };
 

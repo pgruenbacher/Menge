@@ -166,16 +166,16 @@ namespace Menge {
 			}
 			float speed = abs( _vel );
 			const float speedThresh = _prefSpeed / 3.f;
-			Vector2 prefDir = _velPref.getPreferred();
+			Vector2 prefVel = _velPref.getPreferredVel();
 			Vector2 newOrient( _orient );	// by default new is old
 			Vector2 moveDir = _vel / speed;
-			bool hasMinPrefDir = absSq(prefDir) > 0.000001f;
+			bool hasMinPrefVel = absSq(prefVel) > 0.000001f;
 			Vector2 targetDir = _velPref.getTarget() - _pos;
 			if ( speed >= speedThresh ) {
 				newOrient = moveDir;
 				newOrient.normalize();
-			} else if (speed == 0.0 && hasMinPrefDir) {
-				newOrient = prefDir;
+			} else if (speed == 0.0 && hasMinPrefVel) {
+				newOrient = prefVel;
 				newOrient.normalize();
 			} else if (speed < speedThresh && _velPref.hasTarget() && !(targetDir.x() == 0 && targetDir.y() == 0)) {
 				// if slow enough, face target.

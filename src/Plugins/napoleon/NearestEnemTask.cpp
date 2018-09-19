@@ -95,17 +95,6 @@ namespace Napoleon {
     return "NearestEnem Task";
   }
 
-  void NearestEnemTask::_getNearestTarget(const BaseAgent* agent, NearAgent& result) const {
-    float distSq = 1000.f * 1000.f;
-    // NearAgent targetEnem(distSq, 0x0);
-    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
-      if (enem.distanceSquared < distSq) {
-        distSq = enem.distanceSquared;
-        result = enem;
-      }
-    }
-    return;
-  }
 
   bool NearestEnemTask::getCurrentTarget(size_t id, NearAgent& result) const {
     NearestEnemData d(Menge::Agents::NearAgent(100, 0x0));
@@ -115,6 +104,7 @@ namespace Napoleon {
     } else {
       result = it->second;
     }
+    if (result.agent == 0x0) return false;
     return true;
 
   }
@@ -130,8 +120,7 @@ namespace Napoleon {
     } else {
       result = it->second;
     }
-    // result.agent = d.agent;
-    // result.distanceSquared = d.distanceSquared;
+    if (result.agent == 0x0) return false;
     return true;
   }
 
@@ -174,6 +163,8 @@ namespace Napoleon {
         _getNearestTarget(agent, result);
       } else if (result.method == AIMING) {
         _updateAimingTarget(agent, result);
+      } else if (result.method == PIKE) {
+        _updatePikeTarget(agent, result);
       }
       result.timeout = Menge::SIM_TIME + delay;
     } else {
@@ -196,6 +187,41 @@ namespace Napoleon {
     return true;
   }
 
+
+  void NearestEnemTask::_getNearestTarget(const BaseAgent* agent, NearAgent& result) const {
+    float distSq = 1000.f * 1000.f;
+    // NearAgent targetEnem(distSq, 0x0);
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      if (enem.distanceSquared < distSq) {
+        distSq = enem.distanceSquared;
+        result = enem;
+      }
+    }
+    return;
+  }
+
+  void NearestEnemTask::_updatePikeTarget(const Menge::Agents::BaseAgent* agent, Menge::Agents::NearAgent& result, float max_angle) const {
+    float distSq = 1000.f * 1000.f;
+    // NearAgent targetEnem(distSq, 0x0);
+    Vector2 dir;
+    Vector2 pref_dir = agent->_velPref.getPreferred();
+    float pref_angle = atan2(pref_dir.x(), pref_dir.y());
+    float current_max = max_angle;
+
+    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+      if (enem.distanceSquared < distSq) {
+        dir = enem.agent->_pos - agent->_pos;
+        float angle = atan2(dir.y(), dir.x());
+        float angle_diff = std::abs(angle - pref_angle);
+        if (angle_diff < std::min(current_max, max_angle)) continue;
+        const float MIN_PIKE = 1.8 * 1.8;
+        if (enem.distanceSquared < (MIN_PIKE)) continue;
+        distSq = enem.distanceSquared;
+        result = enem;
+      }
+    }
+    return;
+  }
 
   void NearestEnemTask::_updateAimingTarget(const Menge::Agents::BaseAgent* agent, Menge::Agents::NearAgent& result, float max_angle) const {
     // we can try nearest enemies first...

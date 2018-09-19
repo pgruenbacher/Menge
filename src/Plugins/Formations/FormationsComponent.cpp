@@ -149,7 +149,9 @@ namespace Formations {
 
     } else {
 
-      // std::cout << "no modify " << target._x << " " << target._y << std::endl;
+      pVel.setSingle(Vector2(0,0));
+      pVel.setSpeed(0.f);
+      // std::cout << "no MODIFY!! " << target._x << " " << target._y << std::endl;
     }
   }
 
