@@ -58,9 +58,22 @@
         <VelComponent type="enemy_near_comp" method="withdrawing"/>
     </State>
 
+    <State name="Staggering" final="0">
+        <VelComponent type="idle"/>
+    </State>
+
     <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
         <Condition type="enemy_near" dist="5.9" is_close="0"/>
         <Target type="by_class" typename="ChargeState"/>
+    </Transition>
+
+    <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Staggering">
+        <Condition type="can_stagger"/>
+        <Condition type="can_perform" dur="1.1"/>
+    </Transition>
+    <Transition from="Staggering">
+        <Condition type="timer" per_agent="1" dist="c" value="3"/>
+        <Target type="return"/>
     </Transition>
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Attack">

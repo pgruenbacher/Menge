@@ -44,6 +44,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/Actions/PropertyAction.h"
 #include "MengeCore/BFSM/GoalSet.h"
 #include "NearestEnemTask.h"
+#include "StaggerTask.h"
 
 #include <iostream>
 #include <limits>
@@ -107,8 +108,6 @@ namespace Napoleon {
         if (hitChance < 0.f) {
             // std::cout << "MISS hc: " << hitChance << " cls: " << agent->_class << std::endl;
             return;
-        } else {
-            // std::cout << "HIT hc: " << hitChance << " cls: " << agent->_class << std::endl;
         }
 
         agent->attacking = target;
@@ -116,6 +115,9 @@ namespace Napoleon {
         // we use the damage task to apply the cahnge to the agent serially.
         DamageTask* t = DamageTask::getSingleton();
         t->adjustHealth(finalEnem->_id, -10.f);
+
+        StaggerTask* stgr = StaggerTask::getSingleton();
+        stgr->setCanStagger(finalEnem->_id, true);
 
     }
 
