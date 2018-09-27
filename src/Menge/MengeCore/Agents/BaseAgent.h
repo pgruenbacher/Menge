@@ -443,7 +443,7 @@ namespace Menge {
 			 */
 			virtual Math::Vector2 getQueryPoint(){ return _pos; };
 
-			bool isEnemy(const BaseAgent* agt);
+			bool isEnemy(const BaseAgent* agt) const;
 			/*!
 			 *  @brief      updates the max agent query range if conditions inside the filter are
 			 *              met typically, we don't shrink the query range until the result set is

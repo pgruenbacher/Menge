@@ -54,8 +54,11 @@ namespace Napoleon {
 
 
   // 1.04719 radians == 60 degrees == 0.5 dot product.
-  PikeProximityQuery::PikeProximityQuery(Vector2 pos, Vector2 dir) :
+  PikeProximityQuery::PikeProximityQuery(Vector2 pos, Vector2 dir, const Menge::Agents::BaseAgent* queryAgent) :
   _maxAgentResults(100),
+  _queryAgent(queryAgent),
+  _agentResults(),
+  _nearbyAgentResults(),
   queryPoint(pos), queryDirection(dir), queryDotProduct(0.5), _maxAgentResultDistance(1)
   {}
 
@@ -75,6 +78,12 @@ namespace Napoleon {
     // std::cout << "PUSH BACK ?" << distanceSquared << " " << _maxAgentResultDistance << std::endl;
     if (distanceSquared > _maxAgentResultDistance) return;
     if (_agentResults.size() == _maxAgentResults) return;
+
+    // if enemy, add to nearbyEnems
+    if (agent->isEnemy(_queryAgent)) {
+      _nearbyAgentResults.push_back(NearAgent(distanceSquared, agent));
+    }
+
     Vector2 agentDir = agent->_pos - queryPoint;
     agentDir.normalize();
     // check if dot product. if > 0.5, then pike if facing 60 deg angle of agent.
@@ -97,7 +106,7 @@ namespace Napoleon {
 
   };
 
-  Pike::Pike(Vector2 pos, Vector2 dir) : pos(pos), direction(dir), query(pos, dir) {
+  Pike::Pike(Vector2 pos, Vector2 dir, const Menge::Agents::BaseAgent* queryAgent) : pos(pos), direction(dir), query(pos, dir, queryAgent) {
 
   }
 
@@ -128,10 +137,10 @@ namespace Napoleon {
     Vector2 pos = agent->_pos + dir * length;
     PikeMap::iterator it = _pikes.find(agent->_id);
     if (it == _pikes.end()) {
-      _pikes.insert(PikeMap::value_type(agent->_id, Pike(pos, dir)));
+      _pikes.insert(PikeMap::value_type(agent->_id, Pike(pos, dir, agent)));
 
     } else {
-      it->second = Pike(pos, dir);
+      it->second = Pike(pos, dir, agent);
     }
 
     _lock.releaseWrite();
@@ -144,7 +153,7 @@ namespace Napoleon {
       Pike& pike = it->second;
       pike.pos = agt->_pos + agt->_orient * length;
       pike.direction = agt->_orient;
-      pike.query = PikeProximityQuery(pike.pos, pike.direction);
+      pike.query = PikeProximityQuery(pike.pos, pike.direction, agt);
     }
   }
 
@@ -168,7 +177,17 @@ namespace Napoleon {
     return "Pike Task";
   }
 
+  void PikeTask::getNearbyAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const {
+    if (!hasPike(agentId)) return;
+    // std::cout << "GET NARBY?" << std::endl;
+    Pike pike = getPike(agentId);
+    // std::cout << "GOT PIKE...?" << std::endl;
+    pike.query.getNearbyAgentResults(agentList);
+    // std::cout << "DONE " << std::endl;
+  }
+
   void PikeTask::getCollidingAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const {
+    if (!hasPike(agentId)) return;
     Pike pike = getPike(agentId);
     pike.query.getAgentResults(agentList);
   }

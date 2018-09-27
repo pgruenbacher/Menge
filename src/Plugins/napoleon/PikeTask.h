@@ -44,7 +44,10 @@ namespace Napoleon {
       /*!
        *  @brief   the max number of agent results to store
        */
+      // used for decting enemies approaching the tip of the pike.
       std::vector<Menge::Agents::NearAgent> _agentResults;
+      // used by nearestEnemTask to iterate through enemies near the pike.
+      std::vector<Menge::Agents::NearAgent> _nearbyAgentResults;
       size_t _maxAgentResults;
 
       /*!
@@ -59,15 +62,18 @@ namespace Napoleon {
       Math::Vector2 queryPoint;
       Math::Vector2 queryDirection;
       float queryDotProduct;
+      const Menge::Agents::BaseAgent* _queryAgent;
     public:
-      PikeProximityQuery(Vector2 pos, Vector2 dir);
+      PikeProximityQuery(Vector2 pos, Vector2 dir, const Menge::Agents::BaseAgent* queryAgent);
       // PikeProximityQuery(Vector2 point) : _queryPoint(point), _maxAgentResultDistance(2*2),
       float getMaxAgentRange() override { return _maxAgentResultDistance; }
       void filterAgent(const Menge::Agents::BaseAgent * agent, float distanceSquared) override;
       void startQuery() override {}; // no need to clear or reset anything.
       Vector2 getQueryPoint() override { return queryPoint; };
       bool containsAgent(const Menge::Agents::BaseAgent* agent) const;
+
       void getAgentResults(std::vector<Menge::Agents::NearAgent>& list) const { list = _agentResults; }
+      void getNearbyAgentResults(std::vector<Menge::Agents::NearAgent>& list) const { list = _nearbyAgentResults; }
       // empties
       float getMaxObstacleRange() override {};
       void filterObstacle(const Menge::Agents::Obstacle* obstacle, float distSq) override {};
@@ -77,7 +83,7 @@ namespace Napoleon {
     Vector2 pos;
     Vector2 direction;
     PikeProximityQuery query;
-    Pike(Vector2 pos, Vector2 dir);
+    Pike(Vector2 pos, Vector2 dir, const Menge::Agents::BaseAgent* queryAgent);
   };
     /*!
    *  @brief  Task responsible for updating agent data for maintaining a formation.
@@ -97,6 +103,7 @@ private:
    */
   PikeTask();
   void getCollidingAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
+  void getNearbyAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
   bool hasPike(size_t agentId) const { return _pikes.find(agentId) != _pikes.end(); }
   Pike getPike(size_t agentId) const { return _pikes.find(agentId)->second; }
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(

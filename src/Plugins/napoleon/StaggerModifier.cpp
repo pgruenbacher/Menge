@@ -41,6 +41,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Core.h"
 #include "./PikeTask.h"
 #include "StaggerTask.h"
+#include "MengeCore/Agents/SimulatorInterface.h"
 
 namespace Napoleon {
 
@@ -76,6 +77,11 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void StaggerModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
+    StaggerTask* task = StaggerTask::getSingleton();
+    Vector2 forceDir = task->getStaggerForce(agent->_id);
+
+    pVel.setSingle(forceDir);
+    pVel.setSpeed(1.0);
   }
 
   Menge::BFSM::Task * StaggerModifier::getTask() {

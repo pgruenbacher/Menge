@@ -20,8 +20,8 @@
  *  @file   FormationsModifier.h
  *  @brief    definition of a VelocityModifier to enforce formation behavior
  */
-#ifndef _PIKE_MODIFIER_H_
-#define _PIKE_MODIFIER_H_
+#ifndef _STAGGER_MODIFIER_H_
+#define _STAGGER_MODIFIER_H_
 
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
@@ -40,7 +40,7 @@ namespace Napoleon {
     StaggerModifier();
 
   protected:
-    std::vector<Vector2> _stagger_dirs;
+    // std::vector<Vector2> _stagger_dirs;
     virtual ~StaggerModifier();
 
   public:
@@ -72,7 +72,7 @@ namespace Napoleon {
      */
     StaggerModifierFactory();
 
-    virtual const char * name() const { return "pike"; }
+    virtual const char * name() const { return "stagger"; }
 
     virtual const char * description() const {
       return "Perform stagger movement.";
@@ -89,4 +89,4 @@ namespace Napoleon {
 
   };
 } // namespace Napoleon
-#endif  // _PIKE_MODIFIER_H_
+#endif  // _STAGGER_MODIFIER_H_

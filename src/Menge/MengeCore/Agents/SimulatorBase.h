@@ -41,6 +41,7 @@ namespace Menge {
 
 	namespace Agents {
 
+
 		/*!
 		 *  @brief      Defines the basic simulator.  It is responsible for tracking agents and
 		 *				obstacles as well as initializing such from files.

@@ -397,7 +397,7 @@ namespace Menge {
 			insertObstacleNeighbor(obstacle, distance);
 		};
 
-		bool BaseAgent::isEnemy(const BaseAgent* agent) {
+		bool BaseAgent::isEnemy(const BaseAgent* agent) const {
 			return _class != agent->_class;
 		}
 

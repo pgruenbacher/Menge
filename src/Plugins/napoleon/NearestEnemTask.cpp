@@ -40,6 +40,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/Core.h"
 #include <algorithm>
+#include "PikeTask.h"
 
 namespace Napoleon {
 
@@ -207,19 +208,32 @@ namespace Napoleon {
     Vector2 pref_dir = agent->_velPref.getPreferred();
     float pref_angle = atan2(pref_dir.x(), pref_dir.y());
     float current_max = max_angle;
+    const float MIN_PIKE = 1.5 * 1.5;
 
-    for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+    // for (Menge::Agents::NearAgent enem : agent->_nearEnems) {
+    std::vector<NearAgent> enems;
+    PikeTask::getSingleton()->getNearbyAgents(agent->_id, enems);
+    for (const Menge::Agents::NearAgent& enem : enems) {
       if (enem.distanceSquared < distSq) {
         dir = enem.agent->_pos - agent->_pos;
         float angle = atan2(dir.y(), dir.x());
         float angle_diff = std::abs(angle - pref_angle);
-        if (angle_diff < std::min(current_max, max_angle)) continue;
-        const float MIN_PIKE = 1.8 * 1.8;
-        if (enem.distanceSquared < (MIN_PIKE)) continue;
+
+        // claculate enemDistanceSquared manually since the query for pike task
+        // is baed on distance to the tip of hte pike.
+        const float distanceSquared = absSq(dir);
+
+        if (angle_diff > std::min(current_max, max_angle)) continue;
+        if (distanceSquared < (MIN_PIKE)) continue;
         distSq = enem.distanceSquared;
         result = enem;
       }
     }
+
+    // if (result.agent && agent->_id == Menge::SIMULATOR->getSelectedAgentId()) {
+    //   std::cout << " PIKE TARGET " << result.agent->_id << std::endl;
+    // }
+
     return;
   }
 

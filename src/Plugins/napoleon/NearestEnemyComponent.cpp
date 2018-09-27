@@ -193,7 +193,7 @@ namespace Napoleon {
     //   }
     // }
 
-    NearestEnemTask* task = NearestEnemTask::getSingleton();
+    const NearestEnemTask* task = NearestEnemTask::getSingleton();
     NearAgent d(100, 0x0);
     task->getCurrentTarget(agent, d);
 

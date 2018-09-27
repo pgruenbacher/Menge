@@ -48,6 +48,7 @@
     </State>
     <State name="PikeAttack" final="0">
         <Action type="attack_action"/>
+        <GoalSelector type="identity"/>
         <VelComponent type="enemy_near_comp" method="idle"/>
     </State>
 
@@ -60,6 +61,7 @@
 
     <State name="Staggering" final="0">
         <VelComponent type="idle"/>
+        <VelModifier type="stagger"/>
     </State>
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
@@ -69,6 +71,9 @@
 
     <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Staggering">
         <Condition type="can_stagger"/>
+        <Condition type="not">
+            <Condition type="dead"/>
+        </Condition>
         <Condition type="can_perform" dur="1.1"/>
     </Transition>
     <Transition from="Staggering">
@@ -87,7 +92,7 @@
         <Condition type="facing_enemy" threshold="0.9" dist="2"/>
     </Transition>
     <Transition from="PikeAttack" to="Pike">
-        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <Condition type="timer" dist="c" value="2.5" min="2" max="3" seed="6" per_agent="1" />
         <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
     </Transition>
 

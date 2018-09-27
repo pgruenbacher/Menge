@@ -100,6 +100,8 @@ namespace Menge {
 			 *  @returns    A pointer to the agent.
 			 */
 			virtual BaseAgent * getAgent( size_t agentNo ) = 0;
+			// paul method for checking currently selected agent for debugging purposes.
+			size_t getSelectedAgentId() const { return 96; }
 
 			/*!
 			 *  @brief      Const accessor for agents.
@@ -110,7 +112,7 @@ namespace Menge {
 			 *								simulator's local store.
 			 *  @returns    A pointer to the agent.
 			 */
-			virtual const BaseAgent * getAgent( size_t agentNo ) const = 0;	
+			virtual const BaseAgent * getAgent( size_t agentNo ) const = 0;
 
 			/*!
 			 *	@brief	After all agents and all obstacles have been added to the scene
@@ -156,7 +158,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports if the elevation has been set.
-			 *	
+			 *
 			 *	@returns	True if the elevation has been set, false otherwise.
 			 */
 			bool hasElevation() const { return _elevation != 0x0; }
@@ -309,7 +311,7 @@ namespace Menge {
 			/*!
 			 *	@brief		The total accumulated simulation time.
 			 */
-			float _globalTime;	
+			float _globalTime;
 
 			/*!
 			 *	@brief		Data structure for reporting the elevation data of agents.
@@ -317,7 +319,7 @@ namespace Menge {
 			 *				topologically planar.)
 			 */
 			Elevation	*	_elevation;
-			
+
 			/*!
 			 *	@brief		The data structure used to perform spatial queries.
 			 */
@@ -344,6 +346,6 @@ namespace Menge {
 			 */
 			float	_maxDuration;
 		};
-	}	// namespace Agents 
+	}	// namespace Agents
 }	// namespace Menge
 #endif	// __SIMULATOR_INTERFACE_H__
