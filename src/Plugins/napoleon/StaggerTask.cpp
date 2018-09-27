@@ -73,19 +73,35 @@ namespace Napoleon {
   }
   /////////////////////////////////////////////////////////////////////
 
-
-  void StaggerTask::setCanStagger(size_t agentId, bool valid) {
+  void StaggerTask::setStaggerComplete(size_t agentId) {
     _lock.lockWrite();
-    _can_stagger[agentId] = valid;
+    _stagger_map.erase(agentId);
     _lock.releaseWrite  ();
+  }
+
+  void StaggerTask::setCanStagger(size_t agentId, Vector2 force) {
+    _lock.lockWrite();
+    _stagger_map[agentId] = StaggerData{force};
+    _lock.releaseWrite();
+  }
+
+  Vector2 StaggerTask::getStaggerForce(size_t agentId) const {
+    _lock.lockRead();
+    auto const find_iter = _stagger_map.find(agentId);
+    if (find_iter != _stagger_map.end()) {
+      _lock.releaseRead();
+      return find_iter->second.force;
+    }
+    _lock.releaseRead();
+    return Vector2(0.f, 0.f);
   }
 
   bool StaggerTask::canStagger(size_t agentId) const {
     _lock.lockRead();
-    auto const find_iter = _can_stagger.find(agentId);
-    if (find_iter != _can_stagger.end()) {
+    auto const find_iter = _stagger_map.find(agentId);
+    if (find_iter != _stagger_map.end()) {
       _lock.releaseRead();
-      return find_iter->second;
+      return true;
     }
     _lock.releaseRead();
     return false;

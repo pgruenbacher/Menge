@@ -40,7 +40,7 @@ namespace Napoleon {
     StaggerModifier();
 
   protected:
-
+    std::vector<Vector2> _stagger_dirs;
     virtual ~StaggerModifier();
 
   public:

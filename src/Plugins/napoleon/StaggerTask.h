@@ -1,57 +1,35 @@
-/*
- Menge Crowd Simulation Framework
-
- Copyright and trademark 2012-17 University of North Carolina at Chapel Hill
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
- or
-    LICENSE.txt in the root of the Menge repository.
-
- Any questions or comments should be sent to the authors menge@cs.unc.edu
-
- <http://gamma.cs.unc.edu/Menge/>
-*/
-
-/*!
- *  @file   FormationsTask.h
- *  @brief    Task used to maintain a single formation.
- */
-
 #ifndef _STAGGER_TASK_H_
 #define _STAGGER_TASK_H_
 
-#include "MengeCore/BFSM/fsmCommon.h"
 #include "MengeCore/BFSM/Tasks/Task.h"
 #include "MengeCore/BFSM/Tasks/TaskFactory.h"
+#include "MengeCore/BFSM/fsmCommon.h"
 
-#include <string>
 #include <map>
+#include <string>
 
-#include "thirdParty/tinyxml.h"
-#include "MengeCore/Runtime/ReadersWriterLock.h"
 #include "MengeCore/Math/RandGenerator.h"
+#include "MengeCore/Runtime/ReadersWriterLock.h"
+#include "thirdParty/tinyxml.h"
 
 using namespace Menge;
 namespace Napoleon {
-    /*!
-   *  @brief  Task responsible for updating agent data for maintaining a formation.
-   */
-class StaggerTask : public Menge::BFSM::Task {
-private:
-  ReadersWriterLock _lock;
-  std::map<size_t, bool> _can_stagger;
-  // it will also mantain the combat
-  // random generator to be updated serially in parallel.
-  // agent random values will be a combination of the random value per sim step
-  // + the agent's id.
-  // Menge::Math::UniformFloatGenerator _randGenerator;
-  float _step_rand_value;
 
-    static StaggerTask* STAGGER_TASK;
+struct StaggerData {
+  Vector2 force;
+};
+
+/*!
+* @brief  Task responsible for updating agent data for maintaining a formation.
+*/
+class StaggerTask : public Menge::BFSM::Task {
+ private:
+  ReadersWriterLock _lock;
+  typedef std::map<size_t, StaggerData> StaggerMap;
+  StaggerMap _stagger_map;
+
+  static StaggerTask* STAGGER_TASK;
+
  public:
   /*!
    *  @brief    Constructor
@@ -65,8 +43,9 @@ private:
   // }
 
   bool canStagger(size_t agentId) const;
-  void setCanStagger(size_t agentId, bool valid);
-
+  void setStaggerComplete(size_t agentId);
+  void setCanStagger(size_t agentId, Vector2 force);
+  Vector2 getStaggerForce(size_t agentId) const;
   /*!
    *  @brief    The work performed by the task.
    *
@@ -99,8 +78,7 @@ private:
   virtual bool isEquivalent(const Menge::BFSM::Task* task) const;
 
   static StaggerTask* getSingleton();
-  };
+};
 
-
-} // namespace Napoleon
-#endif // _STAGGER_TASK_H_
+}  // namespace Napoleon
+#endif  // _STAGGER_TASK_H_

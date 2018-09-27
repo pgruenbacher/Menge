@@ -92,7 +92,8 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void StaggerModifier::unregisterAgent(const Menge::Agents::BaseAgent* agent){
-
+    StaggerTask* task = StaggerTask::getSingleton();
+    task->setStaggerComplete(agent->_id);
   };
 
   /////////////////////////////////////////////////////////////////////
@@ -106,8 +107,8 @@ namespace Napoleon {
 
   bool StaggerModifierFactory::setFromXML( VelModifier * modifier, TiXmlElement * node,
                          const std::string & behaveFldr ) const {
-    StaggerModifier * pikeMod = dynamic_cast<StaggerModifier *>(modifier);
-        assert( pikeMod != 0x0 &&
+    StaggerModifier * stagMod = dynamic_cast<StaggerModifier *>(modifier);
+        assert( stagMod != 0x0 &&
         "Trying to set property modifier properties on an incompatible object" );
 
     if ( ! Menge::BFSM::VelModFactory::setFromXML( modifier, node, behaveFldr ) ) return false;

@@ -78,7 +78,7 @@ namespace Napoleon {
         if (!NearestEnemTask::getSingleton()->getCurrentTarget(agent, d)) {
             return;
         }
-        Menge::Math::Vector2 target = d.agent->_pos;
+        const Menge::Math::Vector2 target = d.agent->_pos;
         const BaseAgent* finalEnem = d.agent;
 
         if (finalEnem == 0) return;
@@ -117,7 +117,9 @@ namespace Napoleon {
         t->adjustHealth(finalEnem->_id, -10.f);
 
         StaggerTask* stgr = StaggerTask::getSingleton();
-        stgr->setCanStagger(finalEnem->_id, true);
+        Vector2 forceDir = target - agent->_pos;
+        forceDir.normalize();
+        stgr->setCanStagger(finalEnem->_id, forceDir);
 
     }
 
