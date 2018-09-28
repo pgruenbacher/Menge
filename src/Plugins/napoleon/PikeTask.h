@@ -94,7 +94,9 @@ public:
 private:
   ReadersWriterLock _lock;
   PikeMap _pikes;
-
+  std::map<size_t, bool> _pendingPikeActions;
+  void _addPike(const Menge::Agents::BaseAgent* agent);
+  void mapPikePositions(PikeTask::PikeMap& pikeMap);
     static PikeTask* PIKE_TASK;
  public:
   /*!

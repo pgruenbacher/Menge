@@ -27,6 +27,7 @@ class StaggerTask : public Menge::BFSM::Task {
   ReadersWriterLock _lock;
   typedef std::map<size_t, StaggerData> StaggerMap;
   StaggerMap _stagger_map;
+  StaggerMap _pending_stagger;
 
   static StaggerTask* STAGGER_TASK;
 

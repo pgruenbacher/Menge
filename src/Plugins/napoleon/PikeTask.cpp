@@ -124,15 +124,31 @@ namespace Napoleon {
 
   void PikeTask::removePike(const Menge::Agents::BaseAgent* agent) {
     _lock.lockWrite();
-
-    _pikes.erase(agent->_id);
-
+    _pendingPikeActions[agent->_id] = false;
+    // _pikes.erase(agent->_id);
     _lock.releaseWrite();
   }
 
   void PikeTask::addPike(const Menge::Agents::BaseAgent* agent) {
     _lock.lockWrite();
 
+    _pendingPikeActions[agent->_id] = true;
+    // Vector2 dir = agent->_orient;
+    // Vector2 pos = agent->_pos + dir * length;
+    // PikeMap::iterator it = _pikes.find(agent->_id);
+    // if (it == _pikes.end()) {
+    //   _pikes.insert(PikeMap::value_type(agent->_id, Pike(pos, dir, agent)));
+
+    // } else {
+    //   it->second = Pike(pos, dir, agent);
+    // }
+    // _pikes.erase(agent->_id);
+    // std::cout << " ADD PIKE " << std::endl;
+
+    _lock.releaseWrite();
+  }
+
+  void PikeTask::_addPike(const Menge::Agents::BaseAgent* agent) {
     Vector2 dir = agent->_orient;
     Vector2 pos = agent->_pos + dir * length;
     PikeMap::iterator it = _pikes.find(agent->_id);
@@ -143,10 +159,20 @@ namespace Napoleon {
       it->second = Pike(pos, dir, agent);
     }
 
-    _lock.releaseWrite();
   }
 
-  void mapPikePositions(PikeTask::PikeMap& pikeMap) {
+  void PikeTask::mapPikePositions(PikeTask::PikeMap& pikeMap) {
+    std::map<size_t, bool>::iterator actionIterator = _pendingPikeActions.begin();
+    for ( ; actionIterator != _pendingPikeActions.end(); ++ actionIterator ) {
+      size_t agentId = actionIterator->first;
+      bool shouldAdd = actionIterator->second;
+      if (shouldAdd) {
+        _addPike(Menge::SIMULATOR->getAgent(agentId));
+      } else {
+        _pikes.erase(agentId);
+      }
+    }
+
     PikeTask::PikeMap::iterator it = pikeMap.begin();
     for ( ; it != pikeMap.end(); ++it) {
       Menge::Agents::BaseAgent* agt = Menge::SIMULATOR->getAgent(it->first);
@@ -155,6 +181,8 @@ namespace Napoleon {
       pike.direction = agt->_orient;
       pike.query = PikeProximityQuery(pike.pos, pike.direction, agt);
     }
+
+    _pendingPikeActions.clear();
   }
 
   void PikeTask::doWork( const FSM * fsm ) throw( TaskException ) {
