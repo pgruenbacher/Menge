@@ -106,6 +106,7 @@ namespace Napoleon {
       result = it->second;
     }
     if (result.agent == 0x0) return false;
+    if (result.agent->isDead()) return false;
     return true;
 
   }
@@ -122,6 +123,7 @@ namespace Napoleon {
       result = it->second;
     }
     if (result.agent == 0x0) return false;
+    if (result.agent->isDead()) return false;
     return true;
   }
 

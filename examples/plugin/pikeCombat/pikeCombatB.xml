@@ -49,7 +49,12 @@
     <State name="PikeAttack" final="0">
         <Action type="attack_action"/>
         <GoalSelector type="identity"/>
-        <VelComponent type="enemy_near_comp" method="idle"/>
+        <VelComponent type="enemy_near_comp" method="idle" target="pike"/>
+    </State>
+    <State name="PikeAttackCollision" final="0">
+        <Action type="attack_action"/>
+        <GoalSelector type="identity"/>
+        <VelComponent type="enemy_near_comp" method="idle" target="pike"/>
     </State>
 
     <State name="AdvancingEnemy" final="0">
@@ -91,9 +96,11 @@
         <Condition type="enemy_near" dist="2"/>
         <Condition type="facing_enemy" threshold="0.9" dist="2"/>
     </Transition>
-    <Transition from="PikeAttack" to="Pike">
-        <Condition type="timer" dist="c" value="2.5" min="2" max="3" seed="6" per_agent="1" />
-        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
+    <Transition from="Pike" to="PikeAttackCollision">
+        <Condition type="is_pike_colliding"/>
+    </Transition>
+    <Transition from="PikeAttack,PikeAttackCollision" to="Pike">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
     </Transition>
 
     <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
@@ -107,7 +114,7 @@
         <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9" inverse="1"/>
     </Transition>
 
-    <Transition to="Dying" from="Attack,AdvancingEnemy,Pike,TooManyEnemyNear,WalkLeft,WalkRight">
+    <Transition to="Dying" from="Staggering,PikeAttack,PikeAttackCollision,Attack,AdvancingEnemy,Pike,TooManyEnemyNear,WalkLeft,WalkRight">
         <Condition type="dead"/>
     </Transition>
     <Transition from="Dying" to="Dead">

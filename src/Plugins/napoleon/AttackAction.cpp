@@ -87,7 +87,7 @@ namespace Napoleon {
             // i'm not sure why this is happening
             // the task should be happening before the next
             // computeNeighbors is performed...
-            std::cerr << "ALready DED! " << finalEnem->_id << Menge::SIM_TIME << std::endl;
+            std::cerr << "ALready DED! " << finalEnem->_id << " " << Menge::SIM_TIME << std::endl;
         }
 
         // don't update enemy agent! this is being evaluated

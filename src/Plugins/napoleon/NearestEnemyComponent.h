@@ -28,6 +28,7 @@
 #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
 #include "MengeCore/Agents/BaseAgent.h"
+#include "NearestEnemTask.h"
 #include <vector>
 #include <map>
 
@@ -90,6 +91,7 @@ class MENGE_API NearestEnemComponent : public VelComponent {
   // virtual std::string getStringId() const = 0;
   virtual std::string getStringId() const { return NAME; }
 
+  NearestEnemMethod _targetMethod;
   ActionType _actionType;
   // whether unit should slow to arrive when approaching enemy. (cavalry)
   bool _slowToArrive;
@@ -111,6 +113,7 @@ class MENGE_API NearestEnemComponentFactory : public VelCompFactory {
  protected:
   VelComponent* instance() const { return new NearestEnemComponent(); }
   size_t _methodID;
+  size_t _targetMethodID;
   size_t _slowToArriveID;
   virtual bool setFromXML(VelComponent* vc, TiXmlElement* node,
                           const std::string& behaveFldr) const;

@@ -98,7 +98,10 @@ namespace Napoleon {
 
   /////////////////////////////////////////////////////////////////////
 
-  NearestEnemComponent::NearestEnemComponent() : VelComponent() {
+  NearestEnemComponent::NearestEnemComponent() : VelComponent(),
+    _targetMethod(MELEE),
+    _actionType(IDLE)
+  {
   }
 
   void NearestEnemComponent::setIdleVelocity(const BaseAgent* enem, const BaseAgent * agent, const Goal * goal,
@@ -239,6 +242,7 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
   NearestEnemComponentFactory::NearestEnemComponentFactory() : VelCompFactory() {
     _methodID = _attrSet.addStringAttribute("method", true /* required */);
+    _targetMethodID = _attrSet.addStringAttribute("target", false, "melee");
     _slowToArriveID = _attrSet.addBoolAttribute("slow_to_arrive", false, false);
   }
 
@@ -259,6 +263,16 @@ namespace Napoleon {
     }
 
     std::string _typeString = _attrSet.getString(_methodID);
+    std::string _targetMethod = _attrSet.getString(_targetMethodID);
+
+    if (_targetMethod == "melee") {
+      nearestEnemComp->_targetMethod = MELEE;
+    } else if (_targetMethod == "pike") {
+      nearestEnemComp->_targetMethod = PIKE;
+    } else if (_targetMethod == "aiming") {
+      nearestEnemComp->_targetMethod = AIMING;
+    }
+
     if (_typeString == "advancing") {
       nearestEnemComp->_actionType = NearestEnemComponent::ADVANCING;
     } else if (_typeString == "withdrawing") {

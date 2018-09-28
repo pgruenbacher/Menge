@@ -89,6 +89,7 @@ namespace Napoleon {
     // check if dot product. if > 0.5, then pike if facing 60 deg angle of agent.
     if (queryDirection * (agentDir) < queryDotProduct) return;
     // std::cout << "PUSH BACK " << std::endl;
+    std::cout << "PUSH BACK " << queryDirection * agentDir << " " << queryDotProduct << std::endl;
     _agentResults.push_back(NearAgent(distanceSquared,agent));
 
     // we don't care about hte order of the nearest agents....
@@ -218,6 +219,26 @@ namespace Napoleon {
     if (!hasPike(agentId)) return;
     Pike pike = getPike(agentId);
     pike.query.getAgentResults(agentList);
+    std::cout << " GET COLLIDING " << agentList.size() << std::endl;
+  }
+
+  bool PikeTask::areAgentsCollidingWithPike(const Menge::Agents::BaseAgent* agt) const {
+    // used to determine if agent(s) is colliding with pike,
+    // in which the pike-bearer can engage in damage action on the agent.
+    if (!hasPike(agt->_id)) return false;
+    std::vector<Menge::Agents::NearAgent> agentList;
+    PikeMap::const_iterator it = _pikes.begin();
+    Pike pike = getPike(agt->_id);
+    pike.query.getAgentResults(agentList);
+
+    for (const Menge::Agents::NearAgent& nearAgent : agentList) {
+      if (!agt->isEnemy(nearAgent.agent)) continue;
+      if (nearAgent.distanceSquared < (nearAgent.agent->_radius * nearAgent.agent->_radius)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   bool PikeTask::isAgentMovingToPike(const Menge::Agents::BaseAgent* agt, const Menge::Agents::PrefVelocity& pVel) const {

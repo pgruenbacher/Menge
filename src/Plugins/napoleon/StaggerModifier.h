@@ -27,66 +27,64 @@
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
+#include <map>
 
 class TiXmlElement;
 
 namespace Napoleon {
 
-  class StaggerModifierFactory;
+class StaggerModifierFactory;
 
-  class MENGE_API StaggerModifier : public Menge::BFSM::VelModifier {
-  public:
+class MENGE_API StaggerModifier : public Menge::BFSM::VelModifier {
+ public:
+  StaggerModifier();
 
-    StaggerModifier();
+ protected:
+  // std::vector<Vector2> _stagger_dirs;
+  virtual ~StaggerModifier();
+  std::map<size_t, float> _local_dist_travelled;
+  Menge::ReadersWriterLock _lock;
+  void adjustDistTravelled(const Menge::Agents::BaseAgent* agent);
+  float maxDistTravelled;
 
-  protected:
-    // std::vector<Vector2> _stagger_dirs;
-    virtual ~StaggerModifier();
+ public:
+  Menge::BFSM::VelModifier* copy() const;
+  Menge::BFSM::Task* getTask() override;
+  void setMaxDistTravelled(float v) { maxDistTravelled = v * v; }
+  void adaptPrefVelocity(const Menge::Agents::BaseAgent* agent,
+                         Menge::Agents::PrefVelocity& pVel);
 
-  public:
+  void registerAgent(const Menge::Agents::BaseAgent* agent);
+  void unregisterAgent(const Menge::Agents::BaseAgent* agent);
+  friend class StaggerModifierFactory;
 
-    Menge::BFSM::VelModifier* copy() const;
+ protected:
+};
 
-    Menge::BFSM::Task * getTask() override;
-    void adaptPrefVelocity( const Menge::Agents::BaseAgent * agent,
-                Menge::Agents::PrefVelocity & pVel );
+///////////////////////////////////////////////////////////////////////////////
 
-    void registerAgent(const Menge::Agents::BaseAgent * agent);
-    void unregisterAgent(const Menge::Agents::BaseAgent * agent);
-    friend class StaggerModifierFactory;
-
-  protected:
-
-
-  };
-
-  ///////////////////////////////////////////////////////////////////////////////
-
+/*!
+ *  @brief    The factory class for the StaggerModifier
+ */
+class MENGE_API StaggerModifierFactory : public Menge::BFSM::VelModFactory {
+ public:
   /*!
-   *  @brief    The factory class for the StaggerModifier
+   *  @brief    Constructor.
    */
-  class MENGE_API StaggerModifierFactory : public Menge::BFSM::VelModFactory {
-  public:
-    /*!
-     *  @brief    Constructor.
-     */
-    StaggerModifierFactory();
+  StaggerModifierFactory();
 
-    virtual const char * name() const { return "stagger"; }
+  virtual const char* name() const { return "stagger"; }
 
-    virtual const char * description() const {
-      return "Perform stagger movement.";
-    };
-
-  protected:
-
-    Menge::BFSM::VelModifier * instance() const { return new StaggerModifier(); }
-
-
-    virtual bool setFromXML( Menge::BFSM::VelModifier * modifier, TiXmlElement * node,
-                 const std::string & behaveFldr ) const;
-
-
+  virtual const char* description() const {
+    return "Perform stagger movement.";
   };
-} // namespace Napoleon
+
+ protected:
+  Menge::BFSM::VelModifier* instance() const { return new StaggerModifier(); }
+
+  virtual bool setFromXML(Menge::BFSM::VelModifier* modifier,
+                          TiXmlElement* node,
+                          const std::string& behaveFldr) const;
+};
+}  // namespace Napoleon
 #endif  // _STAGGER_MODIFIER_H_

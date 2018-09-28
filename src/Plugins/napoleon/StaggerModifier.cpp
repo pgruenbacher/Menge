@@ -60,13 +60,19 @@ namespace Napoleon {
 
   /* Pike modifier is used for enemy/ally movements moving around pike positions */
 
-  StaggerModifier::StaggerModifier() {
+  StaggerModifier::StaggerModifier() : maxDistTravelled(1*1)  {
   }
 
   /////////////////////////////////////////////////////////////////////
 
-  StaggerModifier::~StaggerModifier(){
+  StaggerModifier::~StaggerModifier() {
   };
+
+  void StaggerModifier::adjustDistTravelled(const BaseAgent* agent) {
+    _lock.lockWrite();
+    _local_dist_travelled[agent->_id] += absSq(agent->_vel) * Menge::SIM_TIME_STEP;
+    _lock.releaseWrite();
+  }
 
   /////////////////////////////////////////////////////////////////////
 
@@ -77,6 +83,15 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void StaggerModifier::adaptPrefVelocity( const BaseAgent * agent, PrefVelocity & pVel ) {
+    adjustDistTravelled(agent);
+
+    _lock.lockRead();
+    float dist = _local_dist_travelled[agent->_id];
+    _lock.releaseRead();
+    if (dist > maxDistTravelled) {
+      return;
+    }
+
     StaggerTask* task = StaggerTask::getSingleton();
     Vector2 forceDir = task->getStaggerForce(agent->_id);
 
@@ -92,12 +107,19 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void StaggerModifier::registerAgent(const Menge::Agents::BaseAgent* agent) {
-
+    _lock.lockWrite();
+    _local_dist_travelled[agent->_id] = 0;
+    _lock.releaseWrite();
   };
 
   /////////////////////////////////////////////////////////////////////
 
   void StaggerModifier::unregisterAgent(const Menge::Agents::BaseAgent* agent){
+
+    _lock.lockWrite();
+    _local_dist_travelled[agent->_id] = 0;
+    _lock.releaseWrite();
+
     StaggerTask* task = StaggerTask::getSingleton();
     task->setStaggerComplete(agent->_id);
   };

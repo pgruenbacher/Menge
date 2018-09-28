@@ -72,20 +72,20 @@ namespace Napoleon {
     // std::cout << "CLEAR " << std::endl;
     // copy to the read-only map for the concurrency.
     _stagger_map = _pending_stagger;
-    // _stagger_map.clear();
-    // _stagger_map.insert(_pending_stagger.begin(), _pending_stagger.end());
-    // std::cout << "CLEAR2 " << std::endl;
-    // std::cout << " GET AGENT ATATC " << getAgentAttackValue(15) << std::endl;
   }
   /////////////////////////////////////////////////////////////////////
 
   void StaggerTask::setStaggerComplete(size_t agentId) {
+    // we write to pending stagger and then copy to a read-only buffer
+    // after the doWork phase.
     _lock.lockWrite();
     _pending_stagger.erase(agentId);
     _lock.releaseWrite  ();
   }
 
   void StaggerTask::setCanStagger(size_t agentId, Vector2 force) {
+    // we write to pending stagger and then copy to a read-only buffer
+    // after the doWork phase.
     _lock.lockWrite();
     _pending_stagger[agentId] = StaggerData{force};
     _lock.releaseWrite();

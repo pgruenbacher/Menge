@@ -254,7 +254,7 @@ namespace MengeVis {
 					agentList = agt->_nearAgents;
 				} else if (_showFriend) {
 					agentList = agt->_nearFriends;
-				} else {
+				} else if (_showEnem) {
 					agentList = agt->_nearEnems;
 				}
 

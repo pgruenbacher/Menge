@@ -18,6 +18,7 @@
 #include "PikeCollisionModifier.h"
 #include "StaggerCondition.h"
 #include "StaggerModifier.h"
+#include "PikeCollisionCondition.h"
 // #include "VisAttackElement.h"
 
 // using MengeVis::PluginEngine::VisPluginEngine;
@@ -65,7 +66,7 @@ extern "C" {
     engine->registerActionFactory( new Napoleon::PikeActionFactory() );
     engine->registerConditionFactory( new Napoleon::StaggerCondFactory() );
     engine->registerVelModFactory ( new Napoleon::StaggerModifierFactory() );
-
+    engine->registerConditionFactory( new Napoleon::PikeCollisionCondFactory() );
   }
 
   // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {

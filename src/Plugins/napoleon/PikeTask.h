@@ -112,6 +112,7 @@ private:
       Menge::BFSM::TaskException);
 
   virtual std::string toString() const;
+  bool areAgentsCollidingWithPike(const Menge::Agents::BaseAgent* agt) const ;
   bool isAgentMovingToPike(const Menge::Agents::BaseAgent* agt, const Menge::Agents::PrefVelocity& pVel) const;
   virtual bool isEquivalent(const Menge::BFSM::Task* task) const;
   void addPike(const Menge::Agents::BaseAgent* agent);
