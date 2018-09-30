@@ -14,7 +14,7 @@ enum MENGE_STATE {
     ADVANCING,
     AIMING,
     BRACING,
-    FIRING
+    FIRING,
 };
 
 MENGE_STATE get_state(size_t agent_id);

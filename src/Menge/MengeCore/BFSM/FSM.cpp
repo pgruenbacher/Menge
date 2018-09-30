@@ -186,6 +186,9 @@ namespace Menge {
 		State * FSM::getNode( const std::string & name ) {
 			const size_t STATE_COUNT = _nodes.size();
 			for ( size_t i = 0; i < STATE_COUNT; ++i ) {
+
+				// std::cout << " NODE ST " << _nodes[i]->getName() << " " << name << " " << int(_nodes[i]->getName() == name) << std::endl;
+
 				if ( _nodes[i]->getName() == name ) {
 					return _nodes[i];
 				}

@@ -96,7 +96,7 @@ namespace Napoleon {
     Vector2 forceDir = task->getStaggerForce(agent->_id);
 
     pVel.setSingle(forceDir);
-    pVel.setSpeed(1.0);
+    pVel.setSpeed(0.5);
   }
 
   Menge::BFSM::Task * StaggerModifier::getTask() {

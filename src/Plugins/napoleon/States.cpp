@@ -23,6 +23,8 @@ MENGE_STATE get_state_from_string(const std::string& name) {
     return AIMING;
   } else if (name == "Bracing") {
     return BRACING;
+  } else if (name == "CavAttackCharge") {
+    return ATTACK;
   }
   return NONE;
 }

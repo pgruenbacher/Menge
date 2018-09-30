@@ -99,6 +99,12 @@
     <Transition from="Pike" to="PikeAttackCollision">
         <Condition type="is_pike_colliding"/>
     </Transition>
+    <Transition from="Pike" to="AdvancingEnemy">
+        <Condition type="enemy_near" dist="0.5"/>
+        <Condition type="not">
+            <Condition type="dead"/>
+        </Condition>
+    </Transition>
     <Transition from="PikeAttack,PikeAttackCollision" to="Pike">
         <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
     </Transition>

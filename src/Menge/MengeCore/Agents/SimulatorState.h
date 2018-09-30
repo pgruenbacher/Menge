@@ -55,7 +55,8 @@ namespace Menge {
 			 *	@param		id			The identifier of the agent.
 			 *	@param		stateName	The name of the state to which the agent belongs.
 			 */
-			void setAgentState( size_t id, const std::string & stateName );
+			void setAgentState( size_t id, const std::string& stateName );
+			void setAgentState( size_t id, const char* stateName );
 
 			/*!
 			 *	@brief		Reports the state name for the given agent.
@@ -72,6 +73,6 @@ namespace Menge {
 			HASH_MAP< size_t, std::string >	_agentStates;
 		};
 
-	}	// namespace Agents 
+	}	// namespace Agents
 }	// namespace Menge
 #endif // __SIMULATOR_STATE_H__

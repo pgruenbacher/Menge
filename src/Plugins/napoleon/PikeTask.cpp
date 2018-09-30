@@ -89,7 +89,7 @@ namespace Napoleon {
     // check if dot product. if > 0.5, then pike if facing 60 deg angle of agent.
     if (queryDirection * (agentDir) < queryDotProduct) return;
     // std::cout << "PUSH BACK " << std::endl;
-    std::cout << "PUSH BACK " << queryDirection * agentDir << " " << queryDotProduct << std::endl;
+    // std::cout << "PUSH BACK " << queryDirection * agentDir << " " << queryDotProduct << std::endl;
     _agentResults.push_back(NearAgent(distanceSquared,agent));
 
     // we don't care about hte order of the nearest agents....

@@ -8,7 +8,7 @@
 
 
 	<!-- horsement -->
-	<State name="HorseCharge" final="0" >
+	<State name="GallopCharge" final="0" >
 		<VelModifier type="turn"/>
 		<!-- <GoalSelector type="explicit" goal_set="0" goal="0" /> -->
 		<!-- <VelComponent type="goal" /> -->
@@ -50,14 +50,14 @@
 
   <!-- TRANSITIONS -->
 
-	<Transition from="HorseCharge" to="Trot" >
+	<Transition from="GallopCharge" to="Trot" >
 		<Condition type="enemy_near" is_close="0" dist="10" />
 	</Transition>
-	<Transition from="Trot" to="HorseCharge" >
+	<Transition from="Trot" to="GallopCharge" >
 		<Condition type="enemy_near" dist="10" />
 	</Transition>
 
-  <Transition to="Dying" from="Idle,Trot,HorseCharge,InfAttack,CavAttackCharge">
+  <Transition to="Dying" from="Idle,Trot,GallopCharge,InfAttack,CavAttackCharge">
       <Condition type="dead"/>
   </Transition>
   <Transition from="Dying" to="Dead">
@@ -65,7 +65,7 @@
   </Transition>
 
 
-  <Transition from="HorseCharge" to="CavAttackCharge">
+  <Transition from="GallopCharge" to="CavAttackCharge">
       <Condition type="can_perform"/>
       <Condition type="enemy_near" dist="1.0"/>
   </Transition>
@@ -76,7 +76,7 @@
   </Transition>
 
 
-  <Transition from="CavAttackCharge" to="HorseCharge">
+  <Transition from="CavAttackCharge" to="GallopCharge">
       <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
   </Transition>
 
