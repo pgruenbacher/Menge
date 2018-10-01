@@ -69,7 +69,7 @@ namespace Menge {
 		 *	@param		seed		The desired seed.
 		 */
 		MENGE_API void setDefaultGeneratorSeed( int seed );
-
+		MENGE_API void resetGlobalSeed();
 		/*!
 		 *	@brief		Retrieves a seed based on the global settings
 		 *

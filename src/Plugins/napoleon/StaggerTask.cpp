@@ -59,6 +59,10 @@ namespace Napoleon {
 
   StaggerTask::StaggerTask() : Menge::BFSM::Task() {
   }
+  StaggerTask::~StaggerTask() {
+    STAGGER_TASK = 0x0;
+    // make sure to clear the singleton if deleting.
+  }
 
   /////////////////////////////////////////////////////////////////////
   StaggerTask* StaggerTask::getSingleton() {

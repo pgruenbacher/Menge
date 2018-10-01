@@ -12,37 +12,39 @@ namespace napoleon {
   using Menge::Agents::PrefVelocity;
   using Menge::Math::Vector2;
 
-  struct Vector2Data {
-    float x;
-    float y;
-    Vector2Data(const Menge::Math::Vector2&);
-    bool operator==(const Vector2& v);
-    bool operator!=(const Vector2& v);
-    Vector2 vector();
-  };
+  // struct Vector2Data {
+  //   float x;
+  //   float y;
+  //   Vector2Data(const Menge::Math::Vector2&);
+  //   bool operator==(const Vector2& v);
+  //   bool operator!=(const Vector2& v);
+  //   Vector2 vector();
+  // };
 
-  struct PrefVelData {
-      float         speed;
-      Vector2Data   preferred;
-      Vector2Data   target;
-      // a bit more optional...
-      Vector2Data   left;
-      Vector2Data   right;
-      PrefVelData(const PrefVelocity&);
-      bool operator!=(const Menge::Agents::PrefVelocity& v);
-      PrefVelocity prefVel();
-  };
+  // struct PrefVelData {
+  //     float         speed;
+  //     Vector2Data   preferred;
+  //     Vector2Data   target;
+  //     // a bit more optional...
+  //     Vector2Data   left;
+  //     Vector2Data   right;
+  //     PrefVelData(const PrefVelocity&);
+  //     bool operator==(const PrefVelData& other);
+  //     bool operator!=(const Menge::Agents::PrefVelocity& v);
+  //     PrefVelocity prefVel();
+  // };
 
   struct AgentData {
     size_t id;
-    Vector2Data pos;
-    Vector2Data orient;
-    Vector2Data vel;
+    Vector2 pos;
+    Vector2 orient;
+    Vector2 vel;
 
-    PrefVelData prefVel;
+    PrefVelocity prefVel;
 
-    AgentData(const BaseAgent& fromAgt);
-    bool updateAgent(BaseAgent& toAgt);
+    bool operator==(const AgentData& other) const;
+    AgentData(const BaseAgent* fromAgt);
+    bool updateAgent(BaseAgent* toAgt);
   };
 
 

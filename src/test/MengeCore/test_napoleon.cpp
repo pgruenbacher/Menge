@@ -43,6 +43,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Runtime/Logger.h"
 #include "MengeCore/Runtime/os.h"
 #include "MengeCore/Runtime/SimulatorDB.h"
+#include "MengeCore/Agents/BaseAgent.h"
+#include "Plugins/napoleon/Network.h"
 
 #include "MengeVis/PluginEngine/VisPluginEngine.h"
 #include "MengeVis/Runtime/AgentContext/BaseAgentContext.h"
@@ -63,6 +65,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
+
 
 #if _MSC_VER >= 1900
 FILE _iob[] = { *stdin, *stdout, *stderr };
@@ -261,13 +264,13 @@ int testMain( ProjectSpec& projSpec ) {
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = true; // testing!
+  bool useVis = false; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );
   if ( simDBEntry == 0x0 ) {
     std::cerr << "!!!  The specified model is not recognized: " << model << "\n";
-    logger.close();
+    // logger.close();
     return 1;
   }
 
@@ -278,10 +281,27 @@ int testMain( ProjectSpec& projSpec ) {
   if ( result ) {
     std::cerr << "Simulation terminated through error.  See error log for details.\n";
   }
-  logger.close();
+  // logger.close();
   return result;
 }
 
+
+void cleanUp() {
+
+  delete Menge::SIMULATOR;
+  Menge::SIM_TIME = 0.f;
+  Menge::Math::resetGlobalSeed();
+
+}
+
+
+void copyAgents(std::vector<napoleon::AgentData>& result) {
+  const Menge::Agents::SimulatorInterface* sim = Menge::SIMULATOR;
+  for (size_t i = 0; i < sim->getNumAgents(); ++i) {
+    const Menge::Agents::BaseAgent* agt = sim->getAgent(i);
+    result.push_back(sim->getAgent(i));
+  }
+}
 
 // napoleon tests...
 
@@ -291,11 +311,52 @@ TEST(NapoleonTests, pikeCombat) {
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
   projSpec.setDuration(400);
 
+  std::vector<napoleon::AgentData> agents1;
+  std::vector<napoleon::AgentData> agents2;
+
   int result = testMain(projSpec);
   ASSERT_EQ(result, 0);
-  // test 2
+  copyAgents(agents1);
+  cleanUp();
+
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
   projSpec.setDuration(400);
   result = testMain(projSpec);
+  copyAgents(agents2);
   ASSERT_EQ(result, 0);
+
+  cleanUp();
+
+  // ASSERT_EQ(agents1, agents2);
+  bool sim_agent_list_equal = agents1 == agents2;
+  ASSERT_TRUE(sim_agent_list_equal);
+  logger.close();
+}
+
+TEST(NapoleonTests, pikeFlankCombat) {
+  ProjectSpec projSpec;
+
+  projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
+  projSpec.setDuration(400);
+
+  std::vector<napoleon::AgentData> agents1;
+  std::vector<napoleon::AgentData> agents2;
+
+  int result = testMain(projSpec);
+  ASSERT_EQ(result, 0);
+  copyAgents(agents1);
+  cleanUp();
+
+  projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
+  projSpec.setDuration(400);
+  result = testMain(projSpec);
+  copyAgents(agents2);
+  ASSERT_EQ(result, 0);
+
+  cleanUp();
+
+  // ASSERT_EQ(agents1, agents2);
+  bool sim_agent_list_equal = agents1 == agents2;
+  ASSERT_TRUE(sim_agent_list_equal);
+  logger.close();
 }

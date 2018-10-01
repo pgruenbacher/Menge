@@ -104,6 +104,7 @@ private:
    *
    */
   PikeTask();
+  ~PikeTask();
   void getCollidingAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
   void getNearbyAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
   bool hasPike(size_t agentId) const { return _pikes.find(agentId) != _pikes.end(); }

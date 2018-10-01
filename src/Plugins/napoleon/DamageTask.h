@@ -58,6 +58,7 @@ private:
    *
    */
   DamageTask();
+  ~DamageTask();
 
   // float getAgentAttackValue(size_t agentId) const {
   //   // it's ok for concurrent reading...

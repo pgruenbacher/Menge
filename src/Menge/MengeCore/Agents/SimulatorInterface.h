@@ -100,6 +100,7 @@ namespace Menge {
 			 *  @returns    A pointer to the agent.
 			 */
 			virtual BaseAgent * getAgent( size_t agentNo ) = 0;
+
 			// paul method for checking currently selected agent for debugging purposes.
 			size_t getSelectedAgentId() const { return 96; }
 

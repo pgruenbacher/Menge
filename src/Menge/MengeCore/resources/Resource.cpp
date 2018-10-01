@@ -45,7 +45,7 @@ namespace Menge {
 	/////////////////////////////////////////////////////////////////////
 
 	void Resource::destroy() {
-    std::cout << "DELETE! " << getName() << std::endl;
+    // std::cout << "DELETE! " << getName() << std::endl;
 		delete this;
 	}
 }	// namespace Menge

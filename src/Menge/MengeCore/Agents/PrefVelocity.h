@@ -73,6 +73,9 @@ namespace Menge {
 			PrefVelocity( const Math::Vector2 & left, const Math::Vector2 & right,
 						  const Math::Vector2 & pref, float speed, const Math::Vector2 & target );
 
+			bool operator==(const PrefVelocity& other) const; // useful for testing agent reproducability.
+			bool operator!=(const PrefVelocity& other) const { return !(*this == other); }
+
 			/*!
 			 *	@brief		Copy constructor.
 			 *

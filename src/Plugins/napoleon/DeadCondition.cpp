@@ -48,9 +48,9 @@ namespace Napoleon {
 
 
     bool DeadCondition::conditionMet( BaseAgent * agent, const Goal * goal ) {
-      if (agent->isDead()) {
-        std::cout << " Died " << agent->_id << " " << Menge::SIM_TIME << std::endl;
-      }
+      // if (agent->isDead()) {
+      //   std::cout << " Died " << agent->_id << " " << Menge::SIM_TIME << std::endl;
+      // }
       return agent->isDead();
     }
 

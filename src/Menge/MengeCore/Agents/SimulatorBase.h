@@ -94,6 +94,7 @@ namespace Menge {
 			 */
 			virtual BaseAgent * getAgent( size_t agentNo ) { return &_agents[ agentNo ]; }
 
+
 			/*!
 			 *  @brief      Const accessor for agents.
 			 *

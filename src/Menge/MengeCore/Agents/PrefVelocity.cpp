@@ -76,6 +76,14 @@ namespace Menge {
 																 _target( vel._target ) {
 		}
 
+		bool PrefVelocity::operator==(const PrefVelocity& other) const {
+			return _right == other._right &&
+				_speed == other._speed &&
+				_preferred == other._preferred &&
+				_target == other._target;
+		}
+
+
 		////////////////////////////////////////////////////////////////
 
 		PrefVelocity & PrefVelocity::operator=( const PrefVelocity & vel ) {

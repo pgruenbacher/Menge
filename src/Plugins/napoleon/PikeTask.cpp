@@ -115,6 +115,11 @@ namespace Napoleon {
   PikeTask::PikeTask() : Menge::BFSM::Task(), _pikes() {
   }
 
+  PikeTask::~PikeTask() {
+    // make sure to clear the singleton.
+    PIKE_TASK = 0x0;
+  }
+
   /////////////////////////////////////////////////////////////////////
   PikeTask* PikeTask::getSingleton() {
     if (PIKE_TASK == 0x0) {
@@ -122,6 +127,7 @@ namespace Napoleon {
     }
     return PIKE_TASK;
   }
+
 
   void PikeTask::removePike(const Menge::Agents::BaseAgent* agent) {
     _lock.lockWrite();

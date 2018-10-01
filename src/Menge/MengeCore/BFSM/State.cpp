@@ -75,7 +75,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		State::~State() {
-			std::cout << "STATE DESTROY " << _name << std::endl;
+			logger << Logger::INFO_MSG << "State Destroy" << _name;
 			for ( size_t i = 0; i < actions_.size(); ++i ) {
 				actions_[i]->destroy();
 			}

@@ -327,7 +327,7 @@ void FSMBuilder::add_state(State* state) {
 }
 
 FSMBuilder::~FSMBuilder() {
-  std::cout << "DELTE FSM BUILDER " << std::endl;
+  // std::cout << "DELETE FSM BUILDER " << std::endl;
 }
 
 void copyToFSM(FSMDescrip& fsmDescrip, FSM* fsm) {

@@ -86,6 +86,31 @@ namespace Menge {
 			attacking = Vector2(0.f, 0.f);
 		}
 
+		bool BaseAgent::operator==(const BaseAgent& other) {
+			return _maxSpeed == other._maxSpeed &&
+				_maxAccel == other._maxAccel &&
+				_prefSpeed == other._prefSpeed &&
+				_pos == other._pos &&
+				_vel == other._vel &&
+				_velPref == other._velPref &&
+				_velNew == other._velNew &&
+				_orient == other._orient &&
+				_maxAngVel == other._maxAngVel &&
+				_maxNeighbors == other._maxNeighbors &&
+				_neighborDist == other._neighborDist &&
+				_maxEnem == other._maxEnem &&
+				// _enemDist == other._enemDist &&
+				// _nearAgents == other._nearAgents &&
+				// _nearEnems == other._nearEnems &&
+				// _nearObstacles == other._nearObstacles &&
+				_class == other._class &&
+				_obstacleSet == other._obstacleSet &&
+				_priority == other._priority &&
+				_id == other._id &&
+				_radius == other._radius &&
+				_health == other._health;
+		}
+
 		////////////////////////////////////////////////////////////////
 
 		void BaseAgent::initialize() {

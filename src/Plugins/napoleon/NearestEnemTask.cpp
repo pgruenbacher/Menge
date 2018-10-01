@@ -77,6 +77,15 @@ namespace Napoleon {
     return TASK_PTR;
   }
 
+  NearestEnemTask::NearestEnemTask() {
+
+  }
+
+  NearestEnemTask::~NearestEnemTask() {
+    // make sure to clear teh singleton.
+    TASK_PTR = 0x0;
+  }
+
   void NearestEnemTask::doWork( const FSM * fsm ) throw( TaskException ) {
     _numTargetedBy.clear();
     NearestEnemDataMap::iterator it;

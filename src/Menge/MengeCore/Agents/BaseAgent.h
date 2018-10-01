@@ -215,6 +215,9 @@ namespace Menge {
 			 */
 			float _prefSpeed;
 
+			bool operator==(const BaseAgent& other); // compare if two agents have same properties (not same pointer).
+			// useful for serialization testing.
+
 			// attacking position for visAgent debugging purposes.
 			Math::Vector2 attacking;
 			bool isAttacking;

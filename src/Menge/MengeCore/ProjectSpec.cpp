@@ -199,7 +199,7 @@ namespace Menge {
 
   if ( rootNode->Attribute( "random", &i ) ) {
     _seed = i;
-    std::cout << "ROOT NODE RANDOM SEED " << _seed << std::endl;
+    // logger << Logger::INFO_MSG << "ROOT NODE RANDOM SEED " << _seed;
   }
 
   if ( rootNode->Attribute( "subSteps", &i ) ) {

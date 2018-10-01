@@ -83,6 +83,8 @@ class NearestEnemTask : public Menge::BFSM::Task {
 
  public:
   static NearestEnemTask* getSingleton();
+  ~NearestEnemTask();
+  NearestEnemTask();
   /*!
    *  @brief    Constructor
    *

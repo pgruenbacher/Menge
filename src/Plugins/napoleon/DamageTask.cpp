@@ -59,7 +59,10 @@ namespace Napoleon {
 
   DamageTask::DamageTask() : Menge::BFSM::Task() {
   }
-
+  DamageTask::~DamageTask() {
+    // make sure to clear the singleton pointer.
+    DAMAGE_TASK2 = 0x0;
+  }
   /////////////////////////////////////////////////////////////////////
   DamageTask* DamageTask::getSingleton() {
     if (DAMAGE_TASK2 == 0x0) {

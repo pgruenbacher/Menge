@@ -84,10 +84,15 @@ namespace Menge {
 		 */
 		int SEED_REQUESTS = 0;
 
+		void resetGlobalSeed() {
+			GLOBAL_SEED = 0;
+			SEED_REQUESTS = 0;
+		}
+
 		/////////////////////////////////////////////////////////////////////
 
 		void setDefaultGeneratorSeed( int seed ) {
-			std::cout << "GLOBAL SEED " << seed << std::endl;
+			// std::cout << "GLOBAL SEED " << seed << std::endl;
 			GLOBAL_SEED = seed;
 		}
 
