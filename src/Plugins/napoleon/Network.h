@@ -61,6 +61,8 @@ namespace napoleon {
     float _maxAngVel;
   };
 
+  bool analyzeAgentData(const std::vector<AgentData>& d, const std::vector<AgentData>& d2);
+
 }
 
 #endif // __MENGE_NETWORK__

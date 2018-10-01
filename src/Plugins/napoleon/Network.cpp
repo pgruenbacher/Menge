@@ -62,6 +62,32 @@ namespace napoleon {
     // velPref_y(fromAgt->_velPref.y())
    {}
 
+   bool analyzeAgentData(const std::vector<AgentData>& d, const std::vector<AgentData>& d2) {
+    if (d.size() != d2.size()) {
+      std::cout << " Size doesn't match " << std::endl;
+      return false;
+    }
+
+    int num_invalid = 0;
+    bool already_printed = false;
+    for (int i = 0; i < d.size(); ++ i) {
+      if (!(d[i] == d2[i])) {
+        if (!already_printed) {
+          printf("%d index diverges.", i);
+          already_printed = true;
+        }
+        ++num_invalid;
+      } else {
+
+      }
+    }
+    if (num_invalid > 0) {
+      printf("%d of %lu are invalid", num_invalid, d.size());
+      return false;
+    }
+    return true;
+   }
+
    bool AgentData::updateAgent(BaseAgent* toAgent) {
     bool valid = true;
     if (pos != toAgent->_pos) {
