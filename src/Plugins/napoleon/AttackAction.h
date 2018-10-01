@@ -57,7 +57,8 @@ namespace Napoleon {
      */
     void onEnter( Menge::Agents::BaseAgent * agent );
     Menge::BFSM::Task* getTask();
-
+    float _percentModifier; // add percent change
+    float _damageModifier;
     friend class AttackActionFactory;
 
   protected:
@@ -86,7 +87,9 @@ namespace Napoleon {
      *  @returns  A string containing the unique action name.
      */
     virtual const char * name() const { return "attack_action"; }
-
+    AttackActionFactory();
+    size_t _percentModifierID;
+    size_t _damageModifierID;
     /*!
      *  @brief    A description of the action.
      *

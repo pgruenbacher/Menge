@@ -105,6 +105,9 @@ namespace Napoleon {
         // std::cout << "BEFORE " << hitChance << std::endl;
         finalEnem->adjustHitChance(hitChance, agent);
 
+        // add any action modifiers
+        hitChance += _percentModifier;
+
         if (hitChance < 0.f) {
             // std::cout << "MISS hc: " << hitChance << " cls: " << agent->_class << std::endl;
             return;
@@ -114,7 +117,9 @@ namespace Napoleon {
         agent->isAttacking = true;
         // we use the damage task to apply the cahnge to the agent serially.
         DamageTask* t = DamageTask::getSingleton();
-        t->adjustHealth(finalEnem->_id, -10.f);
+        float damage = 10.f;
+        damage += _damageModifier;
+        t->adjustHealth(finalEnem->_id, -damage);
 
         StaggerTask* stgr = StaggerTask::getSingleton();
         Vector2 forceDir = target - agent->_pos;
@@ -137,6 +142,13 @@ namespace Napoleon {
     //                   Implementation of PropertyXActFactory
     /////////////////////////////////////////////////////////////////////
 
+    AttackActionFactory::AttackActionFactory() : ActionFactory() {
+      _percentModifierID = _attrSet.addFloatAttribute(
+          "percent_modifier", false, 0.f);
+      _damageModifierID = _attrSet.addFloatAttribute(
+          "damage_modifier", false, 0.f);
+    }
+
     bool AttackActionFactory::setFromXML( Action * action, TiXmlElement * node,
                                           const std::string & behaveFldr ) const {
         AttackAction * pAction = dynamic_cast< AttackAction * >( action );
@@ -145,6 +157,10 @@ namespace Napoleon {
         if ( ! ActionFactory::setFromXML( action, node, behaveFldr ) ) {
             return false;
         }
+
+        pAction->_percentModifier = _attrSet.getFloat(_percentModifierID);
+        pAction->_damageModifier = _attrSet.getFloat(_damageModifierID);
+
         return true;
     }
 }   // namespace Napoleon
