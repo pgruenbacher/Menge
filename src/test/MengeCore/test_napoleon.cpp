@@ -90,7 +90,6 @@ bool VERBOSE = false;
 // The location of the executable - for basic executable resources
 std::string ROOT;
 
-SimulatorDB simDB;
 
 /*!
  *  @brief    Utility function for defining the plugin directory.
@@ -238,6 +237,7 @@ int testMain( ProjectSpec& projSpec ) {
   // std::string tail;
   // os::path::split( absExePath, ROOT, tail );
   ROOT = "Exe";
+  SimulatorDB simDB;
   CorePluginEngine plugins( &simDB );
   // logger.line();
   std::string pluginPath = getPluginPath();
