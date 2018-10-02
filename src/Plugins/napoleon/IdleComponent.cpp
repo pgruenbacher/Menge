@@ -69,7 +69,7 @@ namespace Napoleon {
 
 
   /////////////////////////////////////////////////////////////////////
-  IdleComponentFactory::IdleComponentFactory() : VelCompFactory() {
+  IdleComponentFactory::IdleComponentFactory() : VelCompFactory(), _method(0) {
   }
 
   /////////////////////////////////////////////////////////////////////

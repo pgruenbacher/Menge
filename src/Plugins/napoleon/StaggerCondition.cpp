@@ -10,7 +10,7 @@ namespace Napoleon {
     //                   Implementation of StaggerCondition
     ///////////////////////////////////////////////////////////////////////////
 
-    StaggerCondition::StaggerCondition() {
+    StaggerCondition::StaggerCondition() : _distSquared(0.f) {
     }
 
 

@@ -59,7 +59,7 @@ namespace Napoleon {
     //                   Implementation of PropertyXAction
     /////////////////////////////////////////////////////////////////////
 
-    PikeAction::PikeAction() : Action() {
+    PikeAction::PikeAction() : Action(), lowering(false) {
     }
 
     /////////////////////////////////////////////////////////////////////

@@ -15,6 +15,7 @@ namespace Menge {
         const SelectStateByClassTarget& tgt)
         : TransitionTarget(tgt),
           _typeName(tgt._typeName),
+          _lock(),
           _targets(tgt._targets) {}
 
     void SelectStateByClassTarget::onEnter( Agents::BaseAgent * agent ) {}

@@ -43,7 +43,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 namespace Napoleon {
 
-    CanPerformCondition::CanPerformCondition() {
+    CanPerformCondition::CanPerformCondition() : _duration(0.f) {
     }
 
 

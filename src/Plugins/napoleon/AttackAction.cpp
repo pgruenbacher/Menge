@@ -60,7 +60,10 @@ namespace Napoleon {
     //                   Implementation of PropertyXAction
     /////////////////////////////////////////////////////////////////////
 
-    AttackAction::AttackAction() : Action(), _randGenerator(-100.f, 0.f) {
+    AttackAction::AttackAction() : Action(),
+        _damageModifier(0.f),
+        _percentModifier(0.f),
+        _randGenerator(-100.f, 0.f) {
     }
 
     /////////////////////////////////////////////////////////////////////

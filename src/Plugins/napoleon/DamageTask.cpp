@@ -57,7 +57,7 @@ namespace Napoleon {
   //                   Implementation of NearestEnemTask
   /////////////////////////////////////////////////////////////////////
 
-  DamageTask::DamageTask() : Menge::BFSM::Task() {
+  DamageTask::DamageTask() : Menge::BFSM::Task(), _step_rand_value(0.f) {
   }
   DamageTask::~DamageTask() {
     // make sure to clear the singleton pointer.

@@ -63,7 +63,7 @@ namespace Napoleon {
   NearestEnemTask* NearestEnemTask::TASK_PTR = 0x0;
 
   NearestEnemData::NearestEnemData(const Menge::Agents::NearAgent obj )
-    : NearAgent(obj), doWork(false), timeout(0.f) {}
+    : NearAgent(obj), doWork(false), timeout(0.f), method(MELEE) {}
 
   bool NearestEnemData::isStillRecent() {
     if (Menge::SIM_TIME - timeout < 5.f) return true;

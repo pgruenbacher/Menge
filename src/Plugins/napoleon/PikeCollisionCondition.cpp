@@ -10,7 +10,7 @@ namespace Napoleon {
     //                   Implementation of PikeCollisionCondition
     ///////////////////////////////////////////////////////////////////////////
 
-    PikeCollisionCondition::PikeCollisionCondition() {
+    PikeCollisionCondition::PikeCollisionCondition() : _distSquared(0.f) {
     }
 
 

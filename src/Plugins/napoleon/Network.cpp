@@ -62,6 +62,25 @@ namespace napoleon {
     // velPref_y(fromAgt->_velPref.y())
    {}
 
+   bool compare(const AgentData& d, const AgentData& d2) {
+    bool valid = true;
+    if (d2.pos != d.pos) {
+      std::cout << "pos " << std::endl;
+    }
+    if (d2.orient != d.orient) {
+      std::cout << "bad orient " << d2.orient << " " << d.orient << std::endl;
+    }
+    if (d2.vel != d.vel) {
+      std::cout << "vel not valid " << std::endl;
+      std::cout << "vel " << d2.vel.x() << " " << d2.vel.y() << " " << d.vel.x() << " " << d.vel.y() << std::endl;
+    }
+    if (d2.prefVel != d.prefVel) {
+      std::cout << "pref vel not valid " << std::endl;
+      // std::cout << "vel " << d2.vel.x() << " " << d2.vel.y() << " " << d.vel.x() << " " << d.vel.y() << std::endl;
+    }
+    return valid;
+   }
+
    bool analyzeAgentData(const std::vector<AgentData>& d, const std::vector<AgentData>& d2) {
     if (d.size() != d2.size()) {
       std::cout << " Size doesn't match " << std::endl;
@@ -74,6 +93,7 @@ namespace napoleon {
       if (!(d[i] == d2[i])) {
         if (!already_printed) {
           printf("%d index diverges.", i);
+          compare(d2[i], d[i]);
           already_printed = true;
         }
         ++num_invalid;
@@ -108,5 +128,4 @@ namespace napoleon {
     }
     return valid;
    }
-
 }

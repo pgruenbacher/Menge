@@ -100,7 +100,8 @@ namespace Napoleon {
 
   NearestEnemComponent::NearestEnemComponent() : VelComponent(),
     _targetMethod(MELEE),
-    _actionType(IDLE)
+    _actionType(IDLE),
+    _slowToArrive(false)
   {
   }
 

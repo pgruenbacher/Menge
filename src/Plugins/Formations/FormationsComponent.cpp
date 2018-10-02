@@ -170,6 +170,7 @@ namespace Formations {
     Resource * rsrc = ResourceManager::getResource( resourceName, &SteadyFormation::make, SteadyFormation::LABEL );
     if ( rsrc == 0x0 ) {
       logger << Logger::ERR_MSG << "No resource available.";
+      delete st;
       throw ResourceException();
     }
     SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
