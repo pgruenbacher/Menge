@@ -53,7 +53,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			GoalException() : MengeException() {}		
+			GoalException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -63,7 +63,7 @@ namespace Menge {
 			GoalException( const std::string & s ): MengeException(s) {}
 
 		};
-		
+
 		/*!
 		 *	@brief		Exception thrown when the goal has an error which cannot be
 		 *				recovered from.
@@ -93,15 +93,15 @@ namespace Menge {
 			/*!
 			 *	@brief		Basic constructor
 			 */
-			Goal() : Element(), _weight( 1.f ), _capacity( MAX_CAPACITY ), _id( -1 ), 
-					 _goalSet( 0x0 ), _population( 0 ), _geometry( 0x0 ) {}	
+			Goal() : Element(), _weight( 1.f ), _capacity( MAX_CAPACITY ), _id( -1 ),
+					 _goalSet( 0x0 ), _population( 0 ), _geometry( 0x0 ) {}
 			// -1 is the biggest value for size_t
 
-		protected:
 			/*!
-			 *	@brief		Destructor. 
+			 *	@brief		Destructor.
 			 */
 			virtual ~Goal();
+		// protected:
 
 		public:
 
@@ -128,7 +128,7 @@ namespace Menge {
 			 *
 			 *	The Agents::PrefVelocity class represents a span of velocities that will reach the
 			 *	goal. For a goal that covers a 2D region, the directions in the
-			 *	Agents::PrefVelocity should span the arc subtended by the goal from the query 
+			 *	Agents::PrefVelocity should span the arc subtended by the goal from the query
 			 *	point's perspective.  Furthermore, it should have sufficient clearance for a disk
 			 *	with the given radius to pass through. This should be overridden by subclasses to
 			 *	account for their unique geometry.
@@ -146,7 +146,7 @@ namespace Menge {
 			 *
 			 *	@param		q				The query point.
 			 *	@param		r				The radius of clearance.
-			 *	@param		directions		An instance of Agents::PrefVelocity.  
+			 *	@param		directions		An instance of Agents::PrefVelocity.
 			 */
 			void setDirections( const Math::Vector2 & q, float r,
 								Agents::PrefVelocity & directions ) const {
@@ -200,7 +200,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Sets the goal's geometry.
-			 *				
+			 *
 			 *	@param		geometry		The geometry for this goal; the goal takes ownership.
 			 */
 			void setGeometry( Math::Geometry2D * geometry );
@@ -217,7 +217,7 @@ namespace Menge {
 			 *
 			 *	A dynamic goal (such as would be created by a hold-position goal
 			 *	will return NULL, which means it isn't owned by a goal set and should
-			 *	be destroyed when finished.  
+			 *	be destroyed when finished.
 			 *
 			 *	// TODO: Handle goal sharing and persistence.
 			 *
@@ -230,7 +230,7 @@ namespace Menge {
 			 *
 			 *	A dynamic goal (such as would be created by a hold-position goal
 			 *	will return NULL, which means it isn't owned by a goal set and should
-			 *	be destroyed when finished.  
+			 *	be destroyed when finished.
 			 *
 			 *	// TODO: Handle goal sharing and persistence.
 			 *

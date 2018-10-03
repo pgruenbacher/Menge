@@ -59,12 +59,13 @@ namespace Menge {
 			 */
 			Condition( const Condition & cond ){}
 
-		protected:
 			/*!
 			 *	@brief		Protected destructor.
 			 */
-			virtual ~Condition() {}
+			// http://www.modernescpp.com/index.php/c-core-guidelines-destructor-rules
+			virtual ~Condition() { std::cout << "DELETE CONDITION " << std::endl; }
 
+		// protected:
 		public:
 			/*!
 			 *	@brief		Called when an agent enters a state with this exiting transition.

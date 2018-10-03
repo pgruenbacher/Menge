@@ -56,7 +56,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			GoalSelectorException() : MengeException() {}		
+			GoalSelectorException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -66,7 +66,7 @@ namespace Menge {
 			GoalSelectorException( const std::string & s ): MengeException(s) {}
 
 		};
-		
+
 		/*!
 		 *	@brief		Exception thrown when the goal selector has an error which cannot be
 		 *				recovered from.
@@ -106,24 +106,24 @@ namespace Menge {
 			/*!
 			 *	@brief		Default virtual destructor.
 			 */
-			virtual ~GoalSelector(){}
+			virtual ~GoalSelector();
 
 		public:
-			/*! 
-			 *	@brief		Uses the goal selector to assign a goal to the 
+			/*!
+			 *	@brief		Uses the goal selector to assign a goal to the
 			 *				given agent.
 			 *
 			 *	This is the main interface for assiging goals to agents (while
 			 *	maintaing bookkeping for capacity and persistence.)  It calls
 			 *	the GoalSelector::getGoal method to actually determine which
-			 *	goal is to be assigned.  
+			 *	goal is to be assigned.
 			 *
 			 *	@param		agent		The agent for whom a goal is assigned.
 			 *	@returns	A pointer to the assigned goal.
 			 */
 			Goal *	assignGoal( const Agents::BaseAgent * agent );
 
-			/*! 
+			/*!
 			 *	@brief		Informs the goal selector that the agent is done with
 			 *				the goal.
 			 *
@@ -141,7 +141,7 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
 			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const = 0;
@@ -182,7 +182,7 @@ namespace Menge {
 			 */
 			virtual void lockResources() {}
 
-			/*! 
+			/*!
 			 *	@brief		Allows the goal selector to release previously locked
 			 *				resources.
 			 *

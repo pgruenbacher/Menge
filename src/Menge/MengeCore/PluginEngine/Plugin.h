@@ -84,7 +84,7 @@ namespace Menge {
 			 */
 			~Plugin() {
 				if ( _handle != 0) SharedLibrary::Unload( _handle );
-				std::cout << "DELETE PLUGIN " << std::endl;
+				// std::cout << "DELETE PLUGIN " << std::endl;
 			}
 
 			/*!

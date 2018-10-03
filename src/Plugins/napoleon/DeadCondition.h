@@ -43,6 +43,7 @@ namespace Napoleon {
 
     public:
       DeadCondition();
+      ~DeadCondition() { std::cout << "DELETE DEAD CONDITINO " << std::endl;}
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
       DeadCondition * copy();
   };

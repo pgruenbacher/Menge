@@ -61,8 +61,8 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		Transition::Transition( std::vector<Condition *>& conditions, TransitionTarget * target ) :
-			_conditions( conditions ), _target( target ) {
+		Transition::Transition( std::vector<ConditionPtr>& conditions, TransitionTarget * target ) :
+			_conditions(conditions), _target( target ) {
 			// std::cout << "CONSTRUCTED" << std::endl;
 			// for (Condition* cond : _conditions) {
 			// 	cond->getTask();
@@ -73,9 +73,9 @@ namespace Menge {
 
 		Transition::~Transition() {
 			// if ( _condition ) _condition->destroy();
-			for (Condition* cond : _conditions) {
-				cond->destroy();
-			}
+			// for (Condition* cond : _conditions) {
+			// 	cond->destroy();
+			// }
 			if ( _target ) _target->destroy();
 		}
 
@@ -91,7 +91,7 @@ namespace Menge {
 		void Transition::onEnter( Agents::BaseAgent * agent ) {
 			assert( _conditions.size() > 0 && "Entering transition with no defined condition" );
 			assert( _target && " Entering transition with no defined target" );
-			for (Condition* cond : _conditions) {
+			for (const ConditionPtr cond : _conditions) {
 				cond->onEnter( agent );
 			}
 			_target->onEnter( agent );
@@ -102,7 +102,7 @@ namespace Menge {
 		void Transition::onLeave( Agents::BaseAgent * agent ) {
 			assert( _conditions.size() > 0 && "Leaving transition with no defined condition" );
 			assert( _target && " Leaving transition with no defined target" );
-			for (Condition* cond : _conditions) {
+			for (const ConditionPtr cond : _conditions) {
 				cond->onLeave( agent );
 			}
 			_target->onLeave( agent );
@@ -112,13 +112,13 @@ namespace Menge {
 
 		State * Transition::test( Agents::BaseAgent * agent, const Goal * goal ) {
 			bool anyFalse = false;
-			for (Condition* cond : _conditions) {
+			for (const ConditionPtr cond : _conditions) {
 				if (!cond->conditionMet(agent, goal)) {
 					anyFalse = true;
 				}
 			}
 			if ( !anyFalse ) {
-				for (Condition* cond : _conditions) {
+				for (const ConditionPtr cond : _conditions) {
 					cond->transitionWillPerform(agent);
 				}
 
@@ -131,7 +131,7 @@ namespace Menge {
 
 		void Transition::getTasks( FSM * fsm ) {
 			// std::cout << "GET TASKS" << _conditions.size();
-			for (Condition* cond : _conditions) {
+			for (const ConditionPtr cond : _conditions) {
 				Task* task = cond->getTask();
 				fsm->addTask(task);
 			}
@@ -167,13 +167,13 @@ namespace Menge {
 			}
 			// 3) Look for child tags: Condition and Target
 
-			std::vector<Condition*> conditions;
+			std::vector<ConditionPtr> conditions;
 			for ( TiXmlElement * child = node->FirstChildElement();
 				  child;
 				  child = child->NextSiblingElement() ) {
 				if ( child->ValueStr() == "Condition" ) {
 					// condition = ConditionDB::getInstance( child, behaveFldr );
-					Condition* cond = ConditionDB::getInstance(child, behaveFldr);
+					ConditionPtr cond = ConditionPtr(ConditionDB::getInstance(child, behaveFldr));
 					if (cond == 0x0) {
 						logger << Logger::ERR_MSG << "Unrecognized child tag of a Condition on line ";
 						logger << child->Row() << ": " << child->ValueStr() << ".";
@@ -197,11 +197,12 @@ namespace Menge {
 			if ( ! valid ) {
 				logger << Logger::ERR_MSG << "Missing target and/or condition specification for "
 					"the Transition defined on line " << node->Row() << ".";
-				if ( conditions.size () > 0 ) {
-					for (Condition* cond : conditions) {
-						cond->destroy();
-					}
-				}
+				// no need to destroy manually, the shared ptrs should get them out of the scope.
+				// if ( conditions.size () > 0 ) {
+				// 	for (Condition* cond : conditions) {
+				// 		cond->destroy();
+				// 	}
+				// }
 				if ( target ) target->destroy();
 				return 0x0;
 			}

@@ -26,6 +26,7 @@
 
 #include "MengeCore/BFSM/fsmCommon.h"
 
+#include <memory>
 #include <map>
 
 namespace Menge {
@@ -38,6 +39,7 @@ namespace Menge {
 		class FSM;
 		class Goal;
 
+		typedef std::shared_ptr<Condition> ConditionPtr;
 		/*!
 		 *	@brief		The transition between BFSM states.
 		 *
@@ -65,7 +67,7 @@ namespace Menge {
 			 *	@param		target			The target instance for this transition.
 			 */
 			// Transition( Condition * condition, TransitionTarget * target );
-			Transition( std::vector<Condition*>& conditions, TransitionTarget * target );
+			Transition( std::vector<ConditionPtr>& conditions, TransitionTarget * target );
 
 			/*!
 			 *	@brief		Destructor.
@@ -128,8 +130,8 @@ namespace Menge {
 			 *	@brief		The Condition instance for this transition.
 			 */
 			// updated by Paul to handle multiple conditions.
-			Condition * _condition;
-			std::vector<Condition*> _conditions;
+			// Condition * _condition;
+			std::vector<ConditionPtr> _conditions;
 
 			/*!
 			 *	@brief		The target for this transition.

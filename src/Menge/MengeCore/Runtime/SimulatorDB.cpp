@@ -60,7 +60,7 @@ namespace Menge {
   // paul make sure to cleanup
     // this gets called after BEFORE we've clenad up the entries.
     for (SimulatorDBEntry *entry : _entries) {
-      std::cout << "DELETE ENTRY DB" << std::endl;
+      // std::cout << "DELETE ENTRY DB" << std::endl;
       delete entry;
     }
     _entries.clear();

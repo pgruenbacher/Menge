@@ -34,7 +34,7 @@ namespace ORCA {
 	class DBEntry : public Menge::SimulatorDBEntry {
 	public:
 
-		~DBEntry() { std::cout << "DELETE ORCA DB ENTRY " << std::endl; }
+		// ~DBEntry() {}
 		/*!
 		 *	@brief	Gives a brief description of the simulator.
 		 *

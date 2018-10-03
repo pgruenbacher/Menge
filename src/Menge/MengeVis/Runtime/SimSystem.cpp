@@ -86,7 +86,7 @@ namespace MengeVis {
 				}
 			}
 
-			if ( _sim ) delete _sim;
+			// if ( _sim ) delete _sim;
 
 		}
 

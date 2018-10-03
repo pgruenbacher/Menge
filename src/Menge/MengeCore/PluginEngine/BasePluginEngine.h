@@ -57,12 +57,12 @@ namespace Menge {
 			virtual ~BasePluginEngine() {
 				// cleanup the plugins
 
-				std::cout << "DELETE PLUGIN" << std::endl;
+				// std::cout << "DELETE PLUGIN" << std::endl;
 				for (auto it  = _plugins.begin(); it != _plugins.end(); ++it) {
 					// delete the plugin instnace
 					delete it->second;
 				}
-				std::cout << "DELETED PLUGINS " << std::endl;
+				// std::cout << "DELETED PLUGINS " << std::endl;
 				_plugins.clear();
 			}
 

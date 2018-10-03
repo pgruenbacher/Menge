@@ -213,8 +213,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
 
       view.run();
 
-      delete system;
-      delete scene;
+      delete scene; // scene will delete the system.
     }
   } else {
     bool running = true;
@@ -271,7 +270,7 @@ int testMain( ProjectSpec& projSpec ) {
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = true; // testing!
+  bool useVis = false; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );
@@ -379,50 +378,22 @@ void copyAgents(std::vector<napoleon::AgentData>& result) {
 //   logger.close();
 // }
 
-// TEST(NapoleonTests, formationCombat) {
-//   ProjectSpec projSpec;
-
-//   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
-//   projSpec.setDuration(400);
-
-//   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
-//   std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
-
-//   int result = testMain(projSpec);
-//   ASSERT_EQ(result, 0);
-//   copyAgents(agents1);
-//   cleanUp();
-
-//   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
-//   projSpec.setDuration(400);
-//   result = testMain(projSpec);
-//   copyAgents(agents2);
-//   ASSERT_EQ(result, 0);
-
-//   cleanUp();
-
-//   // ASSERT_EQ(agents1, agents2);
-//   bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
-//   ASSERT_TRUE(sim_agent_list_equal);
-//   logger.close();
-// }
-
-TEST(NapoleonTests, periodic) {
+TEST(NapoleonTests, formationCombat) {
   ProjectSpec projSpec;
 
-  projSpec.loadFromXML("./examples/core/periodic.xml");
+  projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
   projSpec.setDuration(10);
 
   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
-  // std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
+  std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
 
   int result = testMain(projSpec);
   ASSERT_EQ(result, 0);
-  // copyAgents(agents1);
+  copyAgents(agents1);
   cleanUp();
 
-  // projSpec.loadFromXML("./examples/core/periodic.xml");
-  // projSpec.setDuration(10);
+  // projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
+  // projSpec.setDuration(400);
   // result = testMain(projSpec);
   // copyAgents(agents2);
   // ASSERT_EQ(result, 0);
@@ -434,3 +405,31 @@ TEST(NapoleonTests, periodic) {
   // ASSERT_TRUE(sim_agent_list_equal);
   logger.close();
 }
+
+// TEST(NapoleonTests, periodic) {
+//   ProjectSpec projSpec;
+
+//   projSpec.loadFromXML("./examples/core/periodic.xml");
+//   projSpec.setDuration(10);
+
+//   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
+//   // std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
+
+//   int result = testMain(projSpec);
+//   ASSERT_EQ(result, 0);
+//   // copyAgents(agents1);
+//   cleanUp();
+
+//   // projSpec.loadFromXML("./examples/core/periodic.xml");
+//   // projSpec.setDuration(10);
+//   // result = testMain(projSpec);
+//   // copyAgents(agents2);
+//   // ASSERT_EQ(result, 0);
+
+//   // cleanUp();
+
+//   // // ASSERT_EQ(agents1, agents2);
+//   // bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
+//   // ASSERT_TRUE(sim_agent_list_equal);
+//   logger.close();
+// }

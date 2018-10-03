@@ -8,13 +8,20 @@ namespace MengeVis {
 	namespace {
 		// TODO: Make it so this works despite the fact that I can't use "delete" on this global
 		//	member.
-		Runtime::VisAgent _defaulRenderer;
+		Runtime::VisAgent* _defaulRenderer = 0x0;
 	}	// namespace
 
 	// Specialization
 	template<> Runtime::VisAgent *
 		Runtime::VisElementDB<Runtime::VisAgent, Menge::Agents::BaseAgent>::getDefaultElement() {
-		return &_defaulRenderer;
+		if (!_defaulRenderer) {
+			// kinda hacky, but the issue is that i don't want visAgent constructed when
+			// i'm not using the visualizer since it was giving a memory leak at select.h and
+			// i couldn't figure it out. Plus I don't want it being instantiated when using
+			// just hte ismulator itself.
+			_defaulRenderer = new Runtime::VisAgent();
+		}
+		return _defaulRenderer;
 	}
 
 	template<> void
