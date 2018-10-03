@@ -46,7 +46,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			SpatialQueryException() : MengeException() {}		
+			SpatialQueryException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -92,7 +92,7 @@ namespace Menge {
 		 *		- Updates its internal structure based on current agent state.
 		 *			// TODO: This should be done via a task.
 		 *      - The spatial query is also responsible for visiblity testing
-		 *      Spatial Queries work in tandem with a ProximityQuery. The query itself is 
+		 *      Spatial Queries work in tandem with a ProximityQuery. The query itself is
 		 *		agnostic of how the results are filtered.
 		 */
 		class MENGE_API SpatialQuery : public Element {
@@ -106,14 +106,14 @@ namespace Menge {
 			/*!
 			 *	@brief		Virtual destructor.
 			 */
-			virtual ~SpatialQuery() {}
+			virtual ~SpatialQuery();
 
 			// Agent operations
 		public:
 			/*!
 			 *  @brief      Define the set of agents on which query class will operate.
 			 */
-			virtual void setAgents( const std::vector< BaseAgent * > & agents ) = 0;	
+			virtual void setAgents( const std::vector< BaseAgent * > & agents ) = 0;
 
 			/*!
 			 *  @brief      Allows the spatial query structure to update its
@@ -124,16 +124,16 @@ namespace Menge {
 
 			/*!
 			 *  @brief      Adds an obstacle to the internal list of the spatial query
-			 *		
-			 * 	@param		obs		The obstacle to insert into the spatial query data 
+			 *
+			 * 	@param		obs		The obstacle to insert into the spatial query data
 			 *						structure.
 			 */
 			virtual void addObstacle(Obstacle * obs);
 
 			/*!
-			 *  @brief      Returns the collected obstacles of the spatial query for use 
+			 *  @brief      Returns the collected obstacles of the spatial query for use
 			 *				in visualization.
-			 *				
+			 *
 			 *  @returns    A const reference to the obstacle set
 			 */
 			const std::vector< Obstacle * > & getObstacles() const {return _obstacles;}
@@ -150,7 +150,7 @@ namespace Menge {
 			 *  @brief      Do the necessary pre-computation to support obstacle
 			 *				definitions. Now uses the internal obstacle representation
 			 */
-			virtual void processObstacles() = 0;	
+			virtual void processObstacles() = 0;
 
 			/*!
 			 *  @brief      performs an obstacle based proximity query
@@ -205,7 +205,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		an internal central list of obstacles
-			 *				
+			 *
 			 */
 			std::vector<Obstacle *> _obstacles;
 		};

@@ -23,6 +23,7 @@
 #include "MengeCore/Runtime/os.h"
 
 #include <map>
+#include <iostream>
 
 namespace Menge {
 	/*!
@@ -47,12 +48,23 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			BasePluginEngine() : _plugins() {}
+			BasePluginEngine() : _plugins() {
+			}
 
 			/*!
 			 *	@brief		Virtual destructor.
 			 */
-			virtual ~BasePluginEngine() {}
+			virtual ~BasePluginEngine() {
+				// cleanup the plugins
+
+				std::cout << "DELETE PLUGIN" << std::endl;
+				for (auto it  = _plugins.begin(); it != _plugins.end(); ++it) {
+					// delete the plugin instnace
+					delete it->second;
+				}
+				std::cout << "DELETED PLUGINS " << std::endl;
+				_plugins.clear();
+			}
 
 			/*!
 			 *	@brief		Initialize plug-ins from the given directory.

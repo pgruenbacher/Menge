@@ -18,7 +18,7 @@
 
 /*!
  *	@file		ProfileSelector.h
- *	@brief		The definition of the agent profile selector element.  
+ *	@brief		The definition of the agent profile selector element.
  *				This is the mechanism which associates an agent profile with a new agent.
  */
 #ifndef __PROFILE_SELECTOR_H__
@@ -42,7 +42,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			ProfileSelectorException() : MengeException() {}		
+			ProfileSelectorException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -88,11 +88,11 @@ namespace Menge {
 			 */
 			ProfileSelector();
 
-		protected:
 			/*!
 			 *	@brief		Virtual destructor.
 			 */
 			virtual ~ProfileSelector();
+		// protected:
 
 		public:
 			/*!

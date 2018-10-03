@@ -49,6 +49,7 @@ namespace Menge {
 			 *	@brief		Constructor.
 			 */
 			ConstProfileSelector();
+			// ~ConstProfileSelector() { std::cout << "DELETE CONST PROFILE " << std::endl; }
 
 			/*!
 			 *	@brief		Select an agent profile based on internal mechanisms.
@@ -151,7 +152,7 @@ namespace Menge {
 			 *	@param		specFldr		The path to the specification file.  If the condition
 			 *								references resources in the file system, it should be
 			 *								defined relative to the behavior file location.  This
-			 *								is the folder containing that path. 
+			 *								is the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( ProfileSelector * pSel, TiXmlElement * node,

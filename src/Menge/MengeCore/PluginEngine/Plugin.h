@@ -84,12 +84,13 @@ namespace Menge {
 			 */
 			~Plugin() {
 				if ( _handle != 0) SharedLibrary::Unload( _handle );
+				std::cout << "DELETE PLUGIN " << std::endl;
 			}
 
 			/*!
 			 *	@brief		Reports the name of the registraiton function for this plugin type.
 			 */
-			const char * getRegisterName() const { 
+			const char * getRegisterName() const {
 				throw MengeFatalException( "Failed to define plugin register function name." );
 			}
 

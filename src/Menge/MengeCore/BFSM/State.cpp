@@ -86,6 +86,16 @@ namespace Menge {
 				_goalSelector->destroy();
 				_goalSelector = 0x0;
 			}
+
+			// delete the states transitions, which it should all own
+			// since transitions with multiple "from" states should still be copied
+			// for each state
+			for (Transition* t : transitions_) {
+				delete t;
+				transitions_.clear();
+			}
+
+
 			// std::cout << "DES??" << std::endl;
 
 			// std::cout << "CLEARED MEM " << _goalSelector << std::endl;

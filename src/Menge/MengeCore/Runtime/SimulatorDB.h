@@ -51,7 +51,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Default constructor.
 		 */
-		SimDBException() : MengeException() {}		
+		SimDBException() : MengeException() {}
 
 		/*!
 		 *	@brief		Constructor with message.
@@ -102,17 +102,18 @@ namespace Menge {
 		 *	@brief		Constructor.
 		 */
 		SimulatorDB();
-		
+
 		/*!
 		 *	@brief		Destructor.
 		 */
-		~SimulatorDB(){}
+		~SimulatorDB();
 
 		/*!
 		 *	@brief		Reports the number of registered pedestrian models.
 		 *
 		 *	@returns	The number of pedestrian models.
 		 */
+		void clearEntries(); // cleanup
 		inline size_t modelCount() const { return _entries.size(); }
 
 		/*!
@@ -120,7 +121,7 @@ namespace Menge {
 		 *				parameters for all registered simulators.
 		 *
 		 *	@returns	A formatted list of all registered simulators'
-		 *				command-line parameter names, 
+		 *				command-line parameter names,
 		 *				e.g., model1, model2, ..., and modelN.
 		 */
     ::std::string paramList() const;
@@ -140,7 +141,7 @@ namespace Menge {
 		::std::string briefDescriptions() const;
 
     /*!
-     *  @brief    Reports the brief description of the ith model. Throws SimDBException for an 
+     *  @brief    Reports the brief description of the ith model. Throws SimDBException for an
      *            invalid index.
      */
     ::std::string briefDescription( int i ) const;
@@ -155,7 +156,7 @@ namespace Menge {
     ::std::string longDescriptions() const;
 
     /*!
-     *  @brief    Reports the long description of the ith model. Throws SimDBException for an 
+     *  @brief    Reports the long description of the ith model. Throws SimDBException for an
      *            invalid index.
      */
     ::std::string longDescriptions( int i ) const;
@@ -164,7 +165,7 @@ namespace Menge {
 		 *	@brief		Returns the database entry for the given command line parameter.
 		 *
 		 *	It returns the database entry with a command line parameter value that is the
-		 *	same as the provided string.  The test is case <i>in</i>sensitive. 
+		 *	same as the provided string.  The test is case <i>in</i>sensitive.
 		 *
 		 *	@param		modelName		The command-line parameter for the desired pedestrian
 		 *								model.
@@ -190,7 +191,7 @@ namespace Menge {
 		 *	@brief		Returns the static list of entries.
 		 *
 		 *	This is part of C++ voodoo to make static registration of pedestrian
-		 *	models possible and "easy".  
+		 *	models possible and "easy".
 		 */
 		EntryList _entries;
 	};

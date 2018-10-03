@@ -81,7 +81,7 @@ namespace Menge {
 		/*!
 		 *  @brief    Virtual destructor.
 		 */
-		virtual ~SimulatorDBEntry() {}
+		virtual ~SimulatorDBEntry() { std::cout << "DELETE SIM DB ENTRY " << std::endl; }
 
 		/*!
 		 *	@brief		Gives a brief description of the simulator.

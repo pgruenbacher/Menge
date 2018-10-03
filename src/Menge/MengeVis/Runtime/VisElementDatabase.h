@@ -31,6 +31,7 @@
 
 #include <string>
 #include <list>
+#include <iostream>
 
 namespace MengeVis {
 
@@ -141,9 +142,11 @@ namespace MengeVis {
 			 *	@brief		Removes all registered visualization elements from the database.
 			 */
 			static void clear() {
+				// std::cout << "CLEAN !"<<std::endl;
 				typename  HASH_MAP<std::string, VisElement * >::iterator itr = _visElements.begin();
 				for ( ; itr != _visElements.end(); ++itr ) {
-					itr.second->destroy();
+					// itr->second->destroy();
+					delete itr->second;
 				}
 				_visElements.clear();
 			}

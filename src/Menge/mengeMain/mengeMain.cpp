@@ -417,6 +417,8 @@ int main( int argc, char* argv[] ) {
 	if ( result ) {
 		std::cerr << "Simulation terminated through error.  See error log for details.\n";
 	}
+
+  simDB.clearEntries();
 	logger.close();
 	return result;
 }

@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -55,11 +55,13 @@ namespace Menge {
 		Obstacle::Obstacle() : _doubleSided( false ), _isConvex( false ), _nextObstacle( 0x0 ),
 							   _point(), _prevObstacle( 0x0 ), _unitDir(), _id( 0 ),
 							   _class( 0x1 ) {
+			// std::cout << "CREATE OBSTACLE " << std::endl;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////
 
 		Obstacle::~Obstacle() {
+			// std::cout << "DELETE OBSTACLE " << std::endl;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -83,7 +85,7 @@ namespace Menge {
 
 			if (r < 0) { // point a is closest to c
 				nearPt.set( _point );
-				distSq = absSq( ca ); 
+				distSq = absSq( ca );
 				return FIRST;
 			} else if (r > 1) { // point b is closest to c
 				nearPt.set( P1 );
@@ -91,7 +93,7 @@ namespace Menge {
 				return LAST;
 			} else { // some point in between a and b is closest to c
 				nearPt.set( _point + ba*r );
-				distSq = absSq( nearPt - pt ); 
+				distSq = absSq( nearPt - pt );
 				return MIDDLE;
 			}
 		}
@@ -106,7 +108,7 @@ namespace Menge {
 			// Find the end points relative to the start position
 			Vector2 a = getP0() - start;
 			Vector2 b = getP1() - start;
-			
+
 			// rotate the segment so that the direction is aligned with the x-axis
 			//	TODO: Where is this exploited???
 			float x = a.x() * forward.x() + a.y() * forward.y();
@@ -130,8 +132,8 @@ namespace Menge {
 				float t = D * (-a);	// projection of origin on the line
 				if ( t >= -radius && t <= dist + radius ) {
 					// The projection of the circle center lies within the projection of
-					//	the minkowski sum on the line (i.e. extends past the points by 
-					//	a distance equal to the radius). 
+					//	the minkowski sum on the line (i.e. extends past the points by
+					//	a distance equal to the radius).
 					if ( ( t >=0 && t <= dist ) ||
 						 ( t < 0 && absSq( a ) < radSqd ) ||
 						 ( t > dist && absSq( b ) < radSqd ) ) {
@@ -160,10 +162,10 @@ namespace Menge {
 				float x = a2.x() + D.x() * t;
 				if ( x > 0 ) {
 					// The time it takes to travel distance x
-					return x / SPEED;	
+					return x / SPEED;
 				}
 			} else {
-				// both end points are on the same side of the line 
+				// both end points are on the same side of the line
 				// Note: Both of these are possible if the obstacle is near parallel
 				//	to the forward direction
 				float minT = INFTY;
@@ -186,7 +188,7 @@ namespace Menge {
 							minT = t;
 						}
 					}
-				} 
+				}
 				float bDist2 = b.y() * b.y();
 				if ( bDist2 < radSqd ) {
 					// collision with a
@@ -199,7 +201,7 @@ namespace Menge {
 							minT = t;
 						}
 					}
-				} 
+				}
 				return minT;
 			}
 			return INFTY;

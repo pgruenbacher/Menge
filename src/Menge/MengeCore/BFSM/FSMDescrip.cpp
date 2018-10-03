@@ -193,6 +193,7 @@ namespace Menge {
 				} else if ( child->ValueStr() == "Transition" ) {
 					std::string from;
 					Transition * trans = parseTransition( child, _behaviorFldr, from );
+					// std::cout << " FROM NAME " << from << std::endl;
 					if ( trans == 0x0 ) {
 						return false;
 					}

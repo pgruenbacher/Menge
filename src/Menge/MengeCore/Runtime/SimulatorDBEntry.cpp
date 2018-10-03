@@ -68,6 +68,7 @@ namespace Menge {
 			logger << Logger::ERR_MSG << e._msg;
 			return 0x0;
 		}
+		delete agentInit;
 		return sim;
 	}
 
@@ -93,6 +94,7 @@ namespace Menge {
 			logger << Logger::ERR_MSG << e._msg;
 			return 0x0;
 		}
+		delete agentInit;
 		return sim;
 	}
 

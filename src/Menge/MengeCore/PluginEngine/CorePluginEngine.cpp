@@ -28,7 +28,7 @@ namespace Menge {
 		//					Implementation of CorePluginEngine
 		/////////////////////////////////////////////////////////////////////
 
-		CorePluginEngine::CorePluginEngine( SimulatorDB	* simDB ) : 
+		CorePluginEngine::CorePluginEngine( SimulatorDB	* simDB ) :
 			BasePluginEngine< CorePluginEngine, Plugin<CorePluginEngine> >(), _simDB( simDB ) {
 			registerModelDBEntry( new ORCA::DBEntry() );
 			registerModelDBEntry( new PedVO::DBEntry() );
@@ -54,6 +54,24 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		CorePluginEngine::~CorePluginEngine() {
+			std::cout << "CLEAN CORE PLUGIN ENGINE " << std::endl;
+			BFSM::ActionDB::clear();
+			BFSM::ConditionDB::clear();
+			BFSM::TargetDB::clear();
+			BFSM::VelCompDB::clear();
+			BFSM::VelModDB::clear();
+			BFSM::TaskDB::clear();
+			BFSM::GoalDB::clear();
+			BFSM::GoalSelectorDB::clear();
+			Agents::ElevationDB::clear();
+			Agents::SpatialQueryDB::clear();
+			Agents::AgentGeneratorDB::clear();
+			Agents::ObstacleSetDB::clear();
+			Agents::ProfileSelectorDB::clear();
+			Agents::StateSelectorDB::clear();
+			EventEffectDB::clear();
+			EventTriggerDB::clear();
+			EventTargetDB::clear();
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -181,7 +199,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-		template<> 
+		template<>
 		const char * Plugin< CorePluginEngine >::getRegisterName() const {
 			return "registerCorePlugin";
 		}

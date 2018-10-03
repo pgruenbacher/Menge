@@ -16,5 +16,6 @@ TEST(CharacterizingCorePluginEngine, shouldUseOrcaAndPedVOAsDefaultModels) {
     EXPECT_EQ(simDB.modelCount(), 2);
     EXPECT_EQ(simDB.name(0), "orca");
     EXPECT_EQ(simDB.name(1), "pedvo");
+    simDB.clearEntries();
 }
 

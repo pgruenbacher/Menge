@@ -465,6 +465,13 @@ namespace Menge {
 				}
 			}
 
+			if (profileSel != 0x0) {
+				delete profileSel;
+			}
+			if (stateSel != 0x0) {
+				delete stateSel;
+			}
+
 			return true;
 		}
 

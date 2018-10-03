@@ -39,6 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeVis/SceneGraph/Select.h"
 #include "MengeVis/SceneGraph/graphCommon.h"
 #include <sstream>
+#include <algorithm>
 
 namespace MengeVis {
 
@@ -54,13 +55,24 @@ namespace MengeVis {
 		// unsigned int Selectable::ID = 1;
 		Selectable *	Selectable::_selectedObject = 0x0;
 		unsigned int Selectable::_selectedName = 0;
-		SelectableVector	Selectable::_selectables;
+		std::vector< Selectable * >	Selectable::_selectables;
 
 		///////////////////////////////////////////////////////////////////////////
 
 		Selectable::Selectable() :_id(ID), _selected(false) {
 			++ID;
 			_selectables.push_back( this );
+			std::cout << "CREATE SELECTABLE " << _selectables.size() << std::endl;
+		}
+
+		Selectable::~Selectable() {
+			std::cout << "DELETE SELECTABLE " << _selectables.size() << std::endl;
+		  // 	std::vector< Selectable * >::iterator iter = std::find(_selectables.begin(), _selectables.end(), this);
+		  //   if (iter != _selectables.end())
+		  //   {
+		  //   	delete *iter;
+		  //       _selectables.erase(iter);
+		  //   }
 		}
 
 		///////////////////////////////////////////////////////////////////////////

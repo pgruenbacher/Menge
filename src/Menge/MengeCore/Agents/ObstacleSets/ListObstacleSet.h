@@ -70,7 +70,7 @@ namespace Menge {
 			 *	@throws		ObstacleSetException if the index, i, is invalid.
 			 */
 			virtual Obstacle * getObstacle( size_t i );
-			
+
 			/*!
 			 *	@brief		Adds an obstacle  to the generator
 			 *
@@ -88,7 +88,7 @@ namespace Menge {
 			 *	@throws		ObstacleSetException if the obstacle is malformed
 			 */
 			bool addObstacle(ObstacleVertexList o);
-			
+
 			friend class ExplicitObstacleSetFactory;
 
 		protected:
@@ -98,7 +98,7 @@ namespace Menge {
 			std::vector< Obstacle *>	_obstacles;
 		};
 
-		
+
 	}	// namespace Agents
 }	// namespace Menge
 #endif	// __EXPLICIT_OBSTACLE_SET_H__

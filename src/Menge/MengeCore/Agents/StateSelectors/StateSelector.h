@@ -18,7 +18,7 @@
 
 /*!
  *	@file		StateSelector.h
- *	@brief		The definition of the agent initial state selector element.  
+ *	@brief		The definition of the agent initial state selector element.
  *				This is the mechanism which determines which state in the FSM the agent starts in.
  */
 #ifndef __STATE_SELECTOR_H__
@@ -41,7 +41,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			StateSelectorException() : MengeException() {}		
+			StateSelectorException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -86,11 +86,11 @@ namespace Menge {
 			 */
 			StateSelector();
 
-		protected:
 			/*!
 			 *	@brief		Virtual destructor.
 			 */
 			virtual ~StateSelector();
+		// protected:
 
 		public:
 			/*!

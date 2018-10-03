@@ -27,6 +27,7 @@
 #include "MengeVis/VisConfig.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace MengeVis {
 
@@ -42,6 +43,7 @@ namespace MengeVis {
 			 *	@brief		Constructor.
 			 */
 			Selectable();
+			~Selectable();
 
 			/*!
 			 *	@brief		Performs the OpenGL task to make this object selectable.
@@ -54,7 +56,7 @@ namespace MengeVis {
 			 *	@returns	The selection id - a positive value.
 			 */
 			unsigned int getID() const { return _id; }
-			
+
 			/*!
 			 *	@brief		A dummy function that makes Selectable polymorphic.
 			 *				It enables the use of dynamic_cast.  Otherwise, it is a no-op.
@@ -82,9 +84,9 @@ namespace MengeVis {
 			/*!
 			 *	@brief		Clears the current selection
 			 */
-			static void clearSelectedObject() { 
+			static void clearSelectedObject() {
 				if ( _selectedObject ) _selectedObject->_selected = false;
-				_selectedObject = 0x0; 
+				_selectedObject = 0x0;
 				_selectedName = 0;
 			}
 
@@ -151,15 +153,15 @@ namespace MengeVis {
 
 			/*!
 			 *	@brief		A gobal counter of the number of selectable objects in the scene.
-			 *		
+			 *
 			 *	Used to assign a new globally unique selection id to the next Selectable.
 			 */
 			static unsigned int ID;
 
 			/*!
-			 *	@brief		The currently selected object 
+			 *	@brief		The currently selected object
 			 *
-			 *	This system currently only supports selection of one item at a time.  
+			 *	This system currently only supports selection of one item at a time.
 			 *	TODO: support multiple selection as required.
 			 */
 			static Selectable *	_selectedObject;
@@ -174,23 +176,29 @@ namespace MengeVis {
 			 *				list).
 			 */
 			static std::vector< Selectable * >	_selectables;
-
+		// public:
+		// 	static void cleanupSelectable() {
+		// 		// delete Selectable::_buffer;
+		// 		// _selectables.clear();
+		// 		std::cout << "SELECTABLES SIZE ? " << _selectables.size << std::endl;
+		// 	}
 		};
+
 
 		/*!
 		 *	@brief		An STL Vector of Selectable objects.
 		 */
-		typedef std::vector< Selectable * > SelectableVector;
-		
-		/*!
-		 *	@brief		An iterator for the SelectableVector.
-		 */
-		typedef SelectableVector::iterator SelectableVectorItr;
-		
-		/*!
-		 *	@brief		A const iterator for the SelectableVector.
-		 */
-		typedef SelectableVector::const_iterator SelectableVectorCItr;
+		// typedef std::vector< Selectable * > SelectableVector;
+
+		// /*!
+		//  *	@brief		An iterator for the SelectableVector.
+		//  */
+		// typedef SelectableVector::iterator SelectableVectorItr;
+
+		// /*!
+		//  *	@brief		A const iterator for the SelectableVector.
+		//  */
+		// typedef SelectableVector::const_iterator SelectableVectorCItr;
 
 	}	// namespace SceneGraph
 }	// namespace MengeVis

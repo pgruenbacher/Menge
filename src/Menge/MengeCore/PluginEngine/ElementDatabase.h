@@ -52,7 +52,7 @@ namespace Menge {
 		 *	@returns	The number of registered target factories.
 		 */
 		static inline size_t count() { return _factories.size(); }
-		
+
 		/*!
 		 *	@brief		Returns an instance of the TransitionTarget defined in the XML node.
 		 *
@@ -62,7 +62,7 @@ namespace Menge {
 		 *	@param		behaveFldr	The path to the behavior file.  If the transition references
 		 *							resources in the file system, it should be defined relative
 		 *							to the behavior file location.  This is the folder containing
-		 *							that path. 
+		 *							that path.
 		 *	@returns	A pointer to a TransitionTarget instance for the given Condtion XML data.
 		 *				If no valid TargetFactory matches the data, NULL is returned.
 		 */
@@ -106,7 +106,7 @@ namespace Menge {
 				addBuiltins();
 			}
 		}
-		
+
 		/*!
 		 *	@brief		Adds the built-in factories to the database.
 		 *
@@ -114,10 +114,10 @@ namespace Menge {
 		 *	types.
 		 */
 		static void addBuiltins();
-		
+
 		/*!
 		 *	@brief		Adds a new Target factory to the database.
-		 *	
+		 *
 		 *	The database takes ownership of the data pointed to.
 		 *	To be added, the new factory must have a unique name to all
 		 *	previous actions.  If the factory *cannot* be added, it will
@@ -154,11 +154,12 @@ namespace Menge {
 		 *  @returns    the name of the element managed by this database
 		 */
 		static std::string getElementName();
-		
+
 		/*!
 		 *	@brief		Removes all registered factories from the database.
 		 */
 		static void clear() {
+			// std::cout << "ELEMENT CLEAR???" << std::endl;
 			typename std::list< Factory * >::iterator itr = _factories.begin();
 			for ( ; itr != _factories.end(); ++itr ) {
 				(*itr)->destroy();
@@ -171,12 +172,12 @@ namespace Menge {
 		 *				multiple calls to initialize will not cause problems.
 		 */
 		static bool _initialized;
-		
+
 		/*!
 		 *	@brief		The registered factories.
 		 */
 		static std::list< Factory * > _factories;
-		
+
 	};
 
 	// The two functions, addBuiltins and getElementName are *not* defined in-line

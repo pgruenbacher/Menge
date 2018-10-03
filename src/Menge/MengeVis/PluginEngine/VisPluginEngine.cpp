@@ -27,7 +27,7 @@ namespace MengeVis {
 		//					Implementation of VisPluginEngine
 		/////////////////////////////////////////////////////////////////////
 
-		VisPluginEngine::VisPluginEngine() : 
+		VisPluginEngine::VisPluginEngine() :
 			BasePluginEngine<VisPluginEngine, Plugin<VisPluginEngine> >() {
 			AgentContextDB::initialize();
 			VCContextDB::initialize();
@@ -38,6 +38,10 @@ namespace MengeVis {
 		/////////////////////////////////////////////////////////////////////
 
 		VisPluginEngine::~VisPluginEngine() {
+			AgentContextDB::clear();
+			VCContextDB::clear();
+			GoalRendererDB::clear();
+			VisAgentDB::clear();
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -51,7 +55,7 @@ namespace MengeVis {
 		void VisPluginEngine::registerVCContext( VelCompContext * context ) {
 			VCContextDB::addVisElement( context );
 		}
-		
+
 		/////////////////////////////////////////////////////////////////////
 
 		void VisPluginEngine::registerGoalRenderer( GoalRenderer * renderer ) {
