@@ -62,6 +62,11 @@ namespace MengeVis {
 		Selectable::Selectable() :_id(ID), _selected(false) {
 			++ID;
 			_selectables.push_back( this );
+			// _selectables.push_back( 0 );
+
+			// std::vector<Selectable*> other;
+			// other.push_back(0);
+
 			std::cout << "CREATE SELECTABLE " << _selectables.size() << std::endl;
 		}
 
@@ -78,12 +83,14 @@ namespace MengeVis {
 		///////////////////////////////////////////////////////////////////////////
 
 		void Selectable::loadSelectName() const {
+			std::cout << "SELECTABLE?2 " << _selectables.size() << std::endl;
 			glLoadName( _id );
 		}
 
 		///////////////////////////////////////////////////////////////////////////
 
 		void Selectable::selectStart() {
+			std::cout << "SELECTABLE? " << _selectables.size() << std::endl;
 			glSelectBuffer( BUFFER_SIZE, _buffer );
 			glRenderMode( GL_SELECT );
 			glInitNames();

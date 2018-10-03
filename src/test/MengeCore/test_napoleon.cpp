@@ -188,11 +188,12 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
 
     view.setDumpPath( dumpPath );
 
-#ifdef NDEBUG
-    std::string viewTitle = "Pedestrian Simulation - " + dbEntry->viewerName();
-#else
-    std::string viewTitle = "(DEBUG) Pedestrian Simulation - " + dbEntry->viewerName();
-#endif
+    #ifdef NDEBUG
+      std::string viewTitle = "Pedestrian Simulation - " + dbEntry->viewerName();
+    #else
+      std::string viewTitle = "(DEBUG) Pedestrian Simulation - " + dbEntry->viewerName();
+    #endif
+
     if ( !view.initViewer( viewTitle ) ) {
       std::cerr << "Unable to initialize the viewer\n\n";
       visualize = false;
@@ -211,6 +212,9 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
       logger.line();
 
       view.run();
+
+      delete system;
+      delete scene;
     }
   } else {
     bool running = true;
@@ -267,7 +271,7 @@ int testMain( ProjectSpec& projSpec ) {
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = false; // testing!
+  bool useVis = true; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );

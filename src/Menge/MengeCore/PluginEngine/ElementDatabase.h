@@ -165,6 +165,7 @@ namespace Menge {
 				(*itr)->destroy();
 			}
 			_factories.clear();
+			_initialized = false;
 		}
 	protected:
 		/*!
