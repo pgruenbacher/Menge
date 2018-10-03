@@ -36,6 +36,7 @@
 #include <cassert>
 #include <set>
 #include <vector>
+#include <memory>
 
 namespace Menge {
 
@@ -45,7 +46,7 @@ namespace Menge {
 		class GoalSelector;
 		class Goal;
 		class FSM;
-
+		typedef std::shared_ptr<Goal> GoalPtr;
 		/*!
 		 *	@brief		Exception class for BFSM states.
 		 */
@@ -288,7 +289,7 @@ namespace Menge {
 			 *	@param		goalId		The identifier for the desired goal
 			 *	@returns	The goal mapped to the id.
 			 */
-			const Goal * getGoal( size_t goalId ) { return _goals[ goalId ]; }
+			const GoalPtr getGoal( size_t goalId ) { return _goals[ goalId ]; }
 
 		protected:
 			/*!
@@ -342,7 +343,7 @@ namespace Menge {
 			/*!
 			 *	@brief			A mapping from agent id to its per-agent goal.
 			 */
-			HASH_MAP< size_t, Goal * >		_goals;
+			HASH_MAP< size_t, GoalPtr >		_goals;
 
 			/*!
 			 *	@brief		The name of the state.

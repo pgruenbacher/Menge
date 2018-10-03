@@ -34,6 +34,7 @@
 #include <vector>
 #include <cassert>
 #include <map>
+#include <memory>
 #ifndef _MSC_VER
 #include <string.h>
 #endif
@@ -56,6 +57,7 @@ namespace Menge {
 		class GoalSet;
 		class Task;
 		class FSMDescrip;
+		typedef std::shared_ptr<Goal> GoalPtr;
 
 		/////////////////////////////////////////////////////////////////////
 
@@ -210,7 +212,7 @@ namespace Menge {
 			 *	@param		goal		The goal to add.
 			 *	@returns	A boolean reporting success (true) or failure (false)
 			 */
-			bool addGoal( size_t goalSet, size_t goalID, Goal * goal );
+			bool addGoal( size_t goalSet, size_t goalID, GoalPtr goal );
 
 			/*!
 			 *	@brief		Retrieves the given goal from the given goal set.
@@ -220,7 +222,7 @@ namespace Menge {
 			 *	@returns	A pointer to the corresponding goal.  If no such goal exists
 			 *				NULL is returned.
 			 */
-			const Goal * getGoal( size_t goalSet, size_t goalID );
+			const GoalPtr getGoal( size_t goalSet, size_t goalID );
 
 			/*!
 			 *	@brief		Retrives the given goal set.

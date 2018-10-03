@@ -127,7 +127,7 @@ namespace Menge {
 
 		//change this to accept a velPref reference
 		void State::getPrefVelocity( Agents::BaseAgent * agent, Agents::PrefVelocity &velocity ) {
-			Goal * goal;
+			GoalPtr goal;
 			_goalLock.lockRead();
 			goal = _goals[ agent->_id ];
 			_goalLock.releaseRead();
@@ -135,7 +135,7 @@ namespace Menge {
 			//this needs to get changed. Create a copy of the VelPref. Pass that in, and then pass
 			// it back
 
-			_velComponent->setPrefVelocity( agent, goal, velocity);
+			_velComponent->setPrefVelocity( agent, goal.get(), velocity);
 
 			//apply my velocity modifiers now
 			std::vector< VelModifier * >::iterator vItr = velModifiers_.begin();
@@ -166,11 +166,11 @@ namespace Menge {
 			visited.insert( this );
 
 			_goalLock.lockRead();
-			Goal * goal = _goals[ agent->_id ];
+			GoalPtr goal = _goals[ agent->_id ];
 			_goalLock.releaseRead();
 
 			for ( size_t i = 0; i < transitions_.size(); ++i ) {
-				State * next = transitions_[i]->test( agent, goal );
+				State * next = transitions_[i]->test( agent, goal.get() );
 				if ( next ) {
 					leave( agent );	// a transition has come back true, leaving this state
 					next->enter( agent );
@@ -192,7 +192,7 @@ namespace Menge {
 				actions_[i]->onEnter( agent );
 			}
 
-			Goal * goal = 0x0;
+			GoalPtr goal;
 			try {
 				goal = _goalSelector->assignGoal( agent );
 			} catch ( GoalSelectorException ) {

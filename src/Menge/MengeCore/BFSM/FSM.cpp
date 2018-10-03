@@ -77,7 +77,10 @@ namespace Menge {
 			for ( ; gsItr != _goalSets.end(); ++gsItr ) {
 				delete gsItr->second;
 			}
+
+			std::cout << "DELETING TASKS " << _tasks.size() << std::endl;
 			for ( size_t i = 0; i < _tasks.size(); ++i ) {
+				std::cout << "DELETE TASK " << _tasks[i]->toString() << std::endl;
 				_tasks[ i ]->destroy();
 			}
 			_tasks.clear();
@@ -88,6 +91,7 @@ namespace Menge {
 			// 	std::cout << it << std::endl;
 			// }
 			for (auto it : _nodes) {
+				std::cout << "DELETE NODE " << it->getName() << std::endl;
 				// std::cout << " POINTER " << it << std::endl;
 				delete it;
 				// std::cout << " POINTER DELETED " << std::endl;
@@ -130,6 +134,7 @@ namespace Menge {
 						return;
 					}
 				}
+				std::cout << "PUSH TASK " << task->toString() << std::endl;
 				_tasks.push_back( task );
 			}
 		}
@@ -220,7 +225,7 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		bool FSM::addGoal( size_t goalSet, size_t goalID, Goal * goal ) {
+		bool FSM::addGoal( size_t goalSet, size_t goalID, GoalPtr goal ) {
 			if ( _goalSets.find( goalSet ) == _goalSets.end() ) {
 				_goalSets[ goalSet ] = new GoalSet();
 			}
@@ -229,7 +234,7 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		const Goal * FSM::getGoal( size_t goalSet, size_t goalID ) {
+		const GoalPtr FSM::getGoal( size_t goalSet, size_t goalID ) {
 			if ( _goalSets.find( goalSet ) == _goalSets.end() ) {
 				return 0x0;
 			}

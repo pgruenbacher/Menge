@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -55,14 +55,14 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 		//                   Implementation of FarthestNMGoalSelector
 		/////////////////////////////////////////////////////////////////////
-		
+
 		FarthestNMGoalSelector::FarthestNMGoalSelector() : SetGoalSelector(), _navMesh(0x0),
 														   _localizer(0x0) {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		
-		Goal * FarthestNMGoalSelector::getGoal( const Agents::BaseAgent * agent ) const {
+
+		GoalPtr FarthestNMGoalSelector::getGoal( const Agents::BaseAgent * agent ) const {
 			const size_t GOAL_COUNT = _goalSet->size();
 			if ( GOAL_COUNT == 0 ) {
 				logger << Logger::ERR_MSG;
@@ -70,10 +70,10 @@ namespace Menge {
 				logger << agent->_id << ".  There were no available goals in the goal set.";
 				return 0x0;
 			}
-			
-			// 1. Determine which node the agent is in.  
+
+			// 1. Determine which node the agent is in.
 			unsigned int start = _localizer->updateLocation( agent, true );
-			
+
 			if ( start == NavMeshLocation::NO_NODE ) {
 				logger << Logger::ERR_MSG;
 				logger << "Nav Mesh Goal Selector trying to find a goal for an agent who is not "
@@ -83,11 +83,11 @@ namespace Menge {
 
 			float agentDiameter = 2.f * agent->_radius;
 
-			Goal * bestGoal = 0x0;
+			GoalPtr bestGoal;
 			float bestDist = 0.f;
 
 			for ( size_t i = 0; i < GOAL_COUNT; ++i ) {
-				Goal * testGoal = _goalSet->getIthGoal( i );
+				GoalPtr testGoal = _goalSet->getIthGoal( i );
 				unsigned int testNode = _localizer->getNode( testGoal->getCentroid() );
 				if ( testNode == NavMeshLocation::NO_NODE ) {
 					// silently skip it.  The centroid is not on the mesh
@@ -115,7 +115,7 @@ namespace Menge {
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		
+
 		BFSM::Task * FarthestNMGoalSelector::getTask() {
 			return new NavMeshLocalizerTask( _navMesh->getName(), true /*usePlanner*/ );
 		}
@@ -171,6 +171,6 @@ namespace Menge {
 
 			return true;
 		}
-		
+
 	}	// namespace BFSM
 }	// namespace Menge

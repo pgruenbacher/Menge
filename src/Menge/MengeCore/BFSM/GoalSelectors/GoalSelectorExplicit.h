@@ -19,7 +19,7 @@
 /*!
  *	@file		GoalSelectorExplicit.h
  *	@brief		The definition of the explicit goal selector - specifying a target
- *				goal from a set explicitly. 
+ *				goal from a set explicitly.
  */
 
 #ifndef __GOAL_SELECTOR_EXCPLICIT_H__
@@ -51,10 +51,10 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 
 			/*!
 			 *	@brief		Gives the instance the opportunity to set the goal set.
@@ -86,22 +86,22 @@ namespace Menge {
 			 */
 			size_t	_goalSetID;
 
-			/*!	
+			/*!
 			 *	@brief		The goal associated with this goal selector.
 			 *				During parsing, it contains the id of the goal.
 			 *				After FSM construction, it contains a pointer to the
 			 *				actual goal.
 			 */
-			union {
+			// union {
 				size_t		_goalID;		///< The identifier for the goal
-				Goal *		_goal;			///< The pointer to the goal.
-			};
+				GoalPtr		_goal;			///< The pointer to the goal.
+			// };
 		};
 
 		/*!
 		 *	@brief		Factory for the ExplicitGoalSelector.
 		 */
-		class MENGE_API ExplicitGoalSelectorFactory : public GoalSelectorFactory { 
+		class MENGE_API ExplicitGoalSelectorFactory : public GoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		Constructor.
@@ -136,7 +136,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new ExplicitGoalSelector(); }	
+			GoalSelector * instance() const { return new ExplicitGoalSelector(); }
 
 			/*!
 			 *	@brief		Given a pointer to a GoalSelector instance, sets the appropriate fields
@@ -147,17 +147,17 @@ namespace Menge {
 			 *	@param		behaveFldr	The path to the behavior file.  If the goal selector
 			 *							references resources in the file system, it should be
 			 *							defined relative to the behavior file location.  This is
-			 *							the folder containing that path. 
+			 *							the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( GoalSelector * selector, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
-		
+
 			/*!
 			 *	@brief		The identifier for the "goal_set" size_t attribute.
 			 */
 			size_t	_goalSetID;
-		
+
 			/*!
 			 *	@brief		The identifier for the "goal" size_t attribute.
 			 */

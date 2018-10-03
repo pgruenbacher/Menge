@@ -321,67 +321,10 @@ void copyAgents(std::vector<napoleon::AgentData>& result) {
 
 // napoleon tests...
 
-// TEST(NapoleonTests, pikeCombat) {
-//   ProjectSpec projSpec;
-
-//   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
-//   projSpec.setDuration(400);
-
-//   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
-//   std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
-
-//   int result = testMain(projSpec);
-//   ASSERT_EQ(result, 0);
-//   copyAgents(agents1);
-//   cleanUp();
-
-//   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
-//   projSpec.setDuration(400);
-//   result = testMain(projSpec);
-//   copyAgents(agents2);
-//   ASSERT_EQ(result, 0);
-
-//   cleanUp();
-
-//   // ASSERT_EQ(agents1, agents2);
-//   bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
-//   ASSERT_TRUE(sim_agent_list_equal);
-//   logger.close();
-// }
-
-// // this one isn't behaving well...
-// TEST(NapoleonTests, pikeFlankCombat) {
-//   ProjectSpec projSpec;
-
-//   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-//   projSpec.setDuration(400);
-
-//   std::vector<napoleon::AgentData> agents1;
-//   std::vector<napoleon::AgentData> agents2;
-
-//   int result = testMain(projSpec);
-//   ASSERT_EQ(result, 0);
-//   copyAgents(agents1);
-//   cleanUp();
-
-//   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-//   projSpec.setDuration(400);
-//   result = testMain(projSpec);
-//   copyAgents(agents2);
-//   ASSERT_EQ(result, 0);
-
-//   cleanUp();
-
-//   // ASSERT_EQ(agents1, agents2);
-//   bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
-//   ASSERT_TRUE(sim_agent_list_equal);
-//   logger.close();
-// }
-
-TEST(NapoleonTests, formationCombat) {
+TEST(NapoleonTests, pikeCombat) {
   ProjectSpec projSpec;
 
-  projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
+  projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
   projSpec.setDuration(10);
 
   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
@@ -392,7 +335,7 @@ TEST(NapoleonTests, formationCombat) {
   copyAgents(agents1);
   cleanUp();
 
-  // projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
+  // projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
   // projSpec.setDuration(400);
   // result = testMain(projSpec);
   // copyAgents(agents2);
@@ -403,8 +346,65 @@ TEST(NapoleonTests, formationCombat) {
   // // ASSERT_EQ(agents1, agents2);
   // bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
   // ASSERT_TRUE(sim_agent_list_equal);
-  logger.close();
+  // logger.close();
 }
+
+// this one isn't behaving well...
+// TEST(NapoleonTests, pikeFlankCombat) {
+//   ProjectSpec projSpec;
+
+//   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
+//   projSpec.setDuration(10);
+
+//   std::vector<napoleon::AgentData> agents1;
+//   std::vector<napoleon::AgentData> agents2;
+
+//   int result = testMain(projSpec);
+//   ASSERT_EQ(result, 0);
+//   copyAgents(agents1);
+//   cleanUp();
+
+//   // projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
+//   // projSpec.setDuration(400);
+//   // result = testMain(projSpec);
+//   // copyAgents(agents2);
+//   // ASSERT_EQ(result, 0);
+
+//   // cleanUp();
+
+//   // // ASSERT_EQ(agents1, agents2);
+//   // bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
+//   // ASSERT_TRUE(sim_agent_list_equal);
+//   // logger.close();
+// }
+
+// TEST(NapoleonTests, formationCombat) {
+//   ProjectSpec projSpec;
+
+//   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
+//   projSpec.setDuration(10);
+
+//   std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
+//   std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
+
+//   int result = testMain(projSpec);
+//   ASSERT_EQ(result, 0);
+//   copyAgents(agents1);
+//   cleanUp();
+
+//   // projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
+//   // projSpec.setDuration(400);
+//   // result = testMain(projSpec);
+//   // copyAgents(agents2);
+//   // ASSERT_EQ(result, 0);
+
+//   // cleanUp();
+
+//   // // ASSERT_EQ(agents1, agents2);
+//   // bool sim_agent_list_equal = analyzeAgentData(agents1, agents2);
+//   // ASSERT_TRUE(sim_agent_list_equal);
+//   logger.close();
+// }
 
 // TEST(NapoleonTests, periodic) {
 //   ProjectSpec projSpec;

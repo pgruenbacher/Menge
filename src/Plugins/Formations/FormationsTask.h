@@ -44,12 +44,13 @@ namespace Formations {
 	class FormationsTask : public Menge::BFSM::Task {
 	public:
 		/*!
-		 *	@brief		Constructor 
+		 *	@brief		Constructor
 		 *
 		 *  @param      form		The formation to be maintained in the task.
 		 *
 		 */
 		FormationsTask( Formations::FormationPtr & form );
+		~FormationsTask(  );
 
 		/*!
 		 *	@brief		The work performed by the task.
@@ -86,10 +87,10 @@ namespace Formations {
 		 *
 		 *	@returns	The FormationPtr object containing the formation resource
 		 */
-		const Formations::FormationPtr getFormation() const { return _formation;} 
+		const Formations::FormationPtr getFormation() const { return _formation;}
 
 	protected:
-		/*! 
+		/*!
 		 *	@brief		The underlying formation data.
 		 */
 		Formations::FormationPtr _formation; //the formation

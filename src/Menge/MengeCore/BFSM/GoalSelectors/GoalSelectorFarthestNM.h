@@ -18,7 +18,7 @@
 
 /*!
  *	@file		GoalSelectorFarthestNM.h
- *	@brief		The definition of the farthest navigation mesh goal selector. 
+ *	@brief		The definition of the farthest navigation mesh goal selector.
  */
 
 #ifndef __GOAL_SELECTOR_FARTHEST_NM_H__
@@ -34,7 +34,7 @@ namespace Menge {
 
 	namespace BFSM {
 		/*!
-		 *	@brief		The farthest nav mesh goal selector selects the goal from a 
+		 *	@brief		The farthest nav mesh goal selector selects the goal from a
 		 *				goal set that is farthest to the agent in terms of path length
 		 *				through the navigation mesh.
 		 */
@@ -49,10 +49,10 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 
 			/*!
 			 *	@brief		Returns a pointer to the nav mesh localizer task.
@@ -101,13 +101,13 @@ namespace Menge {
 			 *	@brief		The localizer for the navigation mesh.
 			 */
 			NavMeshLocalizerPtr _localizer;
-			
+
 		};
 
 		/*!
 		 *	@brief		Factory for the FarthestNMGoalSelector.
 		 */
-		class MENGE_API FarthestNMGoalSelectorFactory : public SetGoalSelectorFactory { 
+		class MENGE_API FarthestNMGoalSelectorFactory : public SetGoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		Constructor.
@@ -143,7 +143,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new FarthestNMGoalSelector(); }	
+			GoalSelector * instance() const { return new FarthestNMGoalSelector(); }
 
 			/*!
 			 *	@brief		Given a pointer to a GoalSelector instance, sets the appropriate fields
@@ -154,12 +154,12 @@ namespace Menge {
 			 *	@param		behaveFldr	The path to the behavior file.  If the goal selector
 			 *							references resources in the file system, it should be
 			 *							defined relative to the behavior file location.  This is
-			 *							the folder containing that path. 
+			 *							the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( GoalSelector * selector, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
-		
+
 			/*!
 			 *	@brief		The identifier for the "file_name" string attribute.
 			 */

@@ -171,8 +171,9 @@ namespace Menge {
 								logger << Logger::ERR_MSG << "Error parsing a goal description.";
 								return false;
 							}
+							GoalPtr shared_goal = GoalPtr(goal);
 							// Make sure that this goal doesn't duplicate previous goal ids
-							if ( ! _goalSets[ setID ]->addGoal( goal->getID(), goal ) ) {
+							if ( ! _goalSets[ setID ]->addGoal( goal->getID(), shared_goal ) ) {
 								logger << Logger::ERR_MSG << "GoalSet " << setID;
 								logger << " has two goals with the identifier: " << goal->getID();
 								logger << " (second appears on line " << goalNode->Row() << ").";

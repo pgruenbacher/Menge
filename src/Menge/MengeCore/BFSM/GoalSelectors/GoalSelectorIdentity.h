@@ -18,7 +18,7 @@
 
 /*!
  *	@file		GoalSelectorIdentity.h
- *	@brief		The definition of the "identity" goal selector. 
+ *	@brief		The definition of the "identity" goal selector.
  */
 
 #ifndef __GOAL_SELECTOR_IDENTITY_H__
@@ -33,8 +33,8 @@ namespace Menge {
 
 	namespace BFSM {
 		/*!
-		 *	@brief		The identity goal selector makes a goal out of the agent's 
-		 *				current position when assigned.  The goal is not associated 
+		 *	@brief		The identity goal selector makes a goal out of the agent's
+		 *				current position when assigned.  The goal is not associated
 		 *				with any set and should be destroyed upon being freed.
 		 */
 		class MENGE_API IdentityGoalSelector : public GoalSelector {
@@ -48,16 +48,16 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 		};
 
 		/*!
 		 *	@brief		Factory for the IdentityGoalSelector.
 		 */
-		class MENGE_API IdentityGoalSelectorFactory : public GoalSelectorFactory { 
+		class MENGE_API IdentityGoalSelectorFactory : public GoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		The name of the goal selector type.
@@ -77,7 +77,7 @@ namespace Menge {
 			 *	@returns	A string containing the goal selector description.
 			 */
 			virtual const char * description() const {
-				return  "A goal selector.  The goal an agent gets is based on " 
+				return  "A goal selector.  The goal an agent gets is based on "
 						"its current position when the goal is assigned.";
 			};
 
@@ -87,7 +87,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new IdentityGoalSelector(); }	
+			GoalSelector * instance() const { return new IdentityGoalSelector(); }
 		};
 
 	}	// namespace BFSM

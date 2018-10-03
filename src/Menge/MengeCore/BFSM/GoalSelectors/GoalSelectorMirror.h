@@ -18,7 +18,7 @@
 
 /*!
  *	@file		GoalSelectorMirror.h
- *	@brief		The definition of the "mirror" goal selector. 
+ *	@brief		The definition of the "mirror" goal selector.
  */
 
 #ifndef __GOAL_SELECTOR_MIRROR_H__
@@ -51,10 +51,10 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 
 			/*!
 			 *	@brief		Sets the mirroring of the goal selector.
@@ -101,7 +101,7 @@ namespace Menge {
 			 *				x-axis (true) or not (false).
 			 */
 			bool	_mirrorX;
-			
+
 			/*!
 			 *	@brief		Determines if the agent's position is reflected over the
 			 *				y-axis (true) or not (false).
@@ -112,7 +112,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Factory for the MirrorGoalSelector.
 		 */
-		class MENGE_API MirrorGoalSelectorFactory : public GoalSelectorFactory { 
+		class MENGE_API MirrorGoalSelectorFactory : public GoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		Constructor.
@@ -137,7 +137,7 @@ namespace Menge {
 			 *	@returns	A string containing the goal selector description.
 			 */
 			virtual const char * description() const {
-				return  "A goal selector.  The goal an agent gets is the reflection " 
+				return  "A goal selector.  The goal an agent gets is the reflection "
 						"of the agent's position across the world's origin over the "
 						"world's x- and/or y-axes as specified.";
 			};
@@ -148,7 +148,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new MirrorGoalSelector(); }	
+			GoalSelector * instance() const { return new MirrorGoalSelector(); }
 
 			/*!
 			 *	@brief		Given a pointer to a GoalSelector instance, sets the appropriate fields
@@ -159,17 +159,17 @@ namespace Menge {
 			 *	@param		behaveFldr	The path to the behavior file.  If the goal selector
 			 *							references resources in the file system, it should be
 			 *							defined relative to the behavior file location.  This is
-			 *							the folder containing that path. 
+			 *							the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( GoalSelector * selector, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
-		
+
 			/*!
 			 *	@brief		The identifier for the "mirror_x" bool attribute.
 			 */
 			size_t	_mirrorXID;
-		
+
 			/*!
 			 *	@brief		The identifier for the "mirror_y" bool attribute.
 			 */

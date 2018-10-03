@@ -61,7 +61,7 @@ namespace Menge {
 			 *	@param		agent		The agent for whom a goal is extracted.
 			 *	@returns	A pointer to a goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 
 			friend class SharedGoalSelectorFactory;
 

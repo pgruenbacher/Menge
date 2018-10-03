@@ -18,7 +18,7 @@
 
 /*!
  *	@file		GoalSelectorWeighted.h
- *	@brief		The definition of the weighted random goal selector. 
+ *	@brief		The definition of the weighted random goal selector.
  */
 
 #ifndef __GOAL_SELECTOR_WEIGHTED_H__
@@ -41,16 +41,16 @@ namespace Menge {
 			 *	@brief		Interface function for acquiring per-agent goals.
 			 *
 			 *	@param		agent		The agent for whom a goal is extracted.
-			 *	@returns	A pointer to a goal.  
+			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const;
 		};
 
 		/*!
 		 *	@brief		Factory for the WeightedGoalSelector.
 		 */
-		class MENGE_API WeightedGoalSelectorFactory : public SetGoalSelectorFactory { 
+		class MENGE_API WeightedGoalSelectorFactory : public SetGoalSelectorFactory {
 		public:
 			/*!
 			 *	@brief		The name of the goal selector type.
@@ -80,7 +80,7 @@ namespace Menge {
 			 *
 			 *	@returns		A pointer to a newly instantiated GoalSelector class.
 			 */
-			GoalSelector * instance() const { return new WeightedGoalSelector(); }	
+			GoalSelector * instance() const { return new WeightedGoalSelector(); }
 		};
 	}	// namespace BFSM
 }	// namespace Menge

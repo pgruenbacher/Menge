@@ -31,6 +31,7 @@
 #include "MengeCore/Runtime/ReadersWriterLock.h"
 
 #include <map>
+#include <memory>
 
 // forward declaration
 class TiXmlElement;
@@ -47,6 +48,8 @@ namespace Menge {
 		// forward declaration
 		class GoalSet;
 		class Goal;
+
+		typedef std::shared_ptr<Goal> GoalPtr;
 
 		/*!
 		 *	@brief		Exception class for goal generation.
@@ -121,7 +124,7 @@ namespace Menge {
 			 *	@param		agent		The agent for whom a goal is assigned.
 			 *	@returns	A pointer to the assigned goal.
 			 */
-			Goal *	assignGoal( const Agents::BaseAgent * agent );
+			GoalPtr	assignGoal( const Agents::BaseAgent * agent );
 
 			/*!
 			 *	@brief		Informs the goal selector that the agent is done with
@@ -135,7 +138,7 @@ namespace Menge {
 			 *	@param		agent		The agent who is finished using the goal.
 			 *	@param		goal		The goal the agent was previously assigned.
 			 */
-			void freeGoal( const Agents::BaseAgent * agent, Goal * goal );
+			void freeGoal( const Agents::BaseAgent * agent, GoalPtr goal );
 
 			/*!
 			 *	@brief		Interface function for acquiring per-agent goals.
@@ -144,7 +147,7 @@ namespace Menge {
 			 *	@returns	A pointer to a goal.
 			 *	// TODO: Figure out who owns this goal.
 			 */
-			virtual Goal * getGoal( const Agents::BaseAgent * agent ) const = 0;
+			virtual GoalPtr getGoal( const Agents::BaseAgent * agent ) const = 0;
 
 			/*!
 			 *	@brief		Gives the instance the opportunity to set the goal set.
@@ -154,7 +157,7 @@ namespace Menge {
 			 *
 			 *	@param		goalSets	A mapping from goal set identifier to goal set pointers.
 			 */
-			virtual void setGoalSet( std::map< size_t, GoalSet * > & goalSets ){}
+			virtual void setGoalSet( std::map< size_t, GoalSet* > & goalSets ){}
 
 			/*!
 			 *	@brief		Sets the persistence of the goal.
@@ -206,7 +209,7 @@ namespace Menge {
 			 *					- If compiled in debug mode (and then node freeing will
 			 *					be tested against this map).
 			 */
-			HASH_MAP< size_t, Goal * >	_assignedGoals;
+			HASH_MAP< size_t, GoalPtr >	_assignedGoals;
 
 			/*!
 			 *	@brief		The lock to maintain readers-writer access to the

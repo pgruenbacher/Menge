@@ -52,7 +52,7 @@ namespace Menge {
 
 		GoalSelector::~GoalSelector() {
 			std::cout << " DELTE GOAL SELCTOR " << std::endl;
-			// HASH_MAP< size_t, Goal * >::iterator itr = _assignedGoals.begin();
+			// HASH_MAP< size_t, GoalPtr >::iterator itr = _assignedGoals.begin();
 			// for ( ; itr != _assignedGoals.end(); ++ itr ) {
 			// 	Goal* goal = itr->second;
 			// 	if (!_persistent) {
@@ -62,11 +62,11 @@ namespace Menge {
 			// _assignedGoals.clear();
 		}
 
-		Goal *	GoalSelector::assignGoal( const Agents::BaseAgent * agent ) {
-			Goal * goal = 0x0;
+		GoalPtr	GoalSelector::assignGoal( const Agents::BaseAgent * agent ) {
+			GoalPtr goal = 0x0;
 			if ( _persistent ) {
 				_lock.lockRead();
-				HASH_MAP< size_t, Goal * >::iterator itr = _assignedGoals.find( agent->_id );
+				HASH_MAP< size_t, GoalPtr >::iterator itr = _assignedGoals.find( agent->_id );
 				if ( itr != _assignedGoals.end() ) {
 					goal = itr->second;
 				}
@@ -109,7 +109,7 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		void GoalSelector::freeGoal( const Agents::BaseAgent * agent, Goal * goal ) {
+		void GoalSelector::freeGoal( const Agents::BaseAgent * agent, GoalPtr goal ) {
 	#ifdef _DEBUG
 			_lock.lockWrite();
 			assert( _assignedGoals.count( agent->_id ) == 1 &&
