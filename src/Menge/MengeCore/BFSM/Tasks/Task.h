@@ -89,11 +89,12 @@ namespace Menge {
 		 *			beginning of each FSM evaluation per time step.
 		 */
 		class MENGE_API Task : public Element {
-		protected:
+		// protected:
 			/*!
 			 *	@brief		Virtual destructor.
 			 */
-			virtual ~Task(){}
+		public:
+			virtual ~Task(){ std::cout << "DELETE TASK " << std::endl; }
 
 		public:
 			/*!

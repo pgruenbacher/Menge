@@ -92,9 +92,13 @@ namespace Menge {
 			// for each state
 			for (Transition* t : transitions_) {
 				delete t;
-				transitions_.clear();
 			}
-
+			transitions_.clear();
+			// delete any velocity modifiers
+			for (VelModifier* v : velModifiers_) {
+				v->destroy();
+			}
+			velModifiers_.clear();
 
 			// std::cout << "DES??" << std::endl;
 

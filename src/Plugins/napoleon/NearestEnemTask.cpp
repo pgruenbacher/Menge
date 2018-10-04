@@ -95,7 +95,7 @@ namespace Napoleon {
         if (it->second.agent == 0x0) {
           std::cout << " !!!!!??!?!?!" << std::endl;
         }
-        _numTargetedBy[it->second.agent->_id] += 1;
+        _numTargetedBy[it->second.agent->_id] ++;
       }
     }
   }

@@ -91,6 +91,7 @@ namespace Formations {
 
   void FormationComponent::setFormation(FormationPtr form){
     _formation = form;
+    std::cout << "SET FORMATION " << std::endl;
   };
 
   void FormationComponent::setDisplacement(Vector2 v){
@@ -101,7 +102,7 @@ namespace Formations {
     try {
       setFormation(loadFormation(fname));
     } catch ( Menge::ResourceException ) {
-      logger << Logger::ERR_MSG << "Couldn't instantiate formatoin " << fname;
+      logger << Logger::ERR_MSG << "Couldn't instantiate formation " << fname;
     }
     return;
   };
@@ -156,7 +157,9 @@ namespace Formations {
   }
 
   Task * FormationComponent::getTask(){
-    return new FormationsTask( _formation );
+    Task* t = new FormationsTask( _formation );
+    std::cout << " GET TASK ? " << t->toString() << std::endl;
+    return t;
   };
 
   Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId) {

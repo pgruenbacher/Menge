@@ -63,7 +63,7 @@ namespace Menge {
 			 *	@brief		Protected destructor.
 			 */
 			// http://www.modernescpp.com/index.php/c-core-guidelines-destructor-rules
-			virtual ~Condition() { std::cout << "DELETE CONDITION " << std::endl; }
+			virtual ~Condition() { /*std::cout << "DELETE CONDITION " << std::endl;*/ }
 
 		// protected:
 		public:

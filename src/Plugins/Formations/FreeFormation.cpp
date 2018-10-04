@@ -91,6 +91,7 @@ namespace Formations {
 	FreeFormation::~FreeFormation(){
 		//we're certainly not allowed to delete the agents!
 		//but we should clear the vectors we control.
+		std::cout << "DELETE FORMAITON ? " << std::endl;
 		logger << Logger::INFO_MSG << "delete formation " << getName();
 		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
 		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {

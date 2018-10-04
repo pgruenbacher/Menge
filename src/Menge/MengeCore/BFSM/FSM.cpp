@@ -96,6 +96,14 @@ namespace Menge {
 				delete it;
 				// std::cout << " POINTER DELETED " << std::endl;
 			}
+			_nodes.clear();
+
+			// and we'll delete the modifiers
+			for (auto it : _velModifiers) {
+				it->destroy();
+			}
+			_velModifiers.clear();
+
 			// _nodes.clear();
 			// _stateNameMap.clear();
 		}
@@ -114,8 +122,6 @@ namespace Menge {
 			for ( ; vItr != _velModifiers.end(); ++vItr ) {
 				addTask((*vItr)->getTask());
 			}
-
-			//iterate over agents
 
 		}
 

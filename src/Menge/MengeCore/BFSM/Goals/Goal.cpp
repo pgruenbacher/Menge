@@ -59,7 +59,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		Goal::~Goal() {
-			std::cout << "DELETE GOAL " << std::endl;
+			// std::cout << "DELETE GOAL " << std::endl;
 			if (_geometry) delete _geometry;
 		}
 

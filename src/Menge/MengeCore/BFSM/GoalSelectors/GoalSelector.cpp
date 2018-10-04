@@ -51,15 +51,7 @@ namespace Menge {
 		/////////////////////////////////////////////////////////////////////
 
 		GoalSelector::~GoalSelector() {
-			std::cout << " DELTE GOAL SELCTOR " << std::endl;
-			// HASH_MAP< size_t, GoalPtr >::iterator itr = _assignedGoals.begin();
-			// for ( ; itr != _assignedGoals.end(); ++ itr ) {
-			// 	Goal* goal = itr->second;
-			// 	if (!_persistent) {
-			// 		goal->free();
-			// 	}
-			// }
-			// _assignedGoals.clear();
+			// std::cout << " DELTE GOAL SELCTOR " << std::endl;
 		}
 
 		GoalPtr	GoalSelector::assignGoal( const Agents::BaseAgent * agent ) {

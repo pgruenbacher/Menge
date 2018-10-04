@@ -43,7 +43,7 @@
         <Action type="set_property" property="max_angle_vel" dist="c" value="0.1" exit_reset="0" />
         <Action type="set_pike" lowering="1" exit_reset="1"/>
         <!-- <VelComponent type="enemy_near_comp" method="idle"/> -->
-        <VelComponent type="formationComp" file_name="bigSquare.txt" />
+        <!-- <VelComponent type="formationComp" file_name="bigSquare.txt" /> -->
         <VelModifier type="pike"/>
     </State>
     <State name="PikeAttack" final="0">
