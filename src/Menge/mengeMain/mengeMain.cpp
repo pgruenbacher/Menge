@@ -43,6 +43,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Runtime/Logger.h"
 #include "MengeCore/Runtime/os.h"
 #include "MengeCore/Runtime/SimulatorDB.h"
+#include "MengeCore/Agents/Events/EventSystem.h"
 
 #include "MengeVis/PluginEngine/VisPluginEngine.h"
 #include "MengeVis/Runtime/AgentContext/BaseAgentContext.h"
@@ -244,6 +245,23 @@ bool parseCommandParameters( int argc, char* argv[], ProjectSpec* spec, const Si
   return valid;
 }
 
+void cleanUp() {
+
+  delete Menge::SIMULATOR;
+  Menge::SIMULATOR = 0x0;
+  Menge::SIM_TIME = 0.f;
+  Menge::Math::resetGlobalSeed();
+
+  Menge::ACTIVE_FSM = 0x0;
+  Menge::SIM_TIME_STEP = 0.f;
+  // delete Menge::SPATIAL_QUERY; // should be cleaned by simulator automatically.
+  Menge::SPATIAL_QUERY = 0x0;
+  // delete Menge::ELEVATION; // should be cleaned by simulator automatically.
+  Menge::ELEVATION = 0x0;
+  delete Menge::EVENT_SYSTEM;
+  Menge::EVENT_SYSTEM = new Menge::EventSystem();
+}
+
 /*!
  *	@brief		Initialize and start the simulation.
  *
@@ -348,6 +366,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
 
 			view.run();
 
+      delete ctx;
       delete scene; // scene will delete the system.
 		}
 	} else {
@@ -422,5 +441,6 @@ int main( int argc, char* argv[] ) {
 
   simDB.clearEntries();
 	logger.close();
+  cleanUp();
 	return result;
 }

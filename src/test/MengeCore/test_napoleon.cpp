@@ -150,6 +150,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
                             SIM_DURATION, behaveFile, sceneFile, outFile,
                             scbVersion, VERBOSE );
 
+
   if ( sim == 0x0 ) {
     return 1;
   }
@@ -303,7 +304,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = false; // testing!
+  bool useVis = true; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );
@@ -330,7 +331,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
 // napoleon tests...
 
 TEST(NapoleonTests, pikeCombat) {
-  // return;
+  return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
@@ -352,7 +353,7 @@ TEST(NapoleonTests, pikeCombat) {
 }
 
 TEST(NapoleonTests, pikeFlankCombat) {
-  return;
+  // return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
@@ -377,7 +378,7 @@ TEST(NapoleonTests, pikeFlankCombat) {
 }
 
 TEST(NapoleonTests, formationCombat) {
-  // return;
+  return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
