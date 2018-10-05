@@ -201,18 +201,22 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
       GLScene * scene = new GLScene();
       SimSystem * system = new SimSystem( sim );
       system->populateScene( scene );
+      std::cout << "POPULATE SCENE " << std::endl;
       scene->addSystem( system );
+      std::cout << "FINISH SCENE " << std::endl;
       view.setScene( scene );
-
+      std::cout << "SET SCENE " << std::endl;
       view.setFixedStep( TIME_STEP );
       view.setBGColor( 0.1f, 0.1f, 0.1f );
       MengeVis::Runtime::MengeContext * ctx = new MengeVis::Runtime::MengeContext( sim );
       scene->setContext( new EventInjectionContext( ctx ) );
+      std::cout << "SET CONTEXT " << std::endl;
       view.newGLContext();
       logger.line();
-
+      std::cout << "START RUN " << std::endl;
       view.run();
 
+      delete ctx;
       delete scene; // scene will delete the system.
     }
   } else {
@@ -326,7 +330,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
 // napoleon tests...
 
 TEST(NapoleonTests, pikeCombat) {
-  return;
+  // return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
@@ -348,11 +352,11 @@ TEST(NapoleonTests, pikeCombat) {
 }
 
 TEST(NapoleonTests, pikeFlankCombat) {
-  // return;
+  return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(400);
+  projSpec.setDuration(100);
 
   std::vector<napoleon::AgentData> agents1;
   std::vector<napoleon::AgentData> agents2;
@@ -362,7 +366,7 @@ TEST(NapoleonTests, pikeFlankCombat) {
 
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(400);
+  projSpec.setDuration(100);
   result = testMain(projSpec, agents2);
   ASSERT_EQ(result, 0);
 
@@ -373,7 +377,7 @@ TEST(NapoleonTests, pikeFlankCombat) {
 }
 
 TEST(NapoleonTests, formationCombat) {
-  return;
+  // return;
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");

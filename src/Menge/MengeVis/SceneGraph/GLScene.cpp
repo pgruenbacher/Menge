@@ -161,7 +161,9 @@ namespace MengeVis {
 				delete _uiContext;
 			}
 			_uiContext = context;
+			std::cout << "ACTI " << std::endl;
 			_uiContext->activate();
+			std::cout << "ACTIT " << std::endl;
 		}
 
 		///////////////////////////////////////////////////////////////////////////

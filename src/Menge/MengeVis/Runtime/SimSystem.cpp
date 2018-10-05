@@ -78,13 +78,13 @@ namespace MengeVis {
 
 
 			// clean up the visAgent instances as well
-			std::cout << "VIS AGENTS ?? " << std::endl;
-			if (_visAgents) {
-				for (int i = 0; i < _sim->getNumAgents(); ++i) {
-					std::cout << " DELETE ?? " << std::endl;
-					// delete _visAgents[i];
-				}
-			}
+			// std::cout << "VIS AGENTS ?? " << std::endl;
+			// if (_visAgents) {
+			// 	for (int i = 0; i < _sim->getNumAgents(); ++i) {
+			// 		// std::cout << " DELETE ?? " << std::endl;
+			// 		// delete _visAgents[i];
+			// 	}
+			// }
 
 			// if ( _sim ) delete _sim;
 

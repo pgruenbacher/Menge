@@ -22,7 +22,7 @@ namespace MengeVis {
 		//			Implementation of MengeContext
 		////////////////////////////////////////////////////////////////////////////
 
-		MengeContext::MengeContext( SimulatorInterface * sim ) : 
+		MengeContext::MengeContext( SimulatorInterface * sim ) :
 				_sim( sim ), _state( DEFAULT_ST ), _agentContext( 0x0 ), _stateContext(),
 				_selected( 0x0 ), _visAgents( 0x0 ), _agtCount( 0x0 ),
 				_digitCount( 0 ), _drawVC( true ), _drawTrans( true )
@@ -34,6 +34,8 @@ namespace MengeVis {
 
 		MengeContext::~MengeContext() {
 			// TODO: Determine what this owns and should clean up.
+			std::cout << "DELETE MENGE CONTEXT " << std::endl;
+			SceneGraph::Selectable::clearSelectedObject();
 		}
 
 		////////////////////////////////////////////////////////////////////////////
@@ -45,7 +47,7 @@ namespace MengeVis {
 			bool hasAlt = ( mods & KMOD_ALT ) > 0;
 			bool hasShift = ( mods & KMOD_SHIFT ) > 0;
 			bool noMods = !( hasCtrl || hasAlt || hasShift );
-			
+
 			if ( e.type == SDL_KEYDOWN ) {
 				switch ( _state ) {
 					case DEFAULT_ST:
@@ -82,9 +84,9 @@ namespace MengeVis {
 						}
 					}
 					break;
-				} 
+				}
 			}
-			
+
 			if ( _selected != 0x0 ) {
 				if ( !result.isHandled() ) result = _stateContext.handleKeyboard( e );
 				if ( !result.isHandled() ) result = _agentContext->handleKeyboard( e );
@@ -137,7 +139,12 @@ namespace MengeVis {
 
 		bool MengeContext::updateSelected() {
 			bool changed = false;
-			VisAgent * s = dynamic_cast<VisAgent *>( SceneGraph::Selectable::getSelectedObject() );
+			std::cout << " UPDATE SELECTED " << std::endl;
+			SceneGraph::Selectable * _s = SceneGraph::Selectable::getSelectedObject();
+			std::cout << " GOT UPDATE SELECTED " << std::endl;
+			if (_s == 0x0) return changed;
+			VisAgent * s = dynamic_cast<VisAgent *>( _s );
+			std::cout << " GET SELECTED ? " << std::endl;
 			changed = s != _selected;
 			_selected = s;
 			if ( changed && s != 0x0 ) {

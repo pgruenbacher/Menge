@@ -51,7 +51,7 @@ namespace MengeVis {
 
 		const unsigned int Selectable::BUFFER_SIZE = 16384;
 		unsigned int * Selectable::_buffer = new unsigned int[ Selectable::BUFFER_SIZE ];
-		unsigned int Selectable::ID = 0; // should start at zero I think - paul.
+		unsigned int Selectable::ID = 1; // should start at zero I think - paul.
 		// unsigned int Selectable::ID = 1;
 		Selectable *	Selectable::_selectedObject = 0x0;
 		unsigned int Selectable::_selectedName = 0;
@@ -67,11 +67,11 @@ namespace MengeVis {
 			// std::vector<Selectable*> other;
 			// other.push_back(0);
 
-			std::cout << "CREATE SELECTABLE " << _selectables.size() << std::endl;
+			// std::cout << "CREATE SELECTABLE " << _selectables.size() << std::endl;
 		}
 
 		Selectable::~Selectable() {
-			std::cout << "DELETE SELECTABLE " << _selectables.size() << std::endl;
+			// std::cout << "DELETE SELECTABLE " << _selectables.size() << std::endl;
 		  // 	std::vector< Selectable * >::iterator iter = std::find(_selectables.begin(), _selectables.end(), this);
 		  //   if (iter != _selectables.end())
 		  //   {
@@ -83,14 +83,14 @@ namespace MengeVis {
 		///////////////////////////////////////////////////////////////////////////
 
 		void Selectable::loadSelectName() const {
-			std::cout << "SELECTABLE?2 " << _selectables.size() << std::endl;
+			// std::cout << "SELECTABLE?2 " << _selectables.size() << std::endl;
 			glLoadName( _id );
 		}
 
 		///////////////////////////////////////////////////////////////////////////
 
 		void Selectable::selectStart() {
-			std::cout << "SELECTABLE? " << _selectables.size() << std::endl;
+			// std::cout << "SELECTABLE? " << _selectables.size() << std::endl;
 			glSelectBuffer( BUFFER_SIZE, _buffer );
 			glRenderMode( GL_SELECT );
 			glInitNames();
