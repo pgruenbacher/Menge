@@ -25,7 +25,7 @@ namespace MengeVis {
 		//			Implementation of EventInjectContext
 		////////////////////////////////////////////////////////////////////////////
 
-		EventInjectionContext::EventInjectionContext(Context * ctx) : _childContext(ctx), 
+		EventInjectionContext::EventInjectionContext(Context * ctx) : _childContext(ctx),
 																	  _image(nullptr) {
 			// TODO: I'm initializing these values here because VS2013 doesn't support
 			// initialization at declaration of array data members.
@@ -66,7 +66,7 @@ namespace MengeVis {
 
 		bool EventInjectionContext::selectGL(const SceneGraph::GLScene * scene,
 			const GLCamera & camera, int vWidth, int vHeight, int * selectPoint) {
-			if (_childContext) 
+			if (_childContext)
 				return _childContext->selectGL(scene, camera, vWidth, vHeight, selectPoint);
 			return false;
 		}
@@ -79,7 +79,7 @@ namespace MengeVis {
 				if (itr != _triggers.end()) {
 					Menge::EVENT_SYSTEM->activateExternalTrigger(itr->second);
 				}
-			} 
+			}
 #ifdef USE_MOUSE_WHEEL
 			else if (e.type == SDL_MOUSEWHEEL) {
 				auto itr = _triggers.find(e.wheel.y > 0 ? WHEEL_UP : WHEEL_DOWN);
@@ -95,7 +95,7 @@ namespace MengeVis {
 		////////////////////////////////////////////////////////////////////////////
 
 		ContextResult EventInjectionContext::handleKeyboard( SDL_Event & e) {
-			// TODO: Process the mouse for *this* context - it never does anything with the 
+			// TODO: Process the mouse for *this* context - it never does anything with the
 			//	context result.
 			if (e.key.type == SDL_KEYDOWN) {
 				auto itr = _triggers.find(e.key.keysym.sym);
@@ -122,7 +122,9 @@ namespace MengeVis {
 		////////////////////////////////////////////////////////////////////////////
 
 		void EventInjectionContext::activate() {
+			std::cout << "II AC " << std::endl;
 			if (_childContext) return _childContext->activate();
+			std::cout << "II AC END " << std::endl;
 		}
 
 		////////////////////////////////////////////////////////////////////////////

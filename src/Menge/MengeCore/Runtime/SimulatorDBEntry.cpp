@@ -194,11 +194,12 @@ namespace Menge {
 		}
 		// TODO: Remove time step from the simulator specification!
 		float specTimeStep = _sim->getTimeStep();
-
+		std::cout << "INITING FSM" << std::endl;
 		_fsm = initFSM( behaveFile, _sim, verbose );
 		if ( !_fsm ) {
 			return 0x0;
 		}
+		std::cout << "DONE FSM " << std::endl;
 		if ( !finalize( _sim, _fsm ) ) {
 			delete _sim;
 			delete _fsm;

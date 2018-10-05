@@ -71,10 +71,10 @@ namespace MengeVis {
 			 *	@param		res		Const reference to the ContextResult instance to copy from.
 			 *	@returns	A reference to this context result.
 			 */
-			ContextResult & operator=( const ContextResult & res ) { 
-				_handled=res._handled; 
-				_redraw=res._redraw; 
-				return *this; 
+			ContextResult & operator=( const ContextResult & res ) {
+				_handled=res._handled;
+				_redraw=res._redraw;
+				return *this;
 			}
 
 			/*!
@@ -91,7 +91,7 @@ namespace MengeVis {
 			 *	@returns	True if the result considers the event handled, false otherwise.
 			 */
 			inline bool isHandled() const { return _handled; }
-			
+
 			/*!
 			 *	@brief		Sets the "needs redraw" state to the given boolean state.
 			 *
@@ -99,7 +99,7 @@ namespace MengeVis {
 			 *							redraw, otherwise false.
 			 */
 			inline void setNeedsRedraw( bool state ) { _redraw = state; }
-			
+
 			/*!
 			 *	@brief		Reports if the result believes the event handling requires a redraw.
 			 *
@@ -123,11 +123,11 @@ namespace MengeVis {
 			 *
 			 *	@param		res		The context results to combine with this.
 			 */
-			inline void combine( const ContextResult & res ) { 
-				_handled = _handled || res._handled; 
-				_redraw = _redraw || res._redraw; 
+			inline void combine( const ContextResult & res ) {
+				_handled = _handled || res._handled;
+				_redraw = _redraw || res._redraw;
 			}
-			
+
 			friend class Context;
 		protected:
 			/*!
@@ -145,7 +145,7 @@ namespace MengeVis {
 		/*!
 		 *	@brief		The base context class for defining a how events are handled.
 		 *				It also is responsible drawing UI elements in both screen space
-		 *				and in viewer world space.  While the main viewer handles 
+		 *				and in viewer world space.  While the main viewer handles
 		 *				basic view manipulation, all other interactions should be handled
 		 *				with a context.
 		 */
@@ -168,7 +168,7 @@ namespace MengeVis {
 			 *	@param		vHeight		The height of the viewport (in pixels).
 			 */
 			virtual void drawGL( int vWidth, int vHeight ){}
-			
+
 			/*!
 			 *	@brief		Performs selection based on a click on screen space.
 			 *				Uses the OpenGL selection mechanism.
@@ -192,10 +192,10 @@ namespace MengeVis {
 			 *	@returns	A ContextResult instance reporting if the event was handled and
 			 *				if redrawing is necessary.
 			 */
-			virtual ContextResult handleMouse( SDL_Event & e ) { 
-				return ContextResult( false, false ); 
+			virtual ContextResult handleMouse( SDL_Event & e ) {
+				return ContextResult( false, false );
 			}
-			
+
 			/*!
 			 *	@brief		Give the context the opportunity to respond to a keyboard
 			 *				event.
@@ -204,15 +204,15 @@ namespace MengeVis {
 			 *	@returns	A ContextResult instance reporting if the event was handled and
 			 *				if redrawing is necessary.
 			 */
-			virtual ContextResult handleKeyboard( SDL_Event & e ) { 
-				return ContextResult( false, false ); 
+			virtual ContextResult handleKeyboard( SDL_Event & e ) {
+				return ContextResult( false, false );
 			}
 
 			/*!
 			 *	@brief		Allow the context to update any time-dependent state it might have to
 			 *				the given global time.
 			 */
-			virtual void update() {} 
+			virtual void update() {}
 
 			/*!
 			 *	@brief		Callback for when the OpenGL context is changed.
@@ -222,7 +222,7 @@ namespace MengeVis {
 			/*!
 			 *	@brief		Called when the context is activated.
 			 */
-			virtual void activate() {}
+			virtual void activate() { std::cout << "SCENE CONTEXT.H " << std::endl; }
 
 			/*!
 			 *	@brief		Called when the context is deactivated.
@@ -231,13 +231,13 @@ namespace MengeVis {
 
 		protected:
 			/*!
-			 *	@brief		UI setup - handles the configuration of the opengl context 
+			 *	@brief		UI setup - handles the configuration of the opengl context
 			 *				for orthographic rendering.
 			 *
 			 *	@param		vWidth		The width of the view (in pixels).
 			 *	@param		vHeight		The height of the view (in pixels).
 			 */
-			void uiSetup( int vWidth, int vHeight ); 
+			void uiSetup( int vWidth, int vHeight );
 
 			/*!
 			 *	@brief		Cleans up the OpenGL state after having drawn the UI elements of
@@ -276,7 +276,7 @@ namespace MengeVis {
 			 *	@param		currColor	Indicates if the current opengl color should be used (true)
 			 *							or the text writer's default color should be used (false).
 			 */
-			void writeText( const std::string & txt, const Menge::Math::Vector2 & pos, 
+			void writeText( const std::string & txt, const Menge::Math::Vector2 & pos,
 							bool currColor=false ) const;
 
 			/*!
@@ -291,7 +291,7 @@ namespace MengeVis {
 
 			/*!
 			 *	@brief		Writes the given text at the given location, but anchored
-			 *				based on the radial direction given.  
+			 *				based on the radial direction given.
 			 *	@param		txt			The text to write to the screen.
 			 *	@param		pos			The position, in world coordinates, to place the text
 			 *	@param		dir			A vector representing the direction of the radius at whose
@@ -311,7 +311,7 @@ namespace MengeVis {
 			 *	@param		currColor	Indicates if the current opengl color should be used (true)
 			 *							or the text writer's default color should be used (false).
 			 */
-			void writeAlignedText( const std::string & txt, const Menge::Math::Vector2 & pos, 
+			void writeAlignedText( const std::string & txt, const Menge::Math::Vector2 & pos,
 								   TextWriter::Alignment align, bool currColor=false ) const;
 
 			/*!
@@ -340,16 +340,16 @@ namespace MengeVis {
 			 *	@brief		The current model view matrix
 			 */
 			double _modViewMat[16];
-			
+
 			/*!
 			 *	@brief		The current projection matrix
 			 */
 			double _projMat[16];
-			
+
 			/*!
 			 *	@brief		The current viewport parameters
 			 */
-			int _viewMat[4];	
+			int _viewMat[4];
 		};
 
 		/*!

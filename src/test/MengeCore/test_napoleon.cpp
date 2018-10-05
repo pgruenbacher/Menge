@@ -150,6 +150,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
                             SIM_DURATION, behaveFile, sceneFile, outFile,
                             scbVersion, VERBOSE );
 
+
   if ( sim == 0x0 ) {
     return 1;
   }
@@ -201,18 +202,22 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
       GLScene * scene = new GLScene();
       SimSystem * system = new SimSystem( sim );
       system->populateScene( scene );
+      std::cout << "POPULATE SCENE " << std::endl;
       scene->addSystem( system );
+      std::cout << "FINISH SCENE " << std::endl;
       view.setScene( scene );
-
+      std::cout << "SET SCENE " << std::endl;
       view.setFixedStep( TIME_STEP );
       view.setBGColor( 0.1f, 0.1f, 0.1f );
       MengeVis::Runtime::MengeContext * ctx = new MengeVis::Runtime::MengeContext( sim );
       scene->setContext( new EventInjectionContext( ctx ) );
+      std::cout << "SET CONTEXT " << std::endl;
       view.newGLContext();
       logger.line();
-
+      std::cout << "START RUN " << std::endl;
       view.run();
 
+      delete ctx;
       delete scene; // scene will delete the system.
     }
   } else {
@@ -299,7 +304,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = false; // testing!
+  bool useVis = true; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );
