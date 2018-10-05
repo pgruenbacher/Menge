@@ -352,7 +352,7 @@ TEST(NapoleonTests, pikeFlankCombat) {
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(400);
+  projSpec.setDuration(100);
 
   std::vector<napoleon::AgentData> agents1;
   std::vector<napoleon::AgentData> agents2;
@@ -362,7 +362,7 @@ TEST(NapoleonTests, pikeFlankCombat) {
 
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(400);
+  projSpec.setDuration(100);
   result = testMain(projSpec, agents2);
   ASSERT_EQ(result, 0);
 

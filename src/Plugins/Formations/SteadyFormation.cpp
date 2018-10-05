@@ -31,7 +31,7 @@ void SteadyFormation::mapAgentsToFormation(const FSM * fsm) {
   }
 }
 
-SteadyFormation::SteadyFormation(const std::string& name) : FreeFormation(name) {
+SteadyFormation::SteadyFormation(const std::string& name) : FreeFormation(name), _shouldUpdate(true) {
 };
 
 /////////////////////////////////////////////////////////////////////
