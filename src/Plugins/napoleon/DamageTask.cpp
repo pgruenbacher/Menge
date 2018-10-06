@@ -89,7 +89,7 @@ namespace Napoleon {
       size_t agentId = entry.first;
       float health = entry.second;
       finalEnem  = Menge::SIMULATOR->getAgent(agentId);
-      // std::cout << "ADJUST " << finalEnem->_id << " TIME " << Menge::SIM_TIME << std::endl;
+      std::cout << "ADJUST " << finalEnem->_id << " TIME " << Menge::SIM_TIME << std::endl;
       finalEnem->adjustHealth(health);
     }
     _damages.clear();

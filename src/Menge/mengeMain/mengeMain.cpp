@@ -42,6 +42,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/ProjectSpec.h"
 #include "MengeCore/Runtime/Logger.h"
 #include "MengeCore/Runtime/os.h"
+#include "MengeCore/Core.h"
 #include "MengeCore/Runtime/SimulatorDB.h"
 #include "MengeCore/Agents/Events/EventSystem.h"
 
@@ -259,7 +260,6 @@ void cleanUp() {
   // delete Menge::ELEVATION; // should be cleaned by simulator automatically.
   Menge::ELEVATION = 0x0;
   delete Menge::EVENT_SYSTEM;
-  Menge::EVENT_SYSTEM = new Menge::EventSystem();
 }
 
 /*!
@@ -384,6 +384,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
 }
 
 int main( int argc, char* argv[] ) {
+  Menge::EVENT_SYSTEM = new Menge::EventSystem();
   SimulatorDB simDB;
 	logger.setFile( "log.html" );
 	logger << Logger::INFO_MSG << "initialized logger";

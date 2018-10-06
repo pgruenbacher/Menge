@@ -1,6 +1,6 @@
 #include "Network.h"
 
-namespace napoleon {
+namespace Napoleon {
 
   // Vector2Data::Vector2Data(const Vector2& fromVector) :
   //   x(fromVector.x()),

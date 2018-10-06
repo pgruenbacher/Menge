@@ -16,7 +16,7 @@
  <http://gamma.cs.unc.edu/Menge/>
 */
 
-/*! 
+/*!
  *	@file		EventSystem.h
  *	@brief		The definition of the core event system.
  */
@@ -25,7 +25,7 @@
 #define __EVENT_SYSTEM_H__
 
 #include "MengeCore/mengeCommon.h"
-
+#include "./UserEvent.h"
 #include <vector>
 
 // forward declaration
@@ -65,7 +65,7 @@ namespace Menge {
 	 *	</BFSM>
 	 *	@endcode
 	 *
-	 *	The `<%EventSystem>` tag has a single property: 
+	 *	The `<%EventSystem>` tag has a single property:
 	 *		- `conservative` determines how the event system handles errors in the declaration of
 	 *		events. If the value is non-null, the system is conservative and any errors in the
 	 *		definition of events are treated as *fatal* errors and the program exits (having
@@ -84,8 +84,9 @@ namespace Menge {
 		 */
 		~EventSystem();
 
+		UserEvents userEvents;
 		/*!
-		 *	@brief		Adds an event to the system.  
+		 *	@brief		Adds an event to the system.
 		 *
 		 *	The system becomes the owner of the event and will take responsibility
 		 *	for deleting it.
@@ -117,7 +118,7 @@ namespace Menge {
 		/*!
 		 *	@brief		Registers an external event trigger with the system. Any
 		 *	external event trigger that is not added explicitly will not be
-		 *	available to external systems upon query. 
+		 *	available to external systems upon query.
 		 *
 		 *	@param		trigger		The external event trigger to add to the system.
 		 *	@throws		An event exception if the trigger does not have a unique name.
