@@ -17,6 +17,10 @@ enum MENGE_STATE {
     FIRING,
 };
 
-MENGE_STATE get_state(size_t agent_id);
+namespace Napoleon {
+    MENGE_STATE getState(size_t agent_id);
+    void debugState(size_t agent_id);
+}
+
 
 #endif  // _NAP_STATES_H_

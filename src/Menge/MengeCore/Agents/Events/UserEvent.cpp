@@ -15,7 +15,6 @@ void UserEvents::addUserEvent(const UserEvent* evt) {
 
 
 void UserEvents::perform() {
-  std::cout << "PERFORM " << _userEvents.size() << std::endl;
   for (const UserEvent* evt : _userEvents) {
     evt->perform();
     delete evt;

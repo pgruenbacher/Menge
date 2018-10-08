@@ -2,6 +2,8 @@
 #include "MengeCore/Core.h"
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/BFSM/State.h"
+#include "MengeCore/Agents/BaseAgent.h"
+#include "MengeCore/Agents/SimulatorInterface.h"
 
 MENGE_STATE get_state_from_string(const std::string& name) {
   // std::cout << "NAME " << name << std::endl;
@@ -29,10 +31,17 @@ MENGE_STATE get_state_from_string(const std::string& name) {
   return NONE;
 }
 
-MENGE_STATE get_state(size_t agent_id) {
+MENGE_STATE Napoleon::getState(size_t agent_id) {
     if (!Menge::ACTIVE_FSM) return NONE;
     Menge::BFSM::State* st = Menge::ACTIVE_FSM->getCurrentState(agent_id);
     // std::cout << " ST " << st->getName() << std::endl;
     return get_state_from_string(st->getName());
 }
 
+void Napoleon::debugState(size_t agent_id) {
+    if (!Menge::ACTIVE_FSM) return;
+    Menge::BFSM::State* st = Menge::ACTIVE_FSM->getCurrentState(agent_id);
+    Menge::Agents::BaseAgent* ba = Menge::SIMULATOR->getAgent(agent_id);
+    std::cout << " State " << st->getName() << "ORIENT " << ba->_orient << std::endl;
+    // return get_state_from_string(st->getName());
+}
