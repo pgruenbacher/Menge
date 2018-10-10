@@ -42,6 +42,6 @@ void Napoleon::debugState(size_t agent_id) {
     if (!Menge::ACTIVE_FSM) return;
     Menge::BFSM::State* st = Menge::ACTIVE_FSM->getCurrentState(agent_id);
     Menge::Agents::BaseAgent* ba = Menge::SIMULATOR->getAgent(agent_id);
-    std::cout << " State " << st->getName() << "ORIENT " << ba->_orient << std::endl;
+    std::cout << " State " << st->getName() << "ORIENT " << ba->_orient << " " << ba->_velPref.getPreferred()  << " " << ba->_velPref.getTarget() << std::endl;
     // return get_state_from_string(st->getName());
 }

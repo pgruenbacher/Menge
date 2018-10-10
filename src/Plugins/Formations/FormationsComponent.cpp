@@ -135,6 +135,7 @@ namespace Formations {
       if ( distSq <= 0.0001f ) {
         // I've basically arrived -- speed should be zero.
         speed = 0.f;
+        // we'll also set target dir after arrived in formation?
       } else {
         const float speedSq = speed * speed;
         const float TS_SQD = SIM_TIME_STEP * SIM_TIME_STEP;
@@ -176,6 +177,7 @@ namespace Formations {
       delete st;
       throw ResourceException();
     }
+    // std::cout << "FORM  " << st->getName() << std::endl;
     SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
     FormationComponent* fComp = new FormationComponent();
     fComp->setFormation(FormationPtr( form ));
