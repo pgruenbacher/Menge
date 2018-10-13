@@ -78,12 +78,43 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
+	void FreeFormation::setRelativeOrient(const Menge::Math::Vector2& v) {
+		_relativeOrient = v;
+		_absoluteTarget = Vector2(0.f, 0.f);
+		_inverseTarget = Vector2(0.f, 0.f);
+	}
+	void FreeFormation::setAbsoluteTarget(const Menge::Math::Vector2& v) {
+		_relativeOrient = Vector2(0.f, 0.f);
+		_absoluteTarget = v;
+		_inverseTarget = Vector2(0.f, 0.f);
+	}
+	void FreeFormation::setInverseTarget(const Menge::Math::Vector2& v) {
+		_relativeOrient = Vector2(0.f, 0.f);
+		_absoluteTarget = Vector2(0.f, 0.f);
+		_inverseTarget = v;
+	}
+
+	void FreeFormation::setTargetOrient(const Vector2& pos, PrefVelocity& pVel) {
+		if (_relativeOrient) {
+			pVel.setTarget(pos + _relativeOrient);
+		} else if (_absoluteTarget) {
+			pVel.setTarget(_absoluteTarget);
+		} else if (_inverseTarget) {
+			pVel.setTarget(-_inverseTarget);
+		}
+	}
+
 	FreeFormation::FreeFormation(const std::string& name) : Resource(name){
 		_speed = 0.0f;
 		_direction = Vector2(1,0);
 		_pos = Vector2(0, 0);
 		// _pos is later calculated to be the average of all averagedAgent positions, or something like that.
 		_agentRadius = 0;
+
+		// 0,0 values will be ignore
+		_relativeOrient = Menge::Math::Vector2(0.f, 0.f);
+		_absoluteTarget = Menge::Math::Vector2(0.f, 0.f);
+		_inverseTarget = Menge::Math::Vector2(0.f, 0.f);
 	};
 
 	/////////////////////////////////////////////////////////////////////

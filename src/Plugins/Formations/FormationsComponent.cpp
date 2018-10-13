@@ -136,6 +136,7 @@ namespace Formations {
         // I've basically arrived -- speed should be zero.
         speed = 0.f;
         // we'll also set target dir after arrived in formation?
+        _formation->setTargetOrient(agent->_pos, pVel);
       } else {
         const float speedSq = speed * speed;
         const float TS_SQD = SIM_TIME_STEP * SIM_TIME_STEP;
@@ -193,6 +194,7 @@ namespace Formations {
     _fileNameID = _attrSet.addStringAttribute( "file_name", true /*required*/ );
     _x = _attrSet.addFloatAttribute("x", false);
     _y = _attrSet.addFloatAttribute("y", false);
+
   }
 
   /////////////////////////////////////////////////////////////////////

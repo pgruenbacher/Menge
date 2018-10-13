@@ -150,6 +150,7 @@ namespace Formations {
 		bool getStaticGoalForAgent( const Menge::Agents::BaseAgent * agt,
 							  Menge::Agents::PrefVelocity &pVel, Vector2 &target );
 
+		void setTargetOrient(const Vector2& pos, Menge::Agents::PrefVelocity& pVel);
 		// moved to public by paul
 		/*!
 		 *	@brief		Adds a point to the formation.
@@ -169,6 +170,10 @@ namespace Formations {
 		void setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount);
 		std::map< size_t, size_t > getFormationPointAgent() {return _formationPoint_agent;}
 		const std::map< size_t, const Menge::Agents::BaseAgent * >& getCurrentAgents() const { return _agents; };
+
+		void setRelativeOrient(const Menge::Math::Vector2& v);
+		void setAbsoluteTarget(const Menge::Math::Vector2& v);
+		void setInverseTarget(const Menge::Math::Vector2& v);
 	protected:
 
 		/*!
@@ -249,6 +254,11 @@ namespace Formations {
 		 *	@brief		The preferred speed of the formation.
 		 */
 		float _speed;
+
+		// paul - relative orientation when agents have arrived at their position
+		Menge::Math::Vector2 _relativeOrient; // relative target orientation (usual line, column formation)
+		Menge::Math::Vector2 _absoluteTarget; // absolute target orientation (encirclement)
+		Menge::Math::Vector2 _inverseTarget; // orient away from the position (square defensive)
 
 		/*!
 		 *	@brief		The location of the formation center in world space (0,0).
