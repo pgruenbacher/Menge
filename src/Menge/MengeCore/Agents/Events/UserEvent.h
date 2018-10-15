@@ -27,6 +27,13 @@ public:
     ProjectileCollision(size_t agentId, float dmg) : agentId(agentId), damage(dmg) {}
   };
 
+  struct ToFormation : UserEvent {
+    int groupId;
+    int formationId;
+    void perform() const override;
+    ToFormation(int groupId, int formationId) : groupId(groupId), formationId(formationId) {}
+  };
+
   void addUserEvent(const UserEvent* evt);
   void perform();
 };

@@ -2,7 +2,6 @@
 #define _STAGGER_TASK_H_
 
 #include "MengeCore/BFSM/Tasks/Task.h"
-#include "MengeCore/BFSM/Tasks/TaskFactory.h"
 #include "MengeCore/BFSM/fsmCommon.h"
 
 #include <map>
@@ -14,6 +13,7 @@
 
 using namespace Menge;
 namespace Napoleon {
+using Math::Vector2;
 
 struct StaggerData {
   Vector2 force;
