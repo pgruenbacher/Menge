@@ -104,10 +104,14 @@ namespace Formations {
 		}
 	}
 
+	const Vector2& FreeFormation::getDisplacement() { return _displacement; }
+	void FreeFormation::setDisplacement(Vector2& v) { _displacement = v; }
+
 	FreeFormation::FreeFormation(const std::string& name) : Resource(name){
 		_speed = 0.0f;
 		_direction = Vector2(1,0);
 		_pos = Vector2(0, 0);
+		_displacement = Vector2(0, 0);
 		// _pos is later calculated to be the average of all averagedAgent positions, or something like that.
 		_agentRadius = 0;
 
@@ -122,7 +126,7 @@ namespace Formations {
 	FreeFormation::~FreeFormation(){
 		//we're certainly not allowed to delete the agents!
 		//but we should clear the vectors we control.
-		std::cout << "DELETE FORMAITON ? " << std::endl;
+		// std::cout << "DELETE FORMAITON ? " << std::endl;
 		logger << Logger::INFO_MSG << "delete formation " << getName();
 		std::vector<FormationPoint *>::iterator fpIter = _formationPoints.begin();
 		for ( ; fpIter != _formationPoints.end(); ++fpIter ) {
@@ -450,6 +454,26 @@ namespace Formations {
 
 		return false;
 	};
+
+	int FreeFormation::getNumAgents() const {
+		return _agents.size();
+	}
+
+	int FreeFormation::getNumArrived() const {
+		int num = 0;
+		for (const auto v : _agents) {
+			size_t id = v.first;
+			const BaseAgent* agt = v.second;
+			if (_agent_formationPoint.find(agt->_id) != _agent_formationPoint.end()) {
+		    const Vector2& target = _formationPoints[ _agent_formationPoint.find(agt->_id)->second ]->_pos;
+		    // std::cout << "DIST " << absSq(agt->_pos - target - _displacement) << " "<< agt->_pos << " " << target + _displacement << std::endl;
+		    if (absSq(agt->_pos - target - _displacement) < 1e-3) {
+		    	++num;
+		    }
+			}
+		}
+		return num;
+	}
 
 	bool FreeFormation::getStaticGoalForAgent( const BaseAgent * agt, PrefVelocity &pVel, Vector2 &target) {
 		// The goal point is the agent's corresponding sential point (with the point moving the

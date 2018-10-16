@@ -81,6 +81,8 @@ namespace Formations {
 		 */
 		~FreeFormation();
 
+		int getNumArrived() const;
+		int getNumAgents() const;
 		/*!
 		 *	@brief		Reports the message label for this resource.
 		 *
@@ -174,6 +176,8 @@ namespace Formations {
 		void setRelativeOrient(const Menge::Math::Vector2& v);
 		void setAbsoluteTarget(const Menge::Math::Vector2& v);
 		void setInverseTarget(const Menge::Math::Vector2& v);
+		const Menge::Math::Vector2& getDisplacement();
+		void setDisplacement(Menge::Math::Vector2&);
 	protected:
 
 		/*!
@@ -264,6 +268,10 @@ namespace Formations {
 		 *	@brief		The location of the formation center in world space (0,0).
 		 */
 		Menge::Math::Vector2 _pos;
+		/*!
+		 *	@brief		displacement.
+		 */
+		Menge::Math::Vector2 _displacement;
 
 		/*!
 		 *	@brief		The instantaneous max distance from the center of the formation to normalized agent positions

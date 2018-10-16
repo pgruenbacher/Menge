@@ -9,8 +9,8 @@ using namespace Menge;
 namespace Napoleon {
 
 struct UserGroupCommand {
-  bool move_to_formation;
-  bool can_fire;
+  bool moveToFormation;
+  bool canFire;
 };
 
 /*!
@@ -28,6 +28,7 @@ class UserCommandTask : public Menge::BFSM::Task {
   ~UserCommandTask();
 
   void setGroupCommand(int id, UserGroupCommand cmd) { _group_commands[id] = cmd; }
+  const UserGroupCommand& getGroupCommand(int id) { return _group_commands[id]; }
 
   virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
       Menge::BFSM::TaskException);

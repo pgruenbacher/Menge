@@ -12,7 +12,7 @@ void UserEvents::ProjectileCollision::perform() const {
 void UserEvents::ToFormation::perform() const {
   Napoleon::UserCommandTask* tsk = Napoleon::UserCommandTask::getSingleton();
   Napoleon::UserGroupCommand cmd;
-  cmd.move_to_formation = true;
+  cmd.moveToFormation = true;
   tsk->setGroupCommand(groupId, cmd);
   // const size_t NUM_AGENT = Menge::SIMULATOR->getNumAgents();
   // for ( size_t i = 0; i < NUM_AGENT; ++i ) {

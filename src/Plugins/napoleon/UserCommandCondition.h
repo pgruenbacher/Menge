@@ -19,6 +19,8 @@ namespace Napoleon {
       // UserCommandCondition();
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
       UserCommandCondition * copy();
+      bool _canFire;
+      bool _toFormation;
   };
 
   /*!
@@ -38,6 +40,9 @@ namespace Napoleon {
     }
 
   protected:
+
+    size_t _canFireID;
+    size_t _toFormationID;
 
     virtual Condition * instance() const { return new UserCommandCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
