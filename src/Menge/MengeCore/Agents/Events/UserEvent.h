@@ -34,6 +34,12 @@ public:
     ToFormation(int groupId, int formationId) : groupId(groupId), formationId(formationId) {}
   };
 
+  struct CanFire : UserEvent {
+    int groupId;
+    void perform() const override;
+    CanFire(int groupId) : groupId(groupId) {}
+  };
+
   void addUserEvent(const UserEvent* evt);
   void perform();
 };

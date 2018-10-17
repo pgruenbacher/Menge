@@ -9,6 +9,13 @@ void UserEvents::ProjectileCollision::perform() const {
   dt->adjustHealth(agentId, damage);
 }
 
+void UserEvents::CanFire::perform() const {
+  Napoleon::UserCommandTask* tsk = Napoleon::UserCommandTask::getSingleton();
+  Napoleon::UserGroupCommand cmd = tsk->getGroupCommand(groupId);
+  cmd.canFire = true;
+  tsk->setGroupCommand(groupId, cmd);
+}
+
 void UserEvents::ToFormation::perform() const {
   Napoleon::UserCommandTask* tsk = Napoleon::UserCommandTask::getSingleton();
   Napoleon::UserGroupCommand cmd;
