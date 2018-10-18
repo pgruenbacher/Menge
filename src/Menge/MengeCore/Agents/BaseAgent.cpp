@@ -205,10 +205,12 @@ namespace Menge {
 			} else if (speed < speedThresh && _velPref.hasTarget() && !(targetDir.x() == 0 && targetDir.y() == 0)) {
 				// if slow enough, face target.
 				// make sure we're not already on the target...
+				// std::cout << "USE TARGET DIR " << targetDir << std::endl;
 				newOrient = targetDir;
 				newOrient.normalize();
 			} else {
 				newOrient = _orient;
+				// std::cout << "JUST USE OREINT " << int(speed < speedThresh) << " " << (_velPref.getTarget()) << " " << int(_velPref.hasTarget()) << std::endl;
 				// newOrient = targetDir;
 				// newOrient.normalize();
 				// prefDir *can* be zero if we've arrived at goal.  Only use it if it's non-zero.

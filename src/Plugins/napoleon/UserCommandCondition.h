@@ -1,5 +1,5 @@
-#ifndef _ENEMY_NEAR_COND_H_
-#define _ENEMY_NEAR_COND_H_
+#ifndef _USER_COMMAND_CONDITION_H_
+#define _USER_COMMAND_CONDITION_H_
 
 #include "MengeCore/BFSM/Transitions/Condition.h"
 #include "MengeCore/CoreConfig.h"
@@ -13,38 +13,40 @@ using Menge::BFSM::ConditionFactory;
 
 namespace Napoleon {
 
-  class MENGE_API EnemyNearCondition : public Condition {
-    float _distSquared;
+  class MENGE_API UserCommandCondition : public Condition {
+
     public:
-      bool _isClose;
-      EnemyNearCondition();
+      // UserCommandCondition();
       virtual bool conditionMet( BaseAgent * agent, const Goal * goal );
-      EnemyNearCondition * copy();
-      void setDist(float dist);
+      UserCommandCondition * copy();
+      bool _canFire;
+      bool _toFormation;
   };
 
   /*!
    *  @brief    The factory for creating the TimerCondition
    */
-  class MENGE_API EnemyNearCondFactory : public ConditionFactory {
+  class MENGE_API UserCommandConditionFactory : public ConditionFactory {
   public:
     /*!
      *  @brief    Constructor.
      */
-    EnemyNearCondFactory();
+    UserCommandConditionFactory();
 
-    virtual const char * name() const { return "enemy_near"; }
+    virtual const char * name() const { return "user_command_condition"; }
 
     virtual const char * description() const {
-      return "Enemy near condition.";
+      return "Facing target enem condition.";
     }
 
   protected:
-    virtual Condition * instance() const { return new EnemyNearCondition(); }
+
+    size_t _canFireID;
+    size_t _toFormationID;
+
+    virtual Condition * instance() const { return new UserCommandCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,
                  const std::string & behaveFldr ) const;
-    size_t _distID;
-    size_t _isCloseID;
   };
 } // namespace Napoleon
-#endif // _ENEMY_NEAR_COND_H_
+#endif // _USER_COMMAND_CONDITION_H_

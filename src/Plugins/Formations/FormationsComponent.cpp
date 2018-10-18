@@ -91,12 +91,12 @@ namespace Formations {
 
   void FormationComponent::setFormation(FormationPtr form){
     _formation = form;
-    std::cout << "SET FORMATION " << std::endl;
+    // std::cout << "SET FORMATION " << std::endl;
   };
 
-  void FormationComponent::setDisplacement(Vector2 v){
-    _displacment = v;
-  };
+  // void FormationComponent::setDisplacement(Vector2 v){
+  //   _displacment = v;
+  // };
 
   void FormationComponent::loadSetFormation(const std::string& fname) {
     try {
@@ -118,7 +118,7 @@ namespace Formations {
     if ( modify ) {
 
       // target + displacement - agent position
-      Vector2 disp = target + _displacment - agent->_pos;
+      Vector2 disp = target + _formation->getDisplacement() - agent->_pos;
       const float distSq = absSq( disp );
       Vector2 dir;
       if ( distSq > 1e-8 ) {
@@ -135,6 +135,8 @@ namespace Formations {
       if ( distSq <= 0.0001f ) {
         // I've basically arrived -- speed should be zero.
         speed = 0.f;
+        // we'll also set target dir after arrived in formation?
+        _formation->setTargetOrient(agent->_pos, pVel);
       } else {
         const float speedSq = speed * speed;
         const float TS_SQD = SIM_TIME_STEP * SIM_TIME_STEP;
@@ -176,6 +178,7 @@ namespace Formations {
       delete st;
       throw ResourceException();
     }
+    // std::cout << "FORM  " << st->getName() << std::endl;
     SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
     FormationComponent* fComp = new FormationComponent();
     fComp->setFormation(FormationPtr( form ));
@@ -191,6 +194,7 @@ namespace Formations {
     _fileNameID = _attrSet.addStringAttribute( "file_name", true /*required*/ );
     _x = _attrSet.addFloatAttribute("x", false);
     _y = _attrSet.addFloatAttribute("y", false);
+
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -216,8 +220,10 @@ namespace Formations {
     // nav mesh
     FormationPtr formPtr;
     try {
-      formationComp->setFormation(loadFormation( fName ));
-      formationComp->setDisplacement(Vector2(_attrSet.getFloat(_x), _attrSet.getFloat(_y)));
+      formPtr = loadFormation(fName);
+      Vector2 disp = Vector2(_attrSet.getFloat(_x), _attrSet.getFloat(_y));
+      formPtr->setDisplacement(disp);
+      formationComp->setFormation(formPtr);
     } catch ( Menge::ResourceException ) {
       logger << Logger::ERR_MSG << "Couldn't instantiate the formation referenced on line ";
       logger << node->Row() << ".";

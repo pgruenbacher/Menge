@@ -46,6 +46,7 @@ namespace Menge {
 			 *	@brief		Constructor.
 			 */
 			GoalFactory();
+			~GoalFactory() { std::cout << "DELETE GOAL FACTORY " << std::endl; }
 
 		protected:
 			/*!
@@ -63,12 +64,12 @@ namespace Menge {
 			 *	@param		behaveFldr		The path to the behavior file.  If the condition
 			 *								references resources in the file system, it should be
 			 *								defined relative to the behavior file location.  This
-			 *								is the folder containing that path. 
+			 *								is the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( Goal * goal, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
-		
+
 			/*!
 			 *	@brief		The identifier for the "id" size_t attribute.
 			 */

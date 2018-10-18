@@ -150,7 +150,7 @@ namespace Menge {
 			 *	@returns	A singe point in space which corresponds to the preferred direction.
 			 */
 			inline Math::Vector2 getTarget() const { return _target; }
-			inline bool hasTarget() const { return _target.x() != 0.0 && _target.y() != 0.0; }
+			inline bool hasTarget() const { return _target.x() != 0.0 || _target.y() != 0.0; }
 
 			/*!
 			 *	@brief		Sets the target of the preferred velocity.

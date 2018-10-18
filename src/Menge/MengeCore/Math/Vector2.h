@@ -225,6 +225,11 @@ namespace Menge {
 			  return _x == v._x && _y == v._y;
 			}
 
+			explicit inline operator bool() const {
+				// (Vector2(0.f, 0.f)) == false
+				return _x != 0 || _y != 0;
+			}
+
 			/*!
 			*  @brief		Reports if this vector is the different from the given
 			*				vector.

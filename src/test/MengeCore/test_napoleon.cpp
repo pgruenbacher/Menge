@@ -238,7 +238,7 @@ int simMain( SimulatorDBEntry * dbEntry, const std::string & behaveFile,
 
 
 
-void copyAgents(std::vector<napoleon::AgentData>& result) {
+void copyAgents(std::vector<Napoleon::AgentData>& result) {
   const Menge::Agents::SimulatorInterface* sim = Menge::SIMULATOR;
   for (size_t i = 0; i < sim->getNumAgents(); ++i) {
     const Menge::Agents::BaseAgent* agt = sim->getAgent(i);
@@ -261,10 +261,9 @@ void cleanUp() {
   // delete Menge::ELEVATION; // should be cleaned by simulator automatically.
   Menge::ELEVATION = 0x0;
   delete Menge::EVENT_SYSTEM;
-  Menge::EVENT_SYSTEM = new Menge::EventSystem();
 }
 
-int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsResult ) {
+int testMain( ProjectSpec& projSpec, std::vector<Napoleon::AgentData>& agentsResult ) {
   logger.setFile( "log.html" );
   // logger << Logger::INFO_MSG << "initialized logger";
 
@@ -275,6 +274,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
   // std::string tail;
   // os::path::split( absExePath, ROOT, tail );
   ROOT = "Exe";
+  Menge::EVENT_SYSTEM = new Menge::EventSystem();
   SimulatorDB simDB;
   CorePluginEngine plugins( &simDB );
   // logger.line();
@@ -337,8 +337,8 @@ TEST(NapoleonTests, pikeCombat) {
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombat.xml");
   projSpec.setDuration(400);
 
-  std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
-  std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
+  std::vector<Napoleon::AgentData> agents1 = std::vector<Napoleon::AgentData>();
+  std::vector<Napoleon::AgentData> agents2 = std::vector<Napoleon::AgentData>();
 
   int result = testMain(projSpec, agents1);
   ASSERT_EQ(result, 0);
@@ -357,17 +357,17 @@ TEST(NapoleonTests, pikeFlankCombat) {
   ProjectSpec projSpec;
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(100);
+  projSpec.setDuration(400);
 
-  std::vector<napoleon::AgentData> agents1;
-  std::vector<napoleon::AgentData> agents2;
+  std::vector<Napoleon::AgentData> agents1;
+  std::vector<Napoleon::AgentData> agents2;
 
   int result = testMain(projSpec, agents1);
   ASSERT_EQ(result, 0);
 
 
   projSpec.loadFromXML("./examples/plugin/pikeCombat/pikeCombatFlank.xml");
-  projSpec.setDuration(100);
+  projSpec.setDuration(400);
   result = testMain(projSpec, agents2);
   ASSERT_EQ(result, 0);
 
@@ -384,8 +384,8 @@ TEST(NapoleonTests, formationCombat) {
   projSpec.loadFromXML("./examples/plugin/formationCombat.xml");
   projSpec.setDuration(400);
 
-  std::vector<napoleon::AgentData> agents1 = std::vector<napoleon::AgentData>();
-  std::vector<napoleon::AgentData> agents2 = std::vector<napoleon::AgentData>();
+  std::vector<Napoleon::AgentData> agents1 = std::vector<Napoleon::AgentData>();
+  std::vector<Napoleon::AgentData> agents2 = std::vector<Napoleon::AgentData>();
 
   int result = testMain(projSpec, agents1);
   ASSERT_EQ(result, 0);

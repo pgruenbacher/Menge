@@ -73,7 +73,7 @@ class MENGE_API FormationComponent : public VelComponent {
   VelComponent* parseVelComponent(TiXmlElement* node,
                                   const std::string& behaveFldr);
 
-  Vector2 _displacment;
+  // Vector2 _displacment;
 
  public:
 
@@ -82,9 +82,8 @@ class MENGE_API FormationComponent : public VelComponent {
   void registerAgent(const BaseAgent* agent);
   void unregisterAgent(const BaseAgent* agent);
   void setFormation(FormationPtr form);
-  FormationPtr getStaticGoalForAgent() { return _formation; }
-  FormationPtr getFormation() { return _formation; }
-  void setDisplacement(Vector2 v);
+  FormationPtr getFormation() const { return _formation; }
+  // void setDisplacement(Vector2 v);
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;

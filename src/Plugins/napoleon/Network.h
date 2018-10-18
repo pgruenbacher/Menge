@@ -6,7 +6,7 @@
 #include "MengeCore/Math/Vector2.h"
 #include "MengeCore/Agents/PrefVelocity.h"
 
-namespace napoleon {
+namespace Napoleon {
 
   using Menge::Agents::BaseAgent;
   using Menge::Agents::PrefVelocity;
