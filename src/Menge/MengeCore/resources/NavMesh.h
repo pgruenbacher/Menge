@@ -67,7 +67,7 @@ namespace Menge {
 		 */
 		NMNodeGroup( unsigned int first, unsigned int last ): _first(first), _last(last) {}
 
-		/*! 
+		/*!
 		 *	@brief		Returns the global identifer of the group's ith node.
 		 *
 		 *	@param		i		The ith index in this group.
@@ -300,7 +300,7 @@ namespace Menge {
 		 *				invalid.
 		 */
 		static Resource * load( const std::string & fileName );
-		
+
 		/*!
 		 *	@brief		Allocates memory for the given number of vertices.
 		 *				All previous vertices will be deleted.
@@ -376,13 +376,13 @@ namespace Menge {
 
 		/*!
 		 *	@brief		Gets the navigation mesh's obstacles for the simulator.
-		 *  
+		 *
 		 *  @returns    Vertex lists of the various obstacles
 		 */
 		std::vector<Agents::ObstacleVertexList> getObstacles();
 
 		/*!
-		 *	@brief		The unique label for this data type to be used with 
+		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.
 		 */
 		static const std::string LABEL;
@@ -418,7 +418,7 @@ namespace Menge {
 
 		/*!
 		 *	@brief		An array containing all edges.
-		 */	
+		 */
 		NavMeshEdge * _edges;
 
 		/*!
@@ -449,7 +449,7 @@ namespace Menge {
 	 *	@returns			The NavMeshPtr containing the data.
 	 *	@throws				A ResourceException if the data is unable to be instantiated.
 	 */
-	NavMeshPtr loadNavMesh( const std::string & fileName ) throw ( ResourceException );
+	NavMeshPtr loadNavMesh( const std::string & fileName );
 
 }	// namespace Menge
 

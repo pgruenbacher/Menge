@@ -46,7 +46,7 @@ namespace Menge {
 
 	/*!
 	 *	@brief		A roadmap graph and the infrastructure for performing graph
-	 *				searches.  NOTE: This implementation assumes that the graph 
+	 *				searches.  NOTE: This implementation assumes that the graph
 	 *				doesn't change.
 	 */
 	class MENGE_API Graph : public Resource {
@@ -91,7 +91,7 @@ namespace Menge {
 		 *				invalid.
 		 */
 		static Resource * load( const std::string & fileName );
-		
+
 		/*!
 		 *	@brief		Compute path
 		 *
@@ -121,7 +121,7 @@ namespace Menge {
 		const GraphVertex * getVertex( size_t i ) const;
 
 		/*!
-		 *	@brief		The unique label for this data type to be used with 
+		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.
 		 */
 		static const std::string LABEL;
@@ -196,7 +196,7 @@ namespace Menge {
 		 *				There are N entries in a single heap
 		 *				and one heap per thread.
 		 */
-		unsigned int * _HEAP;	
+		unsigned int * _HEAP;
 
 		/*!
 		 *	@brief		The full set of data for reconstructing the path.
@@ -213,7 +213,7 @@ namespace Menge {
 		 *				The first N values in a block are the f values, the next N are the g
 		 *				values, and the last set of N values are the h values.
 		 */
-		float * _DATA;	
+		float * _DATA;
 
 		/*!
 		 *	@brief		Block of data for reportin node state (if its in a heap or if its
@@ -235,7 +235,7 @@ namespace Menge {
 	 *	@returns	        The GraphPtr containing the data.
 	 *	@throws		        A  ResourceException if the data is unable to be instantiated.
 	 */
-	GraphPtr loadGraph( const std::string & fileName ) throw ( ResourceException );
+	GraphPtr loadGraph( const std::string & fileName );
 }	// namespace Menge
 
 #endif	// __GRAPH_H__

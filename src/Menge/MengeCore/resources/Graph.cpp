@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -90,7 +90,7 @@ namespace Menge {
 	Resource * Graph::load( const std::string & fileName ) {
 		std::ifstream f;
 		f.open( fileName.c_str(), std::ios::in );
-		
+
 		if ( !f.is_open() ) {
 			logger << Logger::ERR_MSG << "Error opening the roadmap file: " << fileName << "\n";
 			return 0x0;
@@ -134,7 +134,7 @@ namespace Menge {
 		}
 
 		bool validEdges = true;
-		
+
 		for ( size_t e = 0; e < eCount; ++e ) {
 			GraphEdge edge;
 			int from, to;
@@ -201,7 +201,7 @@ namespace Menge {
 		size_t endID = getClosestVertex( goalPos, agent->_radius );
 		// Compute the path based on those nodes
 		RoadMapPath * path = getPath( startID, endID );
-		if ( path ) { 
+		if ( path ) {
 			path->setGoalPos( goal );
 		}
 		return path;
@@ -234,7 +234,7 @@ namespace Menge {
 		}
 
 		assert( bestID != -1 && "Roadmap Graph was unable to find a visible vertex" );
-		
+
 		return bestID;
 	}
 
@@ -252,7 +252,7 @@ namespace Menge {
 	#else
 		AStarMinHeap heap( _HEAP, _DATA, _STATE, _PATH, N );
 	#endif
-		
+
 		const Vector2 goalPos( _vertices[ endID ].getPosition() );
 
 		heap.g( (unsigned int)startID, 0 );
@@ -278,7 +278,7 @@ namespace Menge {
 				if ( heap.isVisited( (unsigned int)y ) ) continue;
 				float distance = vert.getDistance( n );
 				float tempG = heap.g( x ) + distance;
-				
+
 				bool inHeap = heap.isInHeap( (unsigned int)y );
 				if ( ! inHeap ) {
 					heap.h( (unsigned int)y, computeH( y, goalPos ) );
@@ -350,7 +350,7 @@ namespace Menge {
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	GraphPtr loadGraph( const std::string & fileName ) throw ( ResourceException ) {
+	GraphPtr loadGraph( const std::string & fileName ) {
 		Resource * rsrc = ResourceManager::getResource( fileName, &Graph::load, Graph::LABEL );
 		if ( rsrc == 0x0 ) {
 			logger << Logger::ERR_MSG << "No resource available\n";

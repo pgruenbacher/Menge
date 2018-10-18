@@ -38,7 +38,7 @@ namespace Terrain {
 	class EXPORT_API HeightField : public Menge::Resource {
 	public:
 		/*!
-		 *	@brief		Constructor.  
+		 *	@brief		Constructor.
 		 *
 		 *	@param		fileName		The height field specification file used to define the height field.
 		 */
@@ -91,7 +91,7 @@ namespace Terrain {
 		 *				invalid.
 		 */
 		static Resource * load( const std::string & fileName );
-		
+
 		/*!
 		 *	@brief		Given the height field information, computes normals for
 		 *				the data.
@@ -108,7 +108,7 @@ namespace Terrain {
 		 *	@returns	The height at the position (x, y).
 		 */
 		float getHeightAt( float x, float y ) const;
-		
+
 		/*!
 		 *	@brief		Returns the height field normal at the given world position.  If the world
 		 *				position lies outside of the domain of the height field, the normal of the
@@ -121,7 +121,7 @@ namespace Terrain {
 		Menge::Math::Vector3 getNormalAt( float x, float y ) const;
 
 		/*!
-		 *	@brief		Returns the height at the given cell center.  
+		 *	@brief		Returns the height at the given cell center.
 		 *				The behavior is undefined if the indices fall outside the array of cell values.
 		 *
 		 *	@param		x		The index along the x-axis..
@@ -131,7 +131,7 @@ namespace Terrain {
 		float getHeightAtCell( int x, int y ) const;
 
 		/*!
-		 *	@brief		Returns the normal at the given cell center.  
+		 *	@brief		Returns the normal at the given cell center.
 		 *				The behavior is undefined if the indices fall outside the array of cell values.
 		 *
 		 *	@param		x		The index along the x-axis..
@@ -176,7 +176,7 @@ namespace Terrain {
 		float getCornerY() const { return _ypos; }
 
 		/*!
-		 *	@brief		The unique label for this data type to be used with 
+		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.
 		 */
 		static const std::string LABEL;
@@ -199,7 +199,7 @@ namespace Terrain {
 		 *	@brief		The number of cells in the width (x) direction.
 		 */
 		int _W;
-		
+
 		/*!
 		 *	@brief		The number of cells in the height (z) direction.
 		 */
@@ -238,6 +238,6 @@ typedef Menge::ResourcePtr< HeightField > HeightFieldPtr;
  *	@returns	The HeightFieldPtr containing the data.
  *	@throws		A ResourceException if the data is unable to be instantiated.
  */
-HeightFieldPtr loadHeightField( const std::string & fileName ) throw ( Menge::ResourceException );
+HeightFieldPtr loadHeightField( const std::string & fileName );
 }	// namespace Terrain
 #endif

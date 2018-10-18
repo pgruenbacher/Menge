@@ -21,7 +21,7 @@
 
 /*!
  *	@file	NavMeshLocalizerTask.h
- *	@brief	A task based on the NavMeshLocalizer so that it updates 
+ *	@brief	A task based on the NavMeshLocalizer so that it updates
  *			its tracked agent positions at every FSM time step.
  */
 
@@ -65,7 +65,7 @@ namespace Menge {
 			 *	@throws		A TaskFatalException if there is a fatal error that
 			 *				should arrest execution of the simulation.
 			 */
-			virtual void doWork( const FSM * fsm ) throw( TaskException );
+			virtual void doWork( const FSM * fsm );
 
 			/*!
 			 *	@brief		String representation of the task
@@ -92,6 +92,6 @@ namespace Menge {
 			 */
 			NavMeshLocalizerPtr _localizer;
 		};
-	}	 // namespace BFSM 
+	}	 // namespace BFSM
 }	// namespace Menge
 #endif	// __NAV_MESH_LOCALIZER_TASK_H__

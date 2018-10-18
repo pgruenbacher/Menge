@@ -159,8 +159,7 @@ namespace Menge {
 			 *	@param			value			A string containing the value for the parameter.
 			 *	@returns		True if the parameter was successfully set, false otherwise.
 			 */
-			virtual bool setExpParam( const std::string & paramName, const std::string & value )
-				throw( XMLParamException );
+			virtual bool setExpParam( const std::string & paramName, const std::string & value );
 
 		protected:
 
@@ -266,8 +265,7 @@ namespace Menge {
 
 		template < class Agent >
 		bool SimulatorBase<Agent>::setExpParam( const std::string & paramName,
-												const std::string & value )
-												throw( XMLParamException ) {
+												const std::string & value ) {
 
 			if ( paramName == "time_step" ) {
 				try {

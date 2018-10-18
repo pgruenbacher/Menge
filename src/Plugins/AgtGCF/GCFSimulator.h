@@ -73,8 +73,7 @@ namespace GCF {
 		 *	@param			value			A string containing the value for the parameter.
 		 *	@returns		whether or not parameters were successfully set
 		 */
-		virtual bool setExpParam( const std::string & paramName, const std::string & value )
-			throw(  Menge::Agents::XMLParamException );
+		virtual bool setExpParam( const std::string & paramName, const std::string & value );
 
 		/*!
 		 *	@brief	After all agents and all obstacles have been added to the scene
@@ -91,7 +90,7 @@ namespace GCF {
 	protected:
 		friend class Agent;
 		friend class AgentContext;
-		
+
 		/*!
 		 *	@brief		The reaction time used to define the driving force
 		 */

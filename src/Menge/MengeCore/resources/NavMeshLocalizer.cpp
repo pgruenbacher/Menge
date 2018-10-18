@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -177,24 +177,24 @@ namespace Menge {
 			if ( _locations[ id ].isPath() ) {
 				path = _locations[ id ]._path;
 			}
-		} 
+		}
 		_locLock.releaseRead();
 		return path;
 	}
 
 	/////////////////////////////////////////////////////////////////////
 
-	void NavMeshLocalizer::setPath( size_t agentID, PortalPath * path ) { 
+	void NavMeshLocalizer::setPath( size_t agentID, PortalPath * path ) {
 		_locLock.lockWrite();
-		_locations[ agentID ].setPath( path ); 
+		_locations[ agentID ].setPath( path );
 		_locLock.releaseWrite();
 	}
 
 	/////////////////////////////////////////////////////////////////////
 
-	void NavMeshLocalizer::setNode( size_t agentID, unsigned int nodeID ) { 
+	void NavMeshLocalizer::setNode( size_t agentID, unsigned int nodeID ) {
 		_locLock.lockWrite();
-		_locations[ agentID ].setNode( nodeID ); 
+		_locations[ agentID ].setNode( nodeID );
 		_locLock.releaseWrite();
 	}
 
@@ -231,7 +231,7 @@ namespace Menge {
 			}
 			newLoc = (unsigned int)loc._nodeID;
 		}
-		
+
 		if ( newLoc != oldLoc ) {
 			if ( newLoc == NavMeshLocation::NO_NODE ) {
 				newLoc = static_cast< unsigned int>( _navMesh->getNodeCount() );
@@ -257,12 +257,12 @@ namespace Menge {
 								break;
 							}
 						}
-					}	
+					}
 				}
 				_nodeOccupants[ newLoc ].insert( ID );
 			}
 		}
-		
+
 		return newLoc;
 	}
 
@@ -301,7 +301,7 @@ namespace Menge {
 				if (node == NavMeshLocation::NO_NODE) {
 					// TODO(curds01) 10/1/2016 - This cast is bad because I can lose precision
 					// (after I get 4 billion nodes...)
-					const unsigned int TOTAL_NODES = 
+					const unsigned int TOTAL_NODES =
 						static_cast< unsigned int >(_navMesh->getNodeCount());
 					node = findNodeInRange(p,grp->_first + 1, TOTAL_NODES);
 				}
@@ -336,7 +336,7 @@ namespace Menge {
 		}
 		return NavMeshLocation::NO_NODE;
 	}
-		
+
 	/////////////////////////////////////////////////////////////////////
 
 	Resource * NavMeshLocalizer::load( const std::string & fileName ) {
@@ -353,8 +353,7 @@ namespace Menge {
 
 	/////////////////////////////////////////////////////////////////////
 
-	NavMeshLocalizerPtr loadNavMeshLocalizer( const std::string & fileName, bool usePlanner )
-		throw ( ResourceException ) {
+	NavMeshLocalizerPtr loadNavMeshLocalizer( const std::string & fileName, bool usePlanner ) {
 		Resource * rsrc = ResourceManager::getResource( fileName,
 														&NavMeshLocalizer::load,
 														NavMeshLocalizer::LABEL );
@@ -375,7 +374,7 @@ namespace Menge {
 				nml->setPlanner( planner );
 			}
 		}
-		
+
 		return NavMeshLocalizerPtr( nml );
 	}
 }	// namespace Menge

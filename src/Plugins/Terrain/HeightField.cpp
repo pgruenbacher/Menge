@@ -3,33 +3,33 @@
 License
 
 Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill. 
+Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
 All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and its documentation 
-for educational, research, and non-profit purposes, without fee, and without a 
-written agreement is hereby granted, provided that the above copyright notice, 
+Permission to use, copy, modify, and distribute this software and its documentation
+for educational, research, and non-profit purposes, without fee, and without a
+written agreement is hereby granted, provided that the above copyright notice,
 this paragraph, and the following four paragraphs appear in all copies.
 
-This software program and documentation are copyrighted by the University of North 
-Carolina at Chapel Hill. The software program and documentation are supplied "as is," 
-without any accompanying services from the University of North Carolina at Chapel 
-Hill or the authors. The University of North Carolina at Chapel Hill and the 
-authors do not warrant that the operation of the program will be uninterrupted 
-or error-free. The end-user understands that the program was developed for research 
+This software program and documentation are copyrighted by the University of North
+Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
+without any accompanying services from the University of North Carolina at Chapel
+Hill or the authors. The University of North Carolina at Chapel Hill and the
+authors do not warrant that the operation of the program will be uninterrupted
+or error-free. The end-user understands that the program was developed for research
 purposes and is advised not to rely exclusively on the program for any reason.
 
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS 
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS 
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE 
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
+BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
 AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY 
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY 
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND 
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS 
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
+DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
+OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
@@ -93,7 +93,7 @@ namespace Terrain {
 		_cellSize = cellSize;
 		_xpos = xpos;
 		_ypos = zpos;
-		
+
 		// TODO: Catch errors and exceptions
 		Image *img = loadImage( imgName );
 		if ( img == 0x0 ) {
@@ -104,7 +104,7 @@ namespace Terrain {
 		_W = img->data()->getWidth();
 		_H = img->data()->getHeight();
 
-		// TODO: 
+		// TODO:
 		//	Do this in one block of contiguous memory
 		_heightMap = new float*[ _W ];
 		_normalMap = new Vector3*[ _W ];
@@ -113,7 +113,7 @@ namespace Terrain {
 			_heightMap[ x ] = new float[ _H ];
 			_normalMap[ x ] = new Vector3[ _H ];
 		}
-		
+
 		const float VSCALE = vertScale / 255.f;
 		for (int x = 0; x < _W; x++ ) {
 			for (int z = 0; z < _H; z++ ) {
@@ -144,7 +144,7 @@ namespace Terrain {
 			return 0x0;
 		}
 
-		TiXmlElement* rootNode = xml.RootElement();	
+		TiXmlElement* rootNode = xml.RootElement();
 		if( ! rootNode ) {
 			logger << Logger::ERR_MSG << "Height field configuration (" << fileName;
 			logger << ") does not contain a root element.";
@@ -161,7 +161,7 @@ namespace Terrain {
 		Menge::os::path::absPath( fileName, absPath );
 		std::string junk;
 		std::string sceneFldr;
-		Menge::os::path::split( absPath, sceneFldr, junk );	
+		Menge::os::path::split( absPath, sceneFldr, junk );
 
 		std::string imgName;
 		double d;
@@ -175,7 +175,7 @@ namespace Terrain {
 			valid = false;
 		}
 		imgName = nameCStr;
-		
+
 		if ( rootNode->Attribute( "cell_size", &d ) ) {
 			cellSize = (float)d;
 		} else {
@@ -183,7 +183,7 @@ namespace Terrain {
 			logger << " is missing the required \"cell_size\" attribute.";
 			valid = false;
 		}
-		
+
 		if ( rootNode->Attribute( "vert_scale", &d ) ) {
 			vertScale = (float)d;
 		} else {
@@ -191,7 +191,7 @@ namespace Terrain {
 			logger << " is missing the required \"vert_scale\" attribute.";
 			valid = false;
 		}
-		
+
 		if ( rootNode->Attribute( "x", &d ) ) {
 			xPos = (float)d;
 		} else {
@@ -199,7 +199,7 @@ namespace Terrain {
 			logger << " is missing the required \"x\" attribute.";
 			valid = false;
 		}
-		
+
 		if ( rootNode->Attribute( "y", &d ) ) {
 			yPos = (float)d;
 		} else {
@@ -207,7 +207,7 @@ namespace Terrain {
 			logger << " is missing the required \"y\" attribute.";
 			valid = false;
 		}
-		
+
 		if ( rootNode->Attribute( "kernel", &d ) ) {
 			smooth = (float)d;
 		} else {
@@ -248,7 +248,7 @@ namespace Terrain {
 					float dh = _heightMap[ x + 1 ][ y ] - _heightMap[ x - 1 ][ y ];
 					Nx.set( DELTA, -dh, 0.f );
 				}
-				
+
 				Vector3 Ny;
 				if ( y == 0 ) {
 					float dh = _heightMap[ x ][ y + 1 ] - _heightMap[ x ][ y ];
@@ -284,7 +284,7 @@ namespace Terrain {
 	float HeightField::getHeightAt( float x, float y ) const {
 		x = (x - _xpos) / _cellSize;
 		y = (y - _ypos) / _cellSize;
-		
+
 		if ( ( x < 0 ) || ( y < 0 ) || ( x > _W-1 ) || ( y > _H-1 ) ) { return 0.f; }
 
 		int x1 = (int)floor(x);
@@ -353,7 +353,7 @@ namespace Terrain {
 			normFactors[i] = 1.f / sum;
 		}
 
-		// Prepare to convolve 
+		// Prepare to convolve
 		float * workSpace = new float[ _W > _H ? _W : _H ];
 		// iterate along width axis
 		int SIZE = _W;
@@ -431,7 +431,7 @@ namespace Terrain {
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	HeightFieldPtr loadHeightField( const std::string & fileName ) throw ( ResourceException ) {
+	HeightFieldPtr loadHeightField( const std::string & fileName ) {
 		Resource * rsrc = ResourceManager::getResource( fileName, &HeightField::load,
 														HeightField::LABEL );
 		if ( rsrc == 0x0 ) {

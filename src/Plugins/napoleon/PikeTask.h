@@ -109,8 +109,7 @@ private:
   void getNearbyAgents(size_t agentId, std::vector<Menge::Agents::NearAgent>& agentList) const;
   bool hasPike(size_t agentId) const { return _pikes.find(agentId) != _pikes.end(); }
   Pike getPike(size_t agentId) const { return _pikes.find(agentId)->second; }
-  virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
-      Menge::BFSM::TaskException);
+  virtual void doWork(const Menge::BFSM::FSM* fsm);
 
   virtual std::string toString() const;
   bool areAgentsCollidingWithPike(const Menge::Agents::BaseAgent* agt) const ;

@@ -61,7 +61,7 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
-	void FormationsTask::doWork( const FSM * fsm ) throw( TaskException ) {
+	void FormationsTask::doWork( const FSM * fsm )  {
 		_formation->mapAgentsToFormation(fsm);
 	}
 	/////////////////////////////////////////////////////////////////////

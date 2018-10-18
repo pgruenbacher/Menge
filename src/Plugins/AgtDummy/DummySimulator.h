@@ -26,7 +26,7 @@
 
 #include "DummyAgent.h"
 #include "MengeCore/mengeCommon.h"
-#include "MengeCore/Agents/SimulatorBase.h"	
+#include "MengeCore/Agents/SimulatorBase.h"
 #include "MengeCore/Math/RandGenerator.h"
 
 /*!
@@ -74,14 +74,13 @@ namespace Dummy {
 		 *	@param			value			A string containing the value for the parameter.
 		 *	@returns		whether or not parameters were successfully set
 		 */
-		virtual bool setExpParam( const std::string & paramName, const std::string & value )
-			throw ( Menge::Agents::XMLParamException );
+		virtual bool setExpParam( const std::string & paramName, const std::string & value );
 
 	protected:
 		friend class Agent;
 
 		/*!
-		 *	@brief		The standard deviation of speed 
+		 *	@brief		The standard deviation of speed
 		 */
 		static Menge::Math::NormalFloatGenerator 	_speedDeviation;
 

@@ -140,17 +140,6 @@ namespace Napoleon {
     _lock.lockWrite();
 
     _pendingPikeActions[agent->_id] = true;
-    // Vector2 dir = agent->_orient;
-    // Vector2 pos = agent->_pos + dir * length;
-    // PikeMap::iterator it = _pikes.find(agent->_id);
-    // if (it == _pikes.end()) {
-    //   _pikes.insert(PikeMap::value_type(agent->_id, Pike(pos, dir, agent)));
-
-    // } else {
-    //   it->second = Pike(pos, dir, agent);
-    // }
-    // _pikes.erase(agent->_id);
-    // std::cout << " ADD PIKE " << std::endl;
 
     _lock.releaseWrite();
   }
@@ -192,7 +181,7 @@ namespace Napoleon {
     _pendingPikeActions.clear();
   }
 
-  void PikeTask::doWork( const FSM * fsm ) throw( TaskException ) {
+  void PikeTask::doWork( const FSM * fsm )  {
     // update pike positions
     mapPikePositions(_pikes);
 

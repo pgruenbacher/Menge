@@ -71,8 +71,7 @@ namespace Karamouzas {
 		 *	@param			value			A string containing the value for the parameter.
 		 *	@returns		whether or not parameters were successfully set
 		 */
-		virtual bool setExpParam( const std::string & paramName, const std::string & value )
-			throw( Menge::Agents::XMLParamException );
+		virtual bool setExpParam( const std::string & paramName, const std::string & value );
 
 	protected:
 		friend class Agent;
@@ -94,7 +93,7 @@ namespace Karamouzas {
 		static float	REACTION_TIME;
 
 		/*!
-		 *	@brief		The steepness that the wall forces fall off: K > 0 
+		 *	@brief		The steepness that the wall forces fall off: K > 0
 		 */
 		static float	WALL_STEEPNESS;
 

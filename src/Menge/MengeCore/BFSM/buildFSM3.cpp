@@ -286,7 +286,7 @@ bool connectSharedGoalSelectors(FSM* fsm, FSMDescrip& fsmDescrip,
     // State * state = fsm->getNode( stateID );
     SharedGoalSelector* gs =
         dynamic_cast<SharedGoalSelector*>(state->getGoalSelector());
-    if (gs != false) {
+    if (gs) {
       if (!fsm->getNode(gs->getStateName()) == 0) {
         logger << Logger::ERR_MSG
                << "Found shared goal selector defined on line ";

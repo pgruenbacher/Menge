@@ -17,7 +17,7 @@ namespace StressGAS {
 
 	/////////////////////////////////////////////////////////////////////
 
-	void StressTask::doWork( const FSM * fsm ) throw( TaskException ) {
+	void StressTask::doWork( const FSM * fsm )  {
 		StressGAS::STRESS_MANAGER->updateStress();
 	}
 
@@ -37,4 +37,4 @@ namespace StressGAS {
 			return true;
 		}
 	}
-}	// namespace StressGAS 
+}	// namespace StressGAS

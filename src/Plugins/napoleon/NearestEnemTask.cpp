@@ -86,7 +86,7 @@ namespace Napoleon {
     TASK_PTR = 0x0;
   }
 
-  void NearestEnemTask::doWork( const FSM * fsm ) throw( TaskException ) {
+  void NearestEnemTask::doWork( const FSM * fsm )  {
     _numTargetedBy.clear();
     NearestEnemDataMap::iterator it;
     for (it = _nearEnems.begin(); it != _nearEnems.end(); it++) {

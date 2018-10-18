@@ -81,7 +81,7 @@ namespace Napoleon {
     _lock.releaseWrite();
   }
 
-  void DamageTask::doWork( const FSM * fsm ) throw( TaskException ) {
+  void DamageTask::doWork( const FSM * fsm )  {
     // std::cout << " GET AGENT ATATC " << getAgentAttackValue(15) << std::endl;
 
     Menge::Agents::BaseAgent* finalEnem;

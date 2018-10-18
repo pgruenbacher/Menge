@@ -300,6 +300,6 @@ namespace Formations {
      *	@returns	The FormationPtr containing the data.
      *	@throws		A ResourceException if the data is unable to be instantiated.
 	 */
-	FormationPtr loadFormation( const std::string & fileName ) throw ( Menge::ResourceException );
+	FormationPtr loadFormation( const std::string & fileName );
 }	// namespace Formations
 #endif	// __FREE_FORMATION_H__

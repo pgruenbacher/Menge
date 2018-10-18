@@ -72,7 +72,7 @@ namespace Napoleon {
     return STAGGER_TASK;
   }
 
-  void StaggerTask::doWork( const FSM * fsm ) throw( TaskException ) {
+  void StaggerTask::doWork( const FSM * fsm )  {
     // std::cout << "CLEAR " << std::endl;
     // copy to the read-only map for the concurrency.
     _stagger_map = _pending_stagger;

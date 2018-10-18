@@ -36,7 +36,7 @@ namespace Menge {
 	 *	@brief		A simple 2D vector field.
 	 *
 	 *	The field is defined by the location of its bottom, left-hand corner, the size
-	 *	of the space the grid should cover and the size of each, square cell.	
+	 *	of the space the grid should cover and the size of each, square cell.
 	 */
 	class MENGE_API VectorField : public Resource {
 	public:
@@ -66,7 +66,7 @@ namespace Menge {
 		 *	@brief		Reports the cell the a point is in.
 		 *
 		 *	TODO: Determine what happens if pos is off the grid
-		 *	
+		 *
 		 *	@param		pos		The point to test.
 		 *	@param		r		A reference to the row index -- this is to be set by the
 		 *						function.
@@ -123,7 +123,7 @@ namespace Menge {
 		 *				invalid.
 		 */
 		static Resource * load( const std::string & fileName );
-		
+
 		/*!
 		 *	@brief		Reports the minimum extent of the field.
 		 *
@@ -177,11 +177,11 @@ namespace Menge {
 		friend Logger & operator<< ( Logger & out, const VectorField & vf );
 
 		/*!
-		 *	@brief		The unique label for this data type to be used with 
+		 *	@brief		The unique label for this data type to be used with
 		 *				resource management.
 		 */
 		static const std::string LABEL;
-		
+
 	protected:
 		/*!
 		 *	@brief		The minimum extent of the vector field.
@@ -239,7 +239,7 @@ namespace Menge {
 	 *	@returns	The VectorFieldPtr containing the data.
 	 *	@throws		A ResourceException if the data is unable to be instantiated.
 	 */
-	VectorFieldPtr loadVectorField( const std::string & fileName ) throw ( ResourceException );
+	VectorFieldPtr loadVectorField( const std::string & fileName );
 }	// namespace Menge
 
 #endif // __VECTOR_FIELD_H__

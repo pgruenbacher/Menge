@@ -304,7 +304,7 @@ int testMain( ProjectSpec& projSpec, std::vector<napoleon::AgentData>& agentsRes
 
   std::string viewCfgFile = projSpec.getView();
   // bool useVis = viewCfgFile != "";
-  bool useVis = true; // testing!
+  bool useVis = false; // testing!
   std::string model( projSpec.getModel() );
 
   SimulatorDBEntry * simDBEntry = simDB.getDBEntry( model );

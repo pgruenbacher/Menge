@@ -22,7 +22,7 @@
  *				XML-parsed experiment specification to a simulator.
  *
  *	In order to use the SimXMLLoader class to read XML files and set parameters
- *	The simulator must extend this abstract class and implement the given 
+ *	The simulator must extend this abstract class and implement the given
  *	virtual functions.
  *
  */
@@ -61,7 +61,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Default constructor.
 			 */
-			XMLParamException() : MengeException() {}		
+			XMLParamException() : MengeException() {}
 
 			/*!
 			 *	@brief		Constructor with message.
@@ -71,7 +71,7 @@ namespace Menge {
 			XMLParamException( const std::string & s ): MengeException(s) {}
 
 		};
-		
+
 		/*!
 		 *	@brief		Exception thrown when the xml parameter parser has an error which cannot be
 		 *				recovered from.
@@ -99,7 +99,7 @@ namespace Menge {
 		 *				specification.
 		 *
 		 *	In order to use the SimXMLLoader class to read XML files and set parameters
-		 *	The simulator must extend this abstract class and implement the given 
+		 *	The simulator must extend this abstract class and implement the given
 		 *	virtual functions.
 		 *
 		 *	A "target"-specific parameter refers to the simulator type.  In other words,
@@ -124,7 +124,7 @@ namespace Menge {
 			 *
 			 *	The default case is to assume that the simulator *does* have particular
 			 *	parameters.
-			 *	
+			 *
 			 *	@returns	True if this simulator has target-specific *experiment* parameters,
 			 *				false otherwise.
 			 */
@@ -145,8 +145,8 @@ namespace Menge {
 			virtual bool isExpTarget( const std::string & tagName ) = 0;
 
 			/*!
-			 *	@brief		Given the name of the xml param and its string value, 
-			 *				sets the parameter in the simulator.  
+			 *	@brief		Given the name of the xml param and its string value,
+			 *				sets the parameter in the simulator.
 			 *
 			 *	Common parameters and target-specific parameters will be passed into this function.
 			 *	It is the responsibility of the programmer to make sure the default case of
@@ -160,8 +160,7 @@ namespace Menge {
 			 *	@throws		An XMLParamException if there was a problem with the parameter
 			 *				name/value .
 			 */
-			virtual bool setExpParam( const std::string & paramName, const std::string & value )
-				throw( XMLParamException ) = 0;
+			virtual bool setExpParam( const std::string & paramName, const std::string & value ) = 0;
 
 			/*!
 			 *	@brief		Add an agent with specified position to the simulator whose properties
@@ -187,7 +186,7 @@ namespace Menge {
 
 			/*!
 			 *	@brief		Reports if the elevation has been set.
-			 *	
+			 *
 			 *	@returns	True if the elevation has been set, false otherwise.
 			 */
 			virtual bool hasElevation() const = 0;

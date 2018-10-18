@@ -61,7 +61,7 @@ namespace Formations {
 		 *	@throws		A TaskFatalException if there is a fatal error that
 		 *				should arrest execution of the simulation.
 		 */
-		virtual void doWork( const Menge::BFSM::FSM * fsm ) throw( Menge::BFSM::TaskException );
+		virtual void doWork( const Menge::BFSM::FSM * fsm );
 
 		/*!
 		 *	@brief		String representation of the task

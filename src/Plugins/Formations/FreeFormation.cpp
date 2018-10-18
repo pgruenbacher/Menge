@@ -542,7 +542,7 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
-	FormationPtr loadFormation( const std::string & fileName ) throw ( ResourceException ) {
+	FormationPtr loadFormation( const std::string & fileName ) {
     Resource * rsrc = ResourceManager::getResource( fileName, &FreeFormation::load, FreeFormation::LABEL );
 		if ( rsrc == 0x0 ) {
 			logger << Logger::ERR_MSG << "No resource available.";
