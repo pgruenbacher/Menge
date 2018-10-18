@@ -163,6 +163,10 @@ namespace Menge {
 			inline float operator*(const Vector2d& v) const {
 				return _x * v._x + _y * v._y;
 			}
+			// use dot as well since i don't like using *
+			inline float dot(const Vector2d& v) const {
+				return _x * v._x + _y * v._y;
+			}
 
 			/*!
 			*  @brief		Computes the scalar multiplication of this
@@ -312,6 +316,31 @@ namespace Menge {
 				} else {
 					_x = _y = 0.f;
 				}
+			}
+
+
+			inline Vector2d linear_interpolate(const Vector2d &p_b, float p_t) const {
+
+				Vector2d res = *this;
+
+				res.setX(res.x() + p_t * (p_b.x() - x()));
+				res.setY(res.y() + p_t * (p_b.y() - y()));
+
+				return res;
+			}
+
+
+			inline Vector2d normalized() const {
+				float len = sqrtf( _x * _x + _y * _y );
+				Type x = _x;
+				Type y = _y;
+				if ( len > EPS ) {
+					x /= len;
+					y /= len;
+				} else {
+					x = y = 0.f;
+				}
+				return Vector2d(x, y);
 			}
 
 			/////////////////////////////    GEOMETRIC OPERATIONS      ////////////////////////////

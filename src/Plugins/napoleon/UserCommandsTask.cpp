@@ -33,7 +33,7 @@ namespace Napoleon {
     return USER_COMMAND_TASK;
   }
 
-  void UserCommandTask::doWork( const FSM * fsm ) throw( TaskException ) {
+  void UserCommandTask::doWork( const FSM * fsm ) {
     // std::cout << " USER TASK DO WORK " << std::endl;
   }
 

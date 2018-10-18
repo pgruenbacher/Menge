@@ -30,12 +30,11 @@
 
 #include "curve.h"
 
-#include "core_string_names.h"
-
+#define CMP_EPSILON 0.00001
 namespace Napoleon {
 
 template <class T>
-static _FORCE_INLINE_ T _bezier_interp(real_t t, T start, T control_1, T control_2, T end) {
+T _bezier_interp(real_t t, T start, T control_1, T control_2, T end) {
   /* Formula from Wikipedia article on Bezier curves. */
   real_t omt = (1.0 - t);
   real_t omt2 = omt * omt;
@@ -45,8 +44,7 @@ static _FORCE_INLINE_ T _bezier_interp(real_t t, T start, T control_1, T control
 
   return start * omt3 + control_1 * omt2 * t * 3.0 + control_2 * omt * t2 * 3.0 + end * t3;
 }
-
-const char *Curve::SIGNAL_RANGE_CHANGED = "range_changed";
+// const char *Curve::SIGNAL_RANGE_CHANGED = "range_changed";
 
 Curve::Curve() {
   _bake_resolution = 100;
@@ -55,55 +53,80 @@ Curve::Curve() {
   _max_value = 1;
 }
 
-int Curve::add_point(Vector2 p_pos, real_t left_tangent, real_t right_tangent, TangentMode left_mode, TangentMode right_mode) {
-  // Add a point and preserve order
+// int Curve::add_point(Vector2 p_pos, real_t left_tangent, real_t right_tangent, TangentMode left_mode, TangentMode right_mode) {
+//   // Add a point and preserve order
 
-  // Curve bounds is in 0..1
-  if (p_pos.x() > MAX_X)
-    p_pos.x() = MAX_X;
-  else if (p_pos.x() < MIN_X)
-    p_pos.x() = MIN_X;
+//   // Curve bounds is in 0..1
+//   if (p_pos.x() > MAX_X)
+//     p_pos.setX(MAX_X);
+//   else if (p_pos.x() < MIN_X)
+//     p_pos.setX(MIN_X);
 
-  int ret = -1;
+//   int ret = -1;
 
-  if (_points.size() == 0) {
-    _points.push_back(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
-    ret = 0;
+//   if (_points.size() == 0) {
+//     _points.push_back(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
+//     ret = 0;
 
-  } else if (_points.size() == 1) {
-    // TODO Is the `else` able to handle this block already?
+//   } else if (_points.size() == 1) {
+//     // TODO Is the `else` able to handle this block already?
 
-    real_t diff = p_pos.x() - _points[0].pos.x();
+//     real_t diff = p_pos.x() - _points[0].pos.x();
 
-    if (diff > 0) {
-      _points.push_back(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
-      ret = 1;
-    } else {
-      _points.insert(0, Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
-      ret = 0;
-    }
+//     if (diff > 0) {
+//       _points.push_back(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
+//       ret = 1;
+//     } else {
+//       _points.push_front(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
+//       ret = 0;
+//     }
 
-  } else {
+//   } else {
 
-    int i = get_index(p_pos.x());
+//     int i = get_index(p_pos.x());
 
-    if (i == 0 && p_pos.x() < _points[0].pos.x()) {
-      // Insert before anything else
-      _points.insert(0, Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
-      ret = 0;
-    } else {
-      // Insert between i and i+1
-      ++i;
-      _points.insert(i, Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
-      ret = i;
-    }
-  }
+//     if (i == 0 && p_pos.x() < _points[0].pos.x()) {
+//       // Insert before anything else
+//       _points.push_front(Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
+//       ret = 0;
+//     } else {
+//       // Insert between i and i+1
+//       ++i;
+//       _points.insert(i, Point(p_pos, left_tangent, right_tangent, left_mode, right_mode));
+//       ret = i;
+//     }
+//   }
 
-  update_auto_tangents(ret);
+//   update_auto_tangents(ret);
 
-  mark_dirty();
+//   mark_dirty();
 
-  return ret;
+//   return ret;
+// }
+
+
+
+float lerp(float p_from, float p_to, float p_weight) { return p_from + (p_to - p_from) * p_weight; }
+
+Vector2 cubic_interpolate(const Vector2& p_a, const Vector2 &p_b, const Vector2 &p_pre_a, const Vector2 &p_post_b, real_t p_t) {
+
+  Vector2 p0 = p_pre_a;
+  Vector2 p1 = p_a;
+  Vector2 p2 = p_b;
+  Vector2 p3 = p_post_b;
+
+  real_t t = p_t;
+  real_t t2 = t * t;
+  real_t t3 = t2 * t;
+
+  Vector2 out;
+  out =(
+        (p1 * 2.0) +
+        ((-p0 + p2) * t) +
+        ((p0 * 2.0 - p1 * 5.0 + p2 * 4 - p3) * t2) +
+        ((-p0 + p1 * 3.0 - p2 * 3.0 + p3) * t3)
+      ) * 0.5;
+  return out;
 }
 
 int Curve::get_index(real_t offset) const {
@@ -134,23 +157,6 @@ int Curve::get_index(real_t offset) const {
   if (offset > _points[imax].pos.x())
     return imax;
   return imin;
-}
-
-void Curve::clean_dupes() {
-
-  bool dirty = false;
-
-  for (int i = 1; i < _points.size(); ++i) {
-    real_t diff = _points[i - 1].pos.x() - _points[i].pos.x();
-    if (diff <= CMP_EPSILON) {
-      _points.remove(i);
-      --i;
-      dirty = true;
-    }
-  }
-
-  if (dirty)
-    mark_dirty();
 }
 
 void Curve::set_point_left_tangent(int i, real_t tangent) {
@@ -191,58 +197,58 @@ void Curve::set_point_right_mode(int i, TangentMode p_mode) {
   mark_dirty();
 }
 
-real_t Curve::get_point_left_tangent(int i) const {
-  // ERR_FAIL_INDEX_V(i, _points.size(), 0);
-  return _points[i].left_tangent;
-}
+// real_t Curve::get_point_left_tangent(int i) const {
+//   // ERR_FAIL_INDEX_V(i, _points.size(), 0);
+//   return _points[i].left_tangent;
+// }
 
-real_t Curve::get_point_right_tangent(int i) const {
-  // ERR_FAIL_INDEX_V(i, _points.size(), 0);
-  return _points[i].right_tangent;
-}
+// real_t Curve::get_point_right_tangent(int i) const {
+//   // ERR_FAIL_INDEX_V(i, _points.size(), 0);
+//   return _points[i].right_tangent;
+// }
 
-Curve::TangentMode Curve::get_point_left_mode(int i) const {
-  // ERR_FAIL_INDEX_V(i, _points.size(), TANGENT_FREE);
-  return _points[i].left_mode;
-}
+// Curve::TangentMode Curve::get_point_left_mode(int i) const {
+//   // ERR_FAIL_INDEX_V(i, _points.size(), TANGENT_FREE);
+//   return _points[i].left_mode;
+// }
 
-Curve::TangentMode Curve::get_point_right_mode(int i) const {
-  // ERR_FAIL_INDEX_V(i, _points.size(), TANGENT_FREE);
-  return _points[i].right_mode;
-}
+// Curve::TangentMode Curve::get_point_right_mode(int i) const {
+//   // ERR_FAIL_INDEX_V(i, _points.size(), TANGENT_FREE);
+//   return _points[i].right_mode;
+// }
 
-void Curve::remove_point(int p_index) {
-  // ERR_FAIL_INDEX(p_index, _points.size());
-  _points.remove(p_index);
-  mark_dirty();
-}
+// void Curve::remove_point(int p_index) {
+//   // ERR_FAIL_INDEX(p_index, _points.size());
+//   _points.erase(p_index);
+//   mark_dirty();
+// }
 
-void Curve::clear_points() {
-  _points.clear();
-  mark_dirty();
-}
+// void Curve::clear_points() {
+//   _points.clear();
+//   mark_dirty();
+// }
 
 void Curve::set_point_value(int p_index, real_t pos) {
   // ERR_FAIL_INDEX(p_index, _points.size());
-  _points[p_index].pos.y() = pos;
+  _points[p_index].pos.setY(pos);
   update_auto_tangents(p_index);
   mark_dirty();
 }
 
-int Curve::set_point_offset(int p_index, float offset) {
-  // ERR_FAIL_INDEX_V(p_index, _points.size(), -1);
-  Point p = _points[p_index];
-  remove_point(p_index);
-  int i = add_point(Vector2(offset, p.pos.y()));
-  _points[i].left_tangent = p.left_tangent;
-  _points[i].right_tangent = p.right_tangent;
-  _points[i].left_mode = p.left_mode;
-  _points[i].right_mode = p.right_mode;
-  if (p_index != i)
-    update_auto_tangents(p_index);
-  update_auto_tangents(i);
-  return i;
-}
+// int Curve::set_point_offset(int p_index, float offset) {
+//   // ERR_FAIL_INDEX_V(p_index, _points.size(), -1);
+//   Point p = _points[p_index];
+//   remove_point(p_index);
+//   int i = add_point(Vector2(offset, p.pos.y()));
+//   _points[i].left_tangent = p.left_tangent;
+//   _points[i].right_tangent = p.right_tangent;
+//   _points[i].left_mode = p.left_mode;
+//   _points[i].right_mode = p.right_mode;
+//   if (p_index != i)
+//     update_auto_tangents(p_index);
+//   update_auto_tangents(i);
+//   return i;
+// }
 
 Vector2 Curve::get_point_position(int p_index) const {
   // ERR_FAIL_INDEX_V(p_index, _points.size(), Vector2(0, 0));
@@ -341,7 +347,7 @@ real_t Curve::interpolate_local_nocheck(int index, real_t local_offset) const {
 
   // Control points are chosen at equal distances
   real_t d = b.pos.x() - a.pos.x();
-  if (Math::abs(d) <= CMP_EPSILON)
+  if (abs(d) <= CMP_EPSILON)
     return b.pos.y();
   local_offset /= d;
   d /= 3.0;
@@ -358,67 +364,67 @@ void Curve::mark_dirty() {
   // emit_signal(CoreStringNames::get_singleton()->changed);
 }
 
-Array Curve::get_data() const {
+// Array Curve::get_data() const {
 
-  Array output;
-  const unsigned int ELEMS = 5;
-  output.resize(_points.size() * ELEMS);
+//   Array output;
+//   const unsigned int ELEMS = 5;
+//   output.resize(_points.size() * ELEMS);
 
-  for (int j = 0; j < _points.size(); ++j) {
+//   for (int j = 0; j < _points.size(); ++j) {
 
-    const Point p = _points[j];
-    int i = j * ELEMS;
+//     const Point p = _points[j];
+//     int i = j * ELEMS;
 
-    output[i] = p.pos;
-    output[i + 1] = p.left_tangent;
-    output[i + 2] = p.right_tangent;
-    output[i + 3] = p.left_mode;
-    output[i + 4] = p.right_mode;
-  }
+//     output[i] = p.pos;
+//     output[i + 1] = p.left_tangent;
+//     output[i + 2] = p.right_tangent;
+//     output[i + 3] = p.left_mode;
+//     output[i + 4] = p.right_mode;
+//   }
 
-  return output;
-}
+//   return output;
+// }
 
-void Curve::set_data(Array input) {
-  const unsigned int ELEMS = 5;
-  // ERR_FAIL_COND(input.size() % ELEMS != 0);
+// void Curve::set_data(Array input) {
+//   const unsigned int ELEMS = 5;
+//   // ERR_FAIL_COND(input.size() % ELEMS != 0);
 
-  _points.clear();
+//   _points.clear();
 
-  // Validate input
-  for (int i = 0; i < input.size(); i += ELEMS) {
-    // ERR_FAIL_COND(input[i].get_type() != Variant::VECTOR2);
-    // ERR_FAIL_COND(!input[i + 1].is_num());
-    // ERR_FAIL_COND(input[i + 2].get_type() != Variant::REAL);
+//   // Validate input
+//   for (int i = 0; i < input.size(); i += ELEMS) {
+//     // ERR_FAIL_COND(input[i].get_type() != Variant::VECTOR2);
+//     // ERR_FAIL_COND(!input[i + 1].is_num());
+//     // ERR_FAIL_COND(input[i + 2].get_type() != Variant::REAL);
 
-    // ERR_FAIL_COND(input[i + 3].get_type() != Variant::INT);
-    int left_mode = input[i + 3];
-    // ERR_FAIL_COND(left_mode < 0 || left_mode >= TANGENT_MODE_COUNT);
+//     // ERR_FAIL_COND(input[i + 3].get_type() != Variant::INT);
+//     int left_mode = input[i + 3];
+//     // ERR_FAIL_COND(left_mode < 0 || left_mode >= TANGENT_MODE_COUNT);
 
-    // ERR_FAIL_COND(input[i + 4].get_type() != Variant::INT);
-    int right_mode = input[i + 4];
-    // ERR_FAIL_COND(right_mode < 0 || right_mode >= TANGENT_MODE_COUNT);
-  }
+//     // ERR_FAIL_COND(input[i + 4].get_type() != Variant::INT);
+//     int right_mode = input[i + 4];
+//     // ERR_FAIL_COND(right_mode < 0 || right_mode >= TANGENT_MODE_COUNT);
+//   }
 
-  _points.resize(input.size() / ELEMS);
+//   _points.resize(input.size() / ELEMS);
 
-  for (int j = 0; j < _points.size(); ++j) {
+//   for (int j = 0; j < _points.size(); ++j) {
 
-    Point &p = _points[j];
-    int i = j * ELEMS;
+//     Point &p = _points[j];
+//     int i = j * ELEMS;
 
-    p.pos = input[i];
-    p.left_tangent = input[i + 1];
-    p.right_tangent = input[i + 2];
-    // TODO For some reason the compiler won't convert from Variant to enum
-    int left_mode = input[i + 3];
-    int right_mode = input[i + 4];
-    p.left_mode = (TangentMode)left_mode;
-    p.right_mode = (TangentMode)right_mode;
-  }
+//     p.pos = input[i];
+//     p.left_tangent = input[i + 1];
+//     p.right_tangent = input[i + 2];
+//     // TODO For some reason the compiler won't convert from Variant to enum
+//     int left_mode = input[i + 3];
+//     int right_mode = input[i + 4];
+//     p.left_mode = (TangentMode)left_mode;
+//     p.right_mode = (TangentMode)right_mode;
+//   }
 
-  mark_dirty();
-}
+//   mark_dirty();
+// }
 
 void Curve::bake() {
   _baked_cache.clear();
@@ -463,7 +469,7 @@ real_t Curve::interpolate_baked(real_t offset) {
 
   // Get interpolation index
   real_t fi = offset * _baked_cache.size();
-  int i = Math::floor(fi);
+  int i = floor(fi);
   if (i < 0) {
     i = 0;
     fi = 0;
@@ -475,7 +481,7 @@ real_t Curve::interpolate_baked(real_t offset) {
   // Interpolate
   if (i + 1 < _baked_cache.size()) {
     real_t t = fi - i;
-    return Math::lerp(_baked_cache[i], _baked_cache[i + 1], t);
+    return lerp(_baked_cache[i], _baked_cache[i + 1], t);
   } else {
     return _baked_cache[_baked_cache.size() - 1];
   }
@@ -486,20 +492,20 @@ int Curve2D::get_point_count() const {
 
   return points.size();
 }
-void Curve2D::add_point(const Vector2 &p_pos, const Vector2 &p_in, const Vector2 &p_out, int p_atpos) {
+// void Curve2D::add_point(const Vector2 &p_pos, const Vector2 &p_in, const Vector2 &p_out, int p_atpos) {
 
-  Point n;
-  n.pos = p_pos;
-  n.in = p_in;
-  n.out = p_out;
-  if (p_atpos >= 0 && p_atpos < points.size())
-    points.insert(p_atpos, n);
-  else
-    points.push_back(n);
+//   Point n;
+//   n.pos = p_pos;
+//   n.in = p_in;
+//   n.out = p_out;
+//   if (p_atpos >= 0 && p_atpos < points.size())
+//     points.emplace(points.begin() + p_atpos, n);
+//   else
+//     points.push_back(n);
 
-  baked_cache_dirty = true;
-  // emit_signal(CoreStringNames::get_singleton()->changed);
-}
+//   baked_cache_dirty = true;
+//   // emit_signal(CoreStringNames::get_singleton()->changed);
+// }
 
 void Curve2D::set_point_position(int p_index, const Vector2 &p_pos) {
 
@@ -547,7 +553,7 @@ Vector2 Curve2D::get_point_out(int p_index) const {
 void Curve2D::remove_point(int p_index) {
 
   // ERR_FAIL_INDEX(p_index, points.size());
-  points.remove(p_index);
+  points.erase(points.begin() + p_index);
   baked_cache_dirty = true;
   // emit_signal(CoreStringNames::get_singleton()->changed);
 }
@@ -585,10 +591,10 @@ Vector2 Curve2D::interpolatef(real_t p_findex) const {
   else if (p_findex >= points.size())
     p_findex = points.size();
 
-  return interpolate((int)p_findex, Math::fmod(p_findex, (real_t)1.0));
+  return interpolate((int)p_findex, fmod(p_findex, (real_t)1.0));
 }
 
-void Curve2D::_bake_segment2d(Map<float, Vector2> &r_bake, float p_begin, float p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, float p_tol) const {
+void Curve2D::_bake_segment2d(std::map<float, Vector2> &r_bake, float p_begin, float p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, float p_tol) const {
 
   float mp = p_begin + (p_end - p_begin) * 0.5;
   Vector2 beg = _bezier_interp(p_begin, p_a, p_a + p_out, p_b + p_in, p_b);
@@ -599,7 +605,7 @@ void Curve2D::_bake_segment2d(Map<float, Vector2> &r_bake, float p_begin, float 
   Vector2 nb = (end - mid).normalized();
   float dp = na.dot(nb);
 
-  if (dp < Math::cos(Math::deg2rad(p_tol))) {
+  if (dp < cos((p_tol) * Menge::DEG_TO_RAD)) {
 
     r_bake[mp] = mid;
   }
@@ -626,12 +632,12 @@ void Curve2D::_bake() const {
   if (points.size() == 1) {
 
     baked_point_cache.resize(1);
-    baked_point_cache.set(0, points[0].pos);
+    baked_point_cache[0] = points[0].pos;
     return;
   }
 
   Vector2 pos = points[0].pos;
-  List<Vector2> pointlist;
+  std::vector<Vector2> pointlist;
 
   pointlist.push_back(pos); //start always from origin
 
@@ -647,7 +653,7 @@ void Curve2D::_bake() const {
         np = 1.0;
 
       Vector2 npp = _bezier_interp(np, points[i].pos, points[i].pos + points[i].out, points[i + 1].pos + points[i + 1].in, points[i + 1].pos);
-      float d = pos.distance_to(npp);
+      float d = pos.distance(npp);
 
       if (d > bake_interval) {
         // OK! between P and NP there _has_ to be Something, let's go searching!
@@ -661,7 +667,7 @@ void Curve2D::_bake() const {
         for (int j = 0; j < iterations; j++) {
 
           npp = _bezier_interp(mid, points[i].pos, points[i].pos + points[i].out, points[i + 1].pos + points[i + 1].in, points[i + 1].pos);
-          d = pos.distance_to(npp);
+          d = pos.distance(npp);
 
           if (bake_interval < d)
             hi = mid;
@@ -682,17 +688,18 @@ void Curve2D::_bake() const {
 
   Vector2 lastpos = points[points.size() - 1].pos;
 
-  float rem = pos.distance_to(lastpos);
+  float rem = pos.distance(lastpos);
   baked_max_ofs = (pointlist.size() - 1) * bake_interval + rem;
   pointlist.push_back(lastpos);
 
   baked_point_cache.resize(pointlist.size());
-  PoolVector2Array::Write w = baked_point_cache.write();
+  // PoolVector2Array::Write w = baked_point_cache.write();
+  PoolVector2Array& w = baked_point_cache;
   int idx = 0;
 
-  for (List<Vector2>::Element *E = pointlist.front(); E; E = E->next()) {
+  for (const Vector2& e : pointlist) {
 
-    w[idx] = E->get();
+    w[idx] = e;
     idx++;
   }
 }
@@ -717,23 +724,24 @@ Vector2 Curve2D::interpolate_baked(float p_offset, bool p_cubic) const {
   }
 
   if (pc == 1)
-    return baked_point_cache.get(0);
+    return baked_point_cache[0];
 
   int bpc = baked_point_cache.size();
-  PoolVector2Array::Read r = baked_point_cache.read();
+  PoolVector2Array& r = baked_point_cache;
+  // PoolVector2Array::Read r = baked_point_cache.read();
 
   if (p_offset < 0)
     return r[0];
   if (p_offset >= baked_max_ofs)
     return r[bpc - 1];
 
-  int idx = Math::floor((double)p_offset / (double)bake_interval);
-  float frac = Math::fmod(p_offset, (float)bake_interval);
+  int idx = floor((double)p_offset / (double)bake_interval);
+  float frac = fmod(p_offset, (float)bake_interval);
 
   if (idx >= bpc - 1) {
     return r[bpc - 1];
   } else if (idx == bpc - 2) {
-    frac /= Math::fmod(baked_max_ofs, bake_interval);
+    frac /= fmod(baked_max_ofs, bake_interval);
   } else {
     frac /= bake_interval;
   }
@@ -742,7 +750,7 @@ Vector2 Curve2D::interpolate_baked(float p_offset, bool p_cubic) const {
 
     Vector2 pre = idx > 0 ? r[idx - 1] : r[idx];
     Vector2 post = (idx < (bpc - 2)) ? r[idx + 2] : r[idx + 1];
-    return r[idx].cubic_interpolate(r[idx + 1], pre, post, frac);
+    return cubic_interpolate(r[idx], r[idx + 1], pre, post, frac);
   } else {
     return r[idx].linear_interpolate(r[idx + 1], frac);
   }
@@ -761,46 +769,46 @@ float Curve2D::get_bake_interval() const {
   return bake_interval;
 }
 
-Dictionary Curve2D::_get_data() const {
+// Dictionary Curve2D::_get_data() const {
 
-  Dictionary dc;
+//   Dictionary dc;
 
-  PoolVector2Array d;
-  d.resize(points.size() * 3);
-  PoolVector2Array::Write w = d.write();
+//   PoolVector2Array d;
+//   d.resize(points.size() * 3);
+//   PoolVector2Array::Write w = d.write();
 
-  for (int i = 0; i < points.size(); i++) {
+//   for (int i = 0; i < points.size(); i++) {
 
-    w[i * 3 + 0] = points[i].in;
-    w[i * 3 + 1] = points[i].out;
-    w[i * 3 + 2] = points[i].pos;
-  }
+//     w[i * 3 + 0] = points[i].in;
+//     w[i * 3 + 1] = points[i].out;
+//     w[i * 3 + 2] = points[i].pos;
+//   }
 
-  w = PoolVector2Array::Write();
+//   w = PoolVector2Array::Write();
 
-  dc["points"] = d;
+//   dc["points"] = d;
 
-  return dc;
-}
-void Curve2D::_set_data(const Dictionary &p_data) {
+//   return dc;
+// }
+// void Curve2D::_set_data(const Dictionary &p_data) {
 
-  // ERR_FAIL_COND(!p_data.has("points"));
+//   // ERR_FAIL_COND(!p_data.has("points"));
 
-  PoolVector2Array rp = p_data["points"];
-  int pc = rp.size();
-  // ERR_FAIL_COND(pc % 3 != 0);
-  points.resize(pc / 3);
-  PoolVector2Array::Read r = rp.read();
+//   PoolVector2Array rp = p_data["points"];
+//   int pc = rp.size();
+//   // ERR_FAIL_COND(pc % 3 != 0);
+//   points.resize(pc / 3);
+//   PoolVector2Array::Read r = rp.read();
 
-  for (int i = 0; i < points.size(); i++) {
+//   for (int i = 0; i < points.size(); i++) {
 
-    points[i].in = r[i * 3 + 0];
-    points[i].out = r[i * 3 + 1];
-    points[i].pos = r[i * 3 + 2];
-  }
+//     points[i].in = r[i * 3 + 0];
+//     points[i].out = r[i * 3 + 1];
+//     points[i].pos = r[i * 3 + 2];
+//   }
 
-  baked_cache_dirty = true;
-}
+//   baked_cache_dirty = true;
+// }
 
 Curve2D::Curve2D() {
   baked_cache_dirty = false;

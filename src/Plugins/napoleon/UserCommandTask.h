@@ -30,8 +30,7 @@ class UserCommandTask : public Menge::BFSM::Task {
   void setGroupCommand(int id, UserGroupCommand cmd) { _group_commands[id] = cmd; }
   const UserGroupCommand& getGroupCommand(int id) { return _group_commands[id]; }
 
-  virtual void doWork(const Menge::BFSM::FSM* fsm) throw(
-      Menge::BFSM::TaskException);
+  virtual void doWork(const Menge::BFSM::FSM* fsm);
 
   virtual std::string toString() const;
 

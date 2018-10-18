@@ -32,10 +32,15 @@
 #define CURVE_H
 
 #include "MengeCore/Math/Vector2.h"
+#include <vector>
+#include <map>
+
 
 namespace Napoleon {
   using Menge::Math::Vector2;
 
+  typedef float real_t;
+  typedef std::vector<Vector2> PoolVector2Array;
 // y(x) curve
 class Curve {
 public:
@@ -80,19 +85,19 @@ public:
 
   int get_point_count() const { return _points.size(); }
 
-  int add_point(Vector2 p_pos,
-      real_t left_tangent = 0,
-      real_t right_tangent = 0,
-      TangentMode left_mode = TANGENT_FREE,
-      TangentMode right_mode = TANGENT_FREE);
+  // int add_point(Vector2 p_pos,
+  //     real_t left_tangent = 0,
+  //     real_t right_tangent = 0,
+  //     TangentMode left_mode = TANGENT_FREE,
+  //     TangentMode right_mode = TANGENT_FREE);
 
-  void remove_point(int p_index);
-  void clear_points();
+  // void remove_point(int p_index);
+  // void clear_points();
 
   int get_index(real_t offset) const;
 
   void set_point_value(int p_index, real_t pos);
-  int set_point_offset(int p_index, float offset);
+  // int set_point_offset(int p_index, float offset);
   Vector2 get_point_position(int p_index) const;
 
   Point get_point(int p_index) const;
@@ -106,22 +111,20 @@ public:
   real_t interpolate(real_t offset) const;
   real_t interpolate_local_nocheck(int index, real_t local_offset) const;
 
-  void clean_dupes();
-
   void set_point_left_tangent(int i, real_t tangent);
   void set_point_right_tangent(int i, real_t tangent);
   void set_point_left_mode(int i, TangentMode p_mode);
   void set_point_right_mode(int i, TangentMode p_mode);
 
-  real_t get_point_left_tangent(int i) const;
-  real_t get_point_right_tangent(int i) const;
-  TangentMode get_point_left_mode(int i) const;
-  TangentMode get_point_right_mode(int i) const;
+  // real_t get_point_left_tangent(int i) const;
+  // real_t get_point_right_tangent(int i) const;
+  // TangentMode get_point_left_mode(int i) const;
+  // TangentMode get_point_right_mode(int i) const;
 
   void update_auto_tangents(int i);
 
-  Array get_data() const;
-  void set_data(Array input);
+  // Array get_data() const;
+  // void set_data(Array input);
 
   void bake();
   int get_bake_resolution() const { return _bake_resolution; }
@@ -134,9 +137,9 @@ protected:
 private:
   void mark_dirty();
 
-  Vector<Point> _points;
+  std::vector<Point> _points;
   bool _baked_cache_dirty;
-  Vector<real_t> _baked_cache;
+  std::vector<real_t> _baked_cache;
   int _bake_resolution;
   float _min_value;
   float _max_value;
@@ -152,7 +155,7 @@ class Curve2D {
     Vector2 pos;
   };
 
-  Vector<Point> points;
+  std::vector<Point> points;
 
   struct BakedPoint {
 
@@ -168,16 +171,16 @@ class Curve2D {
 
   float bake_interval;
 
-  void _bake_segment2d(Map<float, Vector2> &r_bake, float p_begin, float p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, float p_tol) const;
-  Dictionary _get_data() const;
-  void _set_data(const Dictionary &p_data);
+  void _bake_segment2d(std::map<float, Vector2> &r_bake, float p_begin, float p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, float p_tol) const;
+  // Dictionary _get_data() const;
+  // void _set_data(const Dictionary &p_data);
 
 protected:
   static void _bind_methods();
 
 public:
   int get_point_count() const;
-  void add_point(const Vector2 &p_pos, const Vector2 &p_in = Vector2(), const Vector2 &p_out = Vector2(), int p_atpos = -1);
+  // void add_point(const Vector2 &p_pos, const Vector2 &p_in = Vector2(), const Vector2 &p_out = Vector2(), int p_atpos = -1);
   void set_point_position(int p_index, const Vector2 &p_pos);
   Vector2 get_point_position(int p_index) const;
   void set_point_in(int p_index, const Vector2 &p_in);
