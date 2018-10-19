@@ -1,0 +1,197 @@
+
+// #include "MengeCore/BFSM/VelocityComponents/VelCompGoal.h"
+#include "WayPointComponent.h"
+#include "MengeCore/resources/Resource.h"
+
+#include "MengeCore/Core.h"
+#include "MengeCore/Agents/BaseAgent.h"
+#include "MengeCore/BFSM/State.h"
+#include "MengeCore/Agents/PrefVelocity.h"
+#include "MengeCore/BFSM/Goals/Goal.h"
+#include "MengeCore/BFSM/GoalSelectors/GoalSelectorIdentity.h"
+#include "MengeCore/Runtime/os.h"
+#include "Plugins/Formations/FormationsTask.h"
+#include "Plugins/Formations/SteadyFormation.h"
+
+
+namespace Formations {
+
+  /////////////////////////////////////////////////////////////////////
+  //                   Implementation of GoalVelComponent
+  /////////////////////////////////////////////////////////////////////
+
+  const std::string WayPointComponent::NAME = "wayPointComp";
+
+  /////////////////////////////////////////////////////////////////////
+
+  void WayPointComponent::onEnter(BaseAgent* agent) {
+    registerAgent(agent);
+  }
+
+  void WayPointComponent::onExit(BaseAgent* agent) {
+    unregisterAgent(agent);
+  }
+
+  void WayPointComponent::registerAgent(const BaseAgent * agent) {
+    _lock.lockWrite();
+      _formation->addAgent(agent);
+    _lock.releaseWrite();
+    // std::cout << "register agent " << std::endl;
+  };
+
+
+  void WayPointComponent::unregisterAgent(const BaseAgent * agent){
+    _lock.lockWrite();
+    _formation->removeAgent(agent);
+    _lock.releaseWrite();
+    // std::cout << "unregister agent " << std::endl;
+  };
+
+  /////////////////////////////////////////////////////////////////////
+
+  WayPointComponent::WayPointComponent() : VelComponent() {
+  }
+
+  void WayPointComponent::setFormation(FormationPtr form){
+    _formation = form;
+    // std::cout << "SET FORMATION " << std::endl;
+  };
+
+  // void WayPointComponent::setDisplacement(Vector2 v){
+  //   _displacment = v;
+  // };
+
+  void WayPointComponent::loadSetFormation(const std::string& fname) {
+    try {
+      setFormation(loadFormation(fname));
+    } catch ( Menge::ResourceException ) {
+      logger << Logger::ERR_MSG << "Couldn't instantiate formation " << fname;
+    }
+    return;
+  };
+  /////////////////////////////////////////////////////////////////////
+
+  void WayPointComponent::setPrefVelocity( const BaseAgent * agent, const Goal * goal,
+                      PrefVelocity & pVel ) const {
+    //adapt the agent's velocity according to the formation
+    Vector2 target = Vector2( 0.f, 0.f );
+    _lock.lockRead();
+    bool modify = _formation->getStaticGoalForAgent( agent, pVel, target );
+    _lock.releaseRead();
+    if ( modify ) {
+
+      // target + displacement - agent position
+      Vector2 disp = target + _formation->getDisplacement() - agent->_pos;
+      const float distSq = absSq( disp );
+      Vector2 dir;
+      if ( distSq > 1e-8 ) {
+        // Distant enough that I can normalize the direction.
+        dir.set( disp / sqrtf( distSq ) );
+      } else {
+        dir.set( 0.f, 0.f );
+      }
+      pVel.setSingle(dir);
+      pVel.setTarget(target);
+
+      float speed = agent->_prefSpeed;
+
+      if ( distSq <= 0.0001f ) {
+        // I've basically arrived -- speed should be zero.
+        speed = 0.f;
+        // we'll also set target dir after arrived in formation?
+        _formation->setTargetOrient(agent->_pos, pVel);
+      } else {
+        const float speedSq = speed * speed;
+        const float TS_SQD = SIM_TIME_STEP * SIM_TIME_STEP;
+        if ( distSq / speedSq < TS_SQD ) {
+          // The distance is less than I would travel in a single time step.
+          speed = sqrtf( distSq ) / SIM_TIME_STEP;
+          // std::cout << "DO REDUCE" << std::endl;
+        } else {
+          // std:: cout << "?? " << distSq / speedSq << " " << TS_SQD << " " << SIM_TIME_STEP << std::endl;
+        }
+      }
+      pVel.setSpeed( speed );
+
+    } else {
+
+      pVel.setSingle(Vector2(0,0));
+      pVel.setSpeed(0.f);
+      // std::cout << "no MODIFY!! " << target._x << " " << target._y << std::endl;
+    }
+  }
+
+  Task * WayPointComponent::getTask(){
+    Task* t = new FormationsTask( _formation );
+    std::cout << " GET TASK ? " << t->toString() << std::endl;
+    return t;
+  };
+
+  Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId) {
+    // godot specific.
+    // uses SteadyFormation instead of FreeFormation,
+    // which means it won't update mapAgentsToPoitns continuously.
+    Menge::BFSM::State* st = new Menge::BFSM::State("Formation" + std::to_string(uniqueIndex), "FormState", classId);
+    st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+    st->setFinal(false);
+    std::string resourceName = "freeFormation" + std::to_string(uniqueIndex);
+    Resource * rsrc = ResourceManager::getResource( resourceName, &SteadyFormation::make, SteadyFormation::LABEL );
+    if ( rsrc == 0x0 ) {
+      logger << Logger::ERR_MSG << "No resource available.";
+      delete st;
+      throw ResourceException();
+    }
+    // std::cout << "FORM  " << st->getName() << std::endl;
+    SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
+    WayPointComponent* fComp = new WayPointComponent();
+    fComp->setFormation(FormationPtr( form ));
+    st->setVelComponent(fComp);
+    return st;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  WayPointComponentFactory::WayPointComponentFactory() : VelCompFactory() {
+    // _fileNameID = _attrSet.addStringAttribute( "file_name", true /*required*/ );
+    // _headingID = _attrSet.addFloatAttribute( "heading_threshold", false /*required*/,
+    //                      180.f );
+    _fileNameID = _attrSet.addStringAttribute( "file_name", true /*required*/ );
+    _x = _attrSet.addFloatAttribute("x", false);
+    _y = _attrSet.addFloatAttribute("y", false);
+
+  }
+
+  /////////////////////////////////////////////////////////////////////
+
+  bool WayPointComponentFactory::setFromXML( VelComponent * component, TiXmlElement * node,
+                     const std::string & behaveFldr ) const {
+      WayPointComponent * formationComp = dynamic_cast<WayPointComponent *>(component);
+      assert( formationComp != 0x0 &&
+      "Trying to set property component properties on an incompatible object" );
+    if ( ! VelCompFactory::setFromXML( component, node, behaveFldr ) ) return false;
+
+    if (_attrSet.getString(_fileNameID).empty()) {
+      logger << Logger::ERR_MSG << "Require filename for velocity component";
+      logger.close();
+      throw Menge::BFSM::VelCompFatalException( "Require filename for velocity component." );
+    }
+    // get the absolute path to the file name
+
+    std::string fName;
+    std::string path = Menge::os::path::join(
+        2, behaveFldr.c_str(), _attrSet.getString(_fileNameID).c_str());
+    Menge::os::path::absPath(path, fName);
+    // nav mesh
+    FormationPtr formPtr;
+    try {
+      formPtr = loadFormation(fName);
+      Vector2 disp = Vector2(_attrSet.getFloat(_x), _attrSet.getFloat(_y));
+      formPtr->setDisplacement(disp);
+      formationComp->setFormation(formPtr);
+    } catch ( Menge::ResourceException ) {
+      logger << Logger::ERR_MSG << "Couldn't instantiate the formation referenced on line ";
+      logger << node->Row() << ".";
+      return false;
+    }
+    return true;
+  }
+} // namespace Formations

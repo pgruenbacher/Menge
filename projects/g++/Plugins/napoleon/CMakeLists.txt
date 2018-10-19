@@ -18,5 +18,5 @@ add_library(
 	${source_files}
 )
 
-target_link_libraries (napoleon mengeCore )
+target_link_libraries (napoleon mengeCore formations )
 
