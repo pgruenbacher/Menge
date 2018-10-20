@@ -27,15 +27,23 @@ namespace Napoleon {
   /////////////////////////////////////////////////////////////////////
 
   void WayPointComponent::onEnter(BaseAgent* agent) {
+    _current_num_agents++;
+    if (_current_num_agents > _current_max_agents) {
+      _current_max_agents = _current_num_agents;
+    }
   }
 
   void WayPointComponent::onExit(BaseAgent* agent) {
+    _current_num_agents--;
   }
 
 
   /////////////////////////////////////////////////////////////////////
 
-  WayPointComponent::WayPointComponent() : VelComponent(), _task(0x0) {
+  WayPointComponent::WayPointComponent() : VelComponent(),
+    _loop(false),
+    _auto(false),
+    _task(0x0), _current_max_agents(0), _current_num_agents(0) {
   }
 
   void WayPointComponent::setCurve(CurvePtr c){

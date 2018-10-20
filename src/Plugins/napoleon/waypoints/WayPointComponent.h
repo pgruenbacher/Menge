@@ -37,6 +37,9 @@ class MENGE_API WayPointComponent : public VelComponent {
   /*!
    *  @brief    Virtual destructor.
    */
+  int _current_num_agents;
+  int _current_max_agents;
+
   virtual ~WayPointComponent() {}
   CurvePtr _curve;
   WayPointsTask* _task;

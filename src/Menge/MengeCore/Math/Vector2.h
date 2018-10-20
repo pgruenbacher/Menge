@@ -285,6 +285,10 @@ namespace Menge {
 				return *this;
 			}
 
+			inline Vector2d tangent() const {
+				return Vector2d(_y, -_x);
+			}
+
 			/*!
 			 *	@brief		Perform in-place vector subtraction on this vector.
 			 *

@@ -51,6 +51,11 @@ T _bezier_interp(real_t t, T start, T control_1, T control_2, T end) {
          control_2 * omt * t2 * 3.0 + end * t3;
 }
 
+#ifndef CLAMP
+#define CLAMP(m_a, m_min, m_max) (((m_a) < (m_min)) ? (m_min) : (((m_a) > (m_max)) ? m_max : m_a))
+#endif
+
+float fposmod(float p_x, float p_y) { return (p_x >= 0) ? fmod(p_x, p_y) : p_y - fmod(-p_x, p_y); }
 
 // float lerp(float p_from, float p_to, float p_weight) { return p_from + (p_to
 // - p_from) * p_weight; }
@@ -115,7 +120,7 @@ void Curve2D::_bake() const {
     while (p < 1.0 && limit < max_limit) {
       limit++;
       if (limit == max_limit) {
-        std::cout << "HIT MAX LIMIT !! " << bake_interval << std::endl;
+        // std::cout << "HIT MAX LIMIT !! " << bake_interval << std::endl;
       }
       float np = p + step;
       if (np > 1.0) np = 1.0;
@@ -171,7 +176,7 @@ void Curve2D::_bake() const {
     idx++;
   }
 
-  std::cout << " FINISH BAKE " << std::endl;
+  // std::cout << " FINISH BAKE " << std::endl;
 }
 
 float Curve2D::get_baked_length() const {
@@ -272,6 +277,72 @@ CurvePtr loadCurve(const std::string& fileName) {
   }
 
   return CurvePtr(form);
+}
+
+PointFollow::PointFollow() : offset(0.f), vOffset(0.f), hOffset(0.f), position(0.f, 0.f) {
+
+}
+
+void PointFollow::updateTransform(const Curve2D& c, bool loop) {
+  bool rotate = true; // hardcode.
+  bool cubic = false;
+
+  float path_length = c.get_baked_length();
+  float bounded_offset = offset;
+  if (loop)
+    bounded_offset = fposmod(bounded_offset, path_length);
+  else
+    bounded_offset = CLAMP(bounded_offset, 0, path_length);
+
+  Vector2 pos = c.interpolate_baked(bounded_offset, cubic);
+
+
+  if (rotate) {
+    float lookahead = 4;
+    float ahead = bounded_offset + lookahead;
+
+    if (loop && ahead >= path_length) {
+      // If our lookahead will loop, we need to check if the path is closed.
+      int point_count = c.get_point_count();
+      if (point_count > 0) {
+        Vector2 start_point = c.get_point_position(0);
+        Vector2 end_point = c.get_point_position(point_count - 1);
+        if (start_point == end_point) {
+          // Since the path is closed we want to 'smooth off'
+          // the corner at the start/end.
+          // So we wrap the lookahead back round.
+          ahead = fmod(ahead, path_length);
+        }
+      }
+    }
+
+    Vector2 ahead_pos = c.interpolate_baked(ahead, cubic);
+
+    Vector2 tangent_to_curve;
+    if (ahead_pos == pos) {
+      // This will happen at the end of non-looping or non-closed paths.
+      // We'll try a look behind instead, in order to get a meaningful angle.
+      tangent_to_curve =
+          (pos - c.interpolate_baked(bounded_offset - lookahead, cubic)).normalized();
+    } else {
+      tangent_to_curve = (ahead_pos - pos).normalized();
+    }
+
+    Vector2 normal_of_curve = -tangent_to_curve.tangent();
+
+    pos += tangent_to_curve * hOffset;
+    pos += normal_of_curve * vOffset;
+
+    // set_rotation(tangent_to_curve.angle());
+
+  } else {
+
+    pos.setX(pos.x() + hOffset);
+    pos.setY(pos.x() + vOffset);
+  }
+
+  // set_position(pos);
+  position = pos;
 }
 
 }  // namespace Napoleon

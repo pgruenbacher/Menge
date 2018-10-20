@@ -54,7 +54,7 @@ class Curve2D : public Menge::Resource {
   std::vector<Point> points;
 
   struct BakedPoint {
-    float ofs;
+    // float ofs;
     Vector2 point;
   };
 
@@ -82,12 +82,24 @@ class Curve2D : public Menge::Resource {
 
   void set_bake_interval(float p_tolerance);
   float get_bake_interval() const;
-
+  Vector2 get_point_position(int index) const { return points[index].pos; }
   float get_baked_length() const;
   Vector2 interpolate_baked(float p_offset, bool p_cubic = false) const;
 
   Curve2D(const std::string& fileName);
   static Menge::Resource* load(const std::string& fileName);
+};
+
+class PointFollow {
+  float offset;
+  float hOffset;
+  float vOffset;
+  Vector2 position;
+  // float rotation;
+public:
+  PointFollow();
+  const Vector2& getPosition() { return position; }
+  void updateTransform(const Curve2D& c, bool loop);
 };
 
 typedef Menge::ResourcePtr<Curve2D> CurvePtr;
