@@ -21,6 +21,7 @@
 #include "PikeCollisionCondition.h"
 #include "UserCommandCondition.h"
 #include "UserCommandTask.h"
+#include "waypoints/WayPointComponent.h"
 // #include "VisAttackElement.h"
 
 // using MengeVis::PluginEngine::VisPluginEngine;
@@ -71,6 +72,7 @@ extern "C" {
     engine->registerConditionFactory( new Napoleon::PikeCollisionCondFactory() );
     engine->registerConditionFactory( new Napoleon::UserCommandConditionFactory() );
     engine->registerTaskFactory( new Napoleon::UserCommandTaskFactory() );
+    engine->registerVelCompFactory( new Napoleon::WayPointComponentFactory() );
   }
 
   // EXPORT_API void registerVisPlugin( VisPluginEngine * engine ) {

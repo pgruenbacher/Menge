@@ -47,7 +47,9 @@ class Curve2D : public Menge::Resource {
     Vector2 in;
     Vector2 out;
     Vector2 pos;
+    Point() : in(0.f, 0.f), out(0.f, 0.f), pos(0.f, 0.f) {}
   };
+
 
   std::vector<Point> points;
 
@@ -89,7 +91,7 @@ class Curve2D : public Menge::Resource {
 };
 
 typedef Menge::ResourcePtr<Curve2D> CurvePtr;
-CurvePtr loadFormation(const std::string& fileName);
+CurvePtr loadCurve(const std::string& fileName);
 
 }  // namespace Napoleon.
 

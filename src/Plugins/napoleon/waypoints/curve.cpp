@@ -51,6 +51,7 @@ T _bezier_interp(real_t t, T start, T control_1, T control_2, T end) {
          control_2 * omt * t2 * 3.0 + end * t3;
 }
 
+
 // float lerp(float p_from, float p_to, float p_weight) { return p_from + (p_to
 // - p_from) * p_weight; }
 
@@ -80,6 +81,7 @@ void Curve2D::addPoint(Vector2 pt) {
   Point point;
   point.pos = pt;
   points.push_back(point);
+  baked_cache_dirty = true;
 }
 
 void Curve2D::_bake() const {
@@ -108,7 +110,13 @@ void Curve2D::_bake() const {
     float step = 0.1;  // at least 10 substeps ought to be enough?
     float p = 0;
 
-    while (p < 1.0) {
+    int limit = 0;
+    const int max_limit = 10;
+    while (p < 1.0 && limit < max_limit) {
+      limit++;
+      if (limit == max_limit) {
+        std::cout << "HIT MAX LIMIT !! " << bake_interval << std::endl;
+      }
       float np = p + step;
       if (np > 1.0) np = 1.0;
 
@@ -116,7 +124,6 @@ void Curve2D::_bake() const {
           np, points[i].pos, points[i].pos + points[i].out,
           points[i + 1].pos + points[i + 1].in, points[i + 1].pos);
       float d = pos.distance(npp);
-
       if (d > bake_interval) {
         // OK! between P and NP there _has_ to be Something, let's go searching!
 
@@ -163,6 +170,8 @@ void Curve2D::_bake() const {
     w[idx] = e;
     idx++;
   }
+
+  std::cout << " FINISH BAKE " << std::endl;
 }
 
 float Curve2D::get_baked_length() const {
@@ -172,7 +181,6 @@ float Curve2D::get_baked_length() const {
 }
 Vector2 Curve2D::interpolate_baked(float p_offset, bool p_cubic) const {
   if (baked_cache_dirty) _bake();
-
   // validate//
   int pc = baked_point_cache.size();
   if (pc == 0) {
@@ -239,12 +247,13 @@ Menge::Resource* Curve2D::load(const std::string& fileName) {
   float x, y;
 
   // while we have points left, they are internal points
-  if ((f >> x >> y)) {
-    while (!f.eof()) {
-      crv->addPoint(Vector2(x, y));
-    }
+  // if ((f >> x >> y)) {
+  while (!f.eof()) {
+    f >> x >> y;
+    crv->addPoint(Vector2(x, y));
+    std::cout << " ADD POINT " << x << " " << y << std::endl;
   }
-
+  // }
   return crv;
 }
 

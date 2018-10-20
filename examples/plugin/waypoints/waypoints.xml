@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<Project
+  random="10"
+  scene="waypointsS.xml"
+  behavior="waypointsB.xml"
+  view="waypointsV.xml"
+  model="orca"
+  dumpPath="images/test"
+/>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<BFSM>
+
+    <GoalSet id="0">
+        <Goal type="point" id="0" x="-10" y="0.0"/>
+        <Goal type="point" id="1" x="10" y="0.0"/>
+        <Goal type="point" id="2" x="-10" y="0.0"/>
+        <Goal type="point" id="3" x="10" y="0.0"/>
+    </GoalSet>
+
+    <State name="Follow" final="0" >
+        <VelComponent type="wayPointComp" auto="1" loop="1" file_name="waypoints.txt"/>
+    </State>
+
+    <!-- <State name="WalkLeft" final="0" type="ChargeState" class="2"> -->
+        <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
+    <!-- </State> -->
+
+
+  <!--   <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
+        <Condition type="enemy_near" dist="5.9" is_close="0"/>
+        <Target type="by_class" typename="ChargeState"/>
+    </Transition> -->
+
+
+</BFSM>

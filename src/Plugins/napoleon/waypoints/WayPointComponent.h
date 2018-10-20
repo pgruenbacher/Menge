@@ -2,38 +2,29 @@
 #ifndef _WAYPOINT_COMPONENT_H_
 #define _WAYPOINT_COMPONENT_H_
 
-// #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
-// #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
-// #include "MengeCore/MengeException.h"
-// #include "MengeCore/Agents/PrefVelocity.h"
-// #include "MengeCore/BFSM/fsmCommon.h"
-// #include "MengeCore/PluginEngine/Element.h"
-// #include "FormationsConfig.h"
-// #include "FreeFormation.h"
-// #include "MengeCore/Runtime/ReadersWriterLock.h"
-#include "Plugins/napoleon/napoleonConfig.h"
-#include "Plugins/Formations/FreeFormation.h"
+
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
-
+#include "Plugins/Formations/FreeFormation.h"
+#include "Plugins/napoleon/napoleonConfig.h"
+#include "curve.h"
 #include <vector>
 
+namespace Napoleon {
+  class WayPointsTask;
 
-namespace Formations {
-  using Menge::Agents::BaseAgent;
-  using Menge::Agents::PrefVelocity;
-  using Menge::BFSM::Goal;
-  using Menge::BFSM::Task;
-  using Menge::BFSM::VelCompFactory;
-  using Menge::BFSM::VelComponent;
-  using Menge::BFSM::Task;
-  using Menge::Logger;
-  using Menge::Math::Vector2;
-  using Menge::logger;
-
-Menge::BFSM::State* makeFormationState(int uniqueIndex, size_t classId);
+using Menge::Agents::BaseAgent;
+using Menge::Agents::PrefVelocity;
+using Menge::BFSM::Goal;
+using Menge::BFSM::Task;
+using Menge::BFSM::Task;
+using Menge::BFSM::VelCompFactory;
+using Menge::BFSM::VelComponent;
+using Menge::Logger;
+using Menge::Math::Vector2;
+using Menge::logger;
 
 class MENGE_API WayPointComponent : public VelComponent {
  public:
@@ -47,7 +38,8 @@ class MENGE_API WayPointComponent : public VelComponent {
    *  @brief    Virtual destructor.
    */
   virtual ~WayPointComponent() {}
-  FormationPtr _formation;
+  CurvePtr _curve;
+  WayPointsTask* _task;
   Menge::ReadersWriterLock _lock;
   VelComponent* parseVelComponent(TiXmlElement* node,
                                   const std::string& behaveFldr);
@@ -55,13 +47,12 @@ class MENGE_API WayPointComponent : public VelComponent {
   // Vector2 _displacment;
 
  public:
-
+  bool _loop;
+  bool _auto;
   virtual void onEnter(BaseAgent* agent);
   virtual void onExit(BaseAgent* agent);
-  void registerAgent(const BaseAgent* agent);
-  void unregisterAgent(const BaseAgent* agent);
-  void setFormation(FormationPtr form);
-  FormationPtr getFormation() const { return _formation; }
+  void setCurve(CurvePtr form);
+  CurvePtr getCurve() const { return _curve; }
   // void setDisplacement(Vector2 v);
 
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
@@ -73,8 +64,7 @@ class MENGE_API WayPointComponent : public VelComponent {
   /*! The unique identifier used to register this type with run-time components.
    */
   static const std::string NAME;
-  virtual Task * getTask();
-  void loadSetFormation(const std::string& fname);
+  virtual Task* getTask();
 };
 
 class MENGE_API WayPointComponentFactory : public VelCompFactory {
@@ -92,10 +82,9 @@ class MENGE_API WayPointComponentFactory : public VelCompFactory {
                           const std::string& behaveFldr) const;
 
   size_t _fileNameID;
-  // displacmeent of the formation
-  float _x;
-  float _y;
+  size_t _autoID;
+  size_t _loopID;
 };
-}  // namespace Formations
+}  // namespace Napoleon
 
 #endif  // _WAYPOINT_COMPONENT_H_

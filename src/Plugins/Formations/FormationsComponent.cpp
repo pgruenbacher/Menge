@@ -160,7 +160,7 @@ namespace Formations {
 
   Task * FormationComponent::getTask(){
     Task* t = new FormationsTask( _formation );
-    std::cout << " GET TASK ? " << t->toString() << std::endl;
+    // std::cout << " GET TASK ? " << t->toString() << std::endl;
     return t;
   };
 
