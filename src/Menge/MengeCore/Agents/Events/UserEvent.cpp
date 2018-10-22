@@ -1,5 +1,7 @@
 #include "./UserEvent.h"
 #include "MengeCore/Core.h"
+#include "MengeCore/BFSM/FSM.h"
+#include "MengeCore/BFSM/State.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "Plugins/napoleon/DamageTask.h"
 #include "Plugins/napoleon/UserCommandTask.h"
@@ -14,6 +16,16 @@ void UserEvents::CanFire::perform() const {
   Napoleon::UserGroupCommand cmd = tsk->getGroupCommand(groupId);
   cmd.canFire = true;
   tsk->setGroupCommand(groupId, cmd);
+}
+
+void UserEvents::AddWaypoints::perform() const {
+  const char* waypointStateName = "WayPoints";
+  std::vector< Menge::BFSM::State * >& states = Menge::ACTIVE_FSM->getStates();
+  for (const Menge::BFSM::State* state : states) {
+    if (state->getType() == waypointStateName &&
+      state->getClassId() == groupId) {
+    }
+  }
 }
 
 void UserEvents::ToFormation::perform() const {

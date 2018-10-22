@@ -34,6 +34,13 @@ public:
     ToFormation(int groupId, int formationId) : groupId(groupId), formationId(formationId) {}
   };
 
+  struct AddWaypoints : UserEvent {
+    int groupId;
+    std::vector<Menge::Math::Vector2> points;
+    void perform() const override;
+    AddWaypoints(int groupId) : groupId(groupId) {};
+  };
+
   struct CanFire : UserEvent {
     int groupId;
     void perform() const override;
