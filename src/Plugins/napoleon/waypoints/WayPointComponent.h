@@ -66,7 +66,7 @@ class MENGE_API WayPointComponent : public VelComponent {
 
   /*! The unique identifier used to register this type with run-time components.
    */
-  static const std::string NAME;
+  static const char* NAME;
   virtual Task* getTask();
 };
 
@@ -74,7 +74,7 @@ class MENGE_API WayPointComponentFactory : public VelCompFactory {
  public:
   WayPointComponentFactory();
 
-  virtual const char* name() const { return WayPointComponent::NAME.c_str(); }
+  virtual const char* name() const { return WayPointComponent::NAME; }
 
   virtual const char* description() const { return "Waypoint Vel component"; };
 

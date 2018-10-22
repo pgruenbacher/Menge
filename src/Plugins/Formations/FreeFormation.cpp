@@ -270,7 +270,7 @@ namespace Formations {
 
 	/////////////////////////////////////////////////////////////////////
 
-	void FreeFormation::mapAgentsToFormation(const FSM * fsm) {
+	void FreeFormation::mapAgentsToFormation() {
 		//we need intermediate vars
 		std::vector<FormationPoint *>::const_iterator formationItr;
 		const BaseAgent *agt;
@@ -432,6 +432,15 @@ namespace Formations {
 	};
 
 	/////////////////////////////////////////////////////////////////////
+
+	bool FreeFormation::getPointIndexForAgent( const BaseAgent* agt, int& i) {
+		if (_agent_formationPoint.find(agt->_id) != _agent_formationPoint.end()) {
+		    i = _agent_formationPoint[agt->_id];
+		    return true;
+		}
+
+		return false;
+	}
 
 	bool FreeFormation::getGoalForAgent( const BaseAgent * agt, PrefVelocity &pVel, Vector2 &target) {
 		// The goal point is the agent's corresponding sential point (with the point moving the

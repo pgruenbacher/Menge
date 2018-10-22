@@ -90,6 +90,7 @@ void Curve2D::addPoint(Vector2 pt) {
 }
 
 void Curve2D::_bake() const {
+  // std::cout << "START BAKE " << std::endl;
   if (!baked_cache_dirty) return;
 
   baked_max_ofs = 0;
@@ -279,34 +280,36 @@ CurvePtr loadCurve(const std::string& fileName) {
   return CurvePtr(form);
 }
 
-PointFollow::PointFollow() : offset(0.f), vOffset(0.f), hOffset(0.f), position(0.f, 0.f) {
+PointFollow::PointFollow(float offset, float vOffset)
+    : offset(offset),
+      vOffset(vOffset),
+      hOffset(0.f),
+      position(0.f, 0.f) {}
 
-}
-
-void PointFollow::updateTransform(const Curve2D& c, bool loop) {
+void PointFollow::updateTransform(const CurvePtr c, bool loop, float curve_offset) {
   bool rotate = true; // hardcode.
   bool cubic = false;
 
-  float path_length = c.get_baked_length();
-  float bounded_offset = offset;
+  float path_length = c->get_baked_length();
+  float bounded_offset = offset + curve_offset;
   if (loop)
     bounded_offset = fposmod(bounded_offset, path_length);
   else
     bounded_offset = CLAMP(bounded_offset, 0, path_length);
 
-  Vector2 pos = c.interpolate_baked(bounded_offset, cubic);
+  Vector2 pos = c->interpolate_baked(bounded_offset, cubic);
 
-
+  Vector2 tangent_to_curve(0.f, 1.f); // default tangent
   if (rotate) {
     float lookahead = 4;
     float ahead = bounded_offset + lookahead;
 
     if (loop && ahead >= path_length) {
       // If our lookahead will loop, we need to check if the path is closed.
-      int point_count = c.get_point_count();
+      int point_count = c->get_point_count();
       if (point_count > 0) {
-        Vector2 start_point = c.get_point_position(0);
-        Vector2 end_point = c.get_point_position(point_count - 1);
+        Vector2 start_point = c->get_point_position(0);
+        Vector2 end_point = c->get_point_position(point_count - 1);
         if (start_point == end_point) {
           // Since the path is closed we want to 'smooth off'
           // the corner at the start/end.
@@ -316,14 +319,13 @@ void PointFollow::updateTransform(const Curve2D& c, bool loop) {
       }
     }
 
-    Vector2 ahead_pos = c.interpolate_baked(ahead, cubic);
+    Vector2 ahead_pos = c->interpolate_baked(ahead, cubic);
 
-    Vector2 tangent_to_curve;
     if (ahead_pos == pos) {
       // This will happen at the end of non-looping or non-closed paths.
       // We'll try a look behind instead, in order to get a meaningful angle.
       tangent_to_curve =
-          (pos - c.interpolate_baked(bounded_offset - lookahead, cubic)).normalized();
+          (pos - c->interpolate_baked(bounded_offset - lookahead, cubic)).normalized();
     } else {
       tangent_to_curve = (ahead_pos - pos).normalized();
     }
@@ -339,6 +341,13 @@ void PointFollow::updateTransform(const Curve2D& c, bool loop) {
 
     pos.setX(pos.x() + hOffset);
     pos.setY(pos.x() + vOffset);
+  }
+
+  if ((offset + curve_offset) < 0) {
+    // this prevents us from goign to the same poitn when
+    // starting the waypoints.
+    pos = pos + tangent_to_curve * (offset + curve_offset);
+    // std::cout << " BOUNDED OFFSET " <<  pos << std::endl;
   }
 
   // set_position(pos);

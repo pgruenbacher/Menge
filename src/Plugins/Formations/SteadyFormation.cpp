@@ -16,16 +16,18 @@ using Menge::Math::sqr;
 
 const std::string SteadyFormation::LABEL("steady-formation");
 
-void SteadyFormation::mapAgentsToFormation(const FSM * fsm) {
+void SteadyFormation::mapAgentsToFormation() {
   // only updates if either a) it hasn't been set the first time or b)
   // explictly caleld to "reset" the mapping of agents to points. e.g. when
   // formation flips more than 180 deg or game timer or num agents changes
   // drastically.
 
   // or just update every time agent enters/leaves maybe...
+
+  // and we should just remove steadyFormation and just update the FormationTask to only update when necessary.
   if (_shouldUpdate || (getFormationPointAgent().size() == 0) || (getFormationPointAgent().size() != getCurrentAgents().size())) {
     _shouldUpdate = false;
-    FreeFormation::mapAgentsToFormation(fsm);
+    FreeFormation::mapAgentsToFormation();
   } else {
     return;
   }

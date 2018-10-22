@@ -134,7 +134,7 @@ namespace Formations {
 		 *
 		 */
 		// allow child classes to override.
-		virtual void mapAgentsToFormation( const Menge::BFSM::FSM * fsm );
+		virtual void mapAgentsToFormation( );
 
 		/*!
 		 *	@brief		Provides an intermediate goal for the agent.
@@ -176,8 +176,17 @@ namespace Formations {
 		void setRelativeOrient(const Menge::Math::Vector2& v);
 		void setAbsoluteTarget(const Menge::Math::Vector2& v);
 		void setInverseTarget(const Menge::Math::Vector2& v);
+		bool getPointIndexForAgent( const Menge::Agents::BaseAgent* agt, int& i);
 		const Menge::Math::Vector2& getDisplacement();
 		void setDisplacement(Menge::Math::Vector2&);
+		/*!
+		 *	@brief		Finalize the formation representation for use.
+		 *
+		 *	Normalizing the formation defines distances between the formation center
+		 *	and formation points relative to the *size* of the formation.  This allows
+		 *	for arbitrary scales.
+		 */
+		void normalizeFormation();
 	protected:
 
 		/*!
@@ -204,14 +213,6 @@ namespace Formations {
 		 */
 		void addAgentPoint( const Menge::Agents::BaseAgent *agt );
 
-		/*!
-		 *	@brief		Finalize the formation representation for use.
-		 *
-		 *	Normalizing the formation defines distances between the formation center
-		 *	and formation points relative to the *size* of the formation.  This allows
-		 *	for arbitrary scales.
-		 */
-		void normalizeFormation();
 
 		/*!
 		 *	@brief		A custom distance metric to apply to formation points. Used

@@ -90,6 +90,9 @@ class Curve2D : public Menge::Resource {
   static Menge::Resource* load(const std::string& fileName);
 };
 
+typedef Menge::ResourcePtr<Curve2D> CurvePtr;
+CurvePtr loadCurve(const std::string& fileName);
+
 class PointFollow {
   float offset;
   float hOffset;
@@ -97,13 +100,10 @@ class PointFollow {
   Vector2 position;
   // float rotation;
 public:
-  PointFollow();
-  const Vector2& getPosition() { return position; }
-  void updateTransform(const Curve2D& c, bool loop);
+  PointFollow(float offset, float vOffset);
+  const Vector2& getPosition() const { return position; }
+  void updateTransform(const CurvePtr c, bool loop, float curve_offset);
 };
-
-typedef Menge::ResourcePtr<Curve2D> CurvePtr;
-CurvePtr loadCurve(const std::string& fileName);
 
 }  // namespace Napoleon.
 

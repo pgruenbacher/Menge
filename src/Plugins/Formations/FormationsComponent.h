@@ -93,7 +93,7 @@ class MENGE_API FormationComponent : public VelComponent {
 
   /*! The unique identifier used to register this type with run-time components.
    */
-  static const std::string NAME;
+  static const char* NAME;
   virtual Task * getTask();
   void loadSetFormation(const std::string& fname);
 };
@@ -102,7 +102,7 @@ class MENGE_API FormationComponentFactory : public VelCompFactory {
  public:
   FormationComponentFactory();
 
-  virtual const char* name() const { return FormationComponent::NAME.c_str(); }
+  virtual const char* name() const { return FormationComponent::NAME; }
 
   virtual const char* description() const { return "Formation Vel component"; };
 

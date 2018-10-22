@@ -57,7 +57,7 @@ namespace Formations {
   //                   Implementation of GoalVelComponent
   /////////////////////////////////////////////////////////////////////
 
-  const std::string FormationComponent::NAME = "formationComp";
+  const char* FormationComponent::NAME = "formationComp";
 
   /////////////////////////////////////////////////////////////////////
 

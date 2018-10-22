@@ -73,7 +73,7 @@ namespace Formations {
      */
     virtual const std::string & getLabel() const { return LABEL; }
     static const std::string LABEL;
-    void mapAgentsToFormation( const Menge::BFSM::FSM * fsm ) override;
+    void mapAgentsToFormation() override;
     bool setShouldUpdate() { _shouldUpdate = true; };
     protected:
       bool _shouldUpdate;

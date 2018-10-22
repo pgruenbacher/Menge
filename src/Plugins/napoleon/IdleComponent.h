@@ -23,29 +23,25 @@
 #ifndef _IDLE_COMPONENT_H_
 #define _IDLE_COMPONENT_H_
 
+#include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponent.h"
 #include "MengeCore/BFSM/VelocityComponents/VelComponentFactory.h"
-#include "MengeCore/Agents/BaseAgent.h"
 // #include <vector>
 
-
 namespace Napoleon {
-  using Menge::Agents::BaseAgent;
-  using Menge::Agents::PrefVelocity;
-  using Menge::BFSM::Goal;
-  using Menge::BFSM::VelCompFactory;
-  using Menge::BFSM::VelComponent;
+using Menge::Agents::BaseAgent;
+using Menge::Agents::PrefVelocity;
+using Menge::BFSM::Goal;
+using Menge::BFSM::VelCompFactory;
+using Menge::BFSM::VelComponent;
 
 class MENGE_API IdleComponent : public VelComponent {
-
  public:
-
-
   virtual void setPrefVelocity(const BaseAgent* agent, const Goal* goal,
                                PrefVelocity& pVel) const;
   virtual std::string getStringId() const { return NAME; }
-  static const std::string NAME;
+  static const char* NAME;
   void loadSetFormation(const std::string& fname);
 };
 
@@ -53,7 +49,7 @@ class MENGE_API IdleComponentFactory : public VelCompFactory {
  public:
   IdleComponentFactory();
 
-  virtual const char* name() const { return IdleComponent::NAME.c_str(); }
+  virtual const char* name() const { return IdleComponent::NAME; }
 
   virtual const char* description() const { return "Idle component"; };
 
@@ -62,7 +58,6 @@ class MENGE_API IdleComponentFactory : public VelCompFactory {
   size_t _method;
   virtual bool setFromXML(VelComponent* vc, TiXmlElement* node,
                           const std::string& behaveFldr) const;
-
 };
 }  // namespace Napoleon
 

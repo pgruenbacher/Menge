@@ -47,7 +47,7 @@ namespace Napoleon {
   //                   Implementation of GoalVelComponent
   /////////////////////////////////////////////////////////////////////
 
-  const std::string IdleComponent::NAME = "idle";
+  const char* IdleComponent::NAME = "idle";
 
   /////////////////////////////////////////////////////////////////////
 

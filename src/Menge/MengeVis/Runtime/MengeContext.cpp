@@ -139,12 +139,12 @@ namespace MengeVis {
 
 		bool MengeContext::updateSelected() {
 			bool changed = false;
-			std::cout << " UPDATE SELECTED " << std::endl;
+			// std::cout << " UPDATE SELECTED " << std::endl;
 			SceneGraph::Selectable * _s = SceneGraph::Selectable::getSelectedObject();
-			std::cout << " GOT UPDATE SELECTED " << std::endl;
+			// std::cout << " GOT UPDATE SELECTED " << std::endl;
 			if (_s == 0x0) return changed;
 			VisAgent * s = dynamic_cast<VisAgent *>( _s );
-			std::cout << " GET SELECTED ? " << std::endl;
+			// std::cout << " GET SELECTED ? " << std::endl;
 			changed = s != _selected;
 			_selected = s;
 			if ( changed && s != 0x0 ) {
