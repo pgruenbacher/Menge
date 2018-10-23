@@ -52,6 +52,7 @@ class MENGE_API WayPointComponent : public VelComponent {
  public:
   bool _loop;
   bool _auto;
+  WayPointsTask* get_task() const { return _task; };
   virtual void onEnter(BaseAgent* agent);
   virtual void onExit(BaseAgent* agent);
   void setCurve(CurvePtr form);

@@ -89,6 +89,11 @@ void Curve2D::addPoint(Vector2 pt) {
   baked_cache_dirty = true;
 }
 
+void Curve2D::clear() {
+  points.clear();
+  baked_cache_dirty = true;
+}
+
 void Curve2D::_bake() const {
   // std::cout << "START BAKE " << std::endl;
   if (!baked_cache_dirty) return;

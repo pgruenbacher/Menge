@@ -40,6 +40,7 @@ namespace Napoleon {
     void setCanPerform(bool v) { _canPerform = v; }
     void addAgent( const Menge::Agents::BaseAgent *agt );
     void removeAgent( const Menge::Agents::BaseAgent *agt );
+    void reset() { currentPosition = 0.f; _isDirty = true; _canPerform = false; }
 
     virtual void doWork( const Menge::BFSM::FSM * fsm );
 

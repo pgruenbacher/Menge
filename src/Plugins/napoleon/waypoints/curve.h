@@ -75,6 +75,7 @@ class Curve2D : public Menge::Resource {
  public:
   int get_point_count() const;
   void addPoint(Vector2 v);
+  void clear();
   static const std::string LABEL;
   const std::string& getLabel() const override { return LABEL; };
   // Vector2 interpolate(int p_index, float p_offset) const;

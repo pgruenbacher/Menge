@@ -5,6 +5,8 @@
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "Plugins/napoleon/DamageTask.h"
 #include "Plugins/napoleon/UserCommandTask.h"
+#include "Plugins/napoleon/waypoints/WayPointComponent.h"
+#include "Plugins/napoleon/waypoints/WayPointTask.h"
 
 void UserEvents::ProjectileCollision::perform() const {
   Napoleon::DamageTask* dt = Napoleon::DamageTask::getSingleton();
@@ -24,6 +26,18 @@ void UserEvents::AddWaypoints::perform() const {
   for (const Menge::BFSM::State* state : states) {
     if (state->getType() == waypointStateName &&
       state->getClassId() == groupId) {
+        Napoleon::WayPointComponent* wc = dynamic_cast<Napoleon::WayPointComponent*>(state->getVelComponent());
+        if (!wc) continue;
+        Napoleon::WayPointsTask* tsk = wc->get_task();
+        Napoleon::CurvePtr curve = wc->getCurve();
+        tsk->reset();
+        curve->clear();
+        for (const Menge::Math::Vector2& pt : points) {
+          curve->addPoint(pt);
+        }
+        if (autoStart) {
+          tsk->setCanPerform(true);
+        }
     }
   }
 }

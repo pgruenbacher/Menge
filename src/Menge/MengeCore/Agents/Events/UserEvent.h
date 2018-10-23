@@ -36,6 +36,7 @@ public:
 
   struct AddWaypoints : UserEvent {
     int groupId;
+    bool autoStart;
     std::vector<Menge::Math::Vector2> points;
     void perform() const override;
     AddWaypoints(int groupId) : groupId(groupId) {};

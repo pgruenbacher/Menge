@@ -214,7 +214,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Retrieves the velocity component.
 			 */
-			VelComponent * getVelComponent() { return _velComponent; }
+			VelComponent * getVelComponent() const { return _velComponent; }
 
 			/*!
 			 *	@brief		Add an action to the state.
