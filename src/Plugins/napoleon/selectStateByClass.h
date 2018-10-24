@@ -20,9 +20,9 @@ namespace Menge {
 
       virtual void onLeave( Agents::BaseAgent * agent );
 
-      virtual State * nextState( Agents::BaseAgent * agent );
+      virtual State * nextState( const Agents::BaseAgent * agent );
 
-      virtual bool connectStates( std::map< std::string, State * > & stateMap );
+      virtual bool connectStates( const std::map< std::string, State * > & stateMap );
 
       virtual TransitionTarget * copy();
 

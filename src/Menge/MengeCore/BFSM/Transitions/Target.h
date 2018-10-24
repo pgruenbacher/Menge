@@ -48,7 +48,7 @@ namespace Menge {
 		 *	A transition target is the state a transition moves an agent to.
 		 *	In the simplest case, the transition simply connects two states and
 		 *	when the transition is active, the agent moves from the source state
-		 *	to the destination state.  
+		 *	to the destination state.
 		 *
 		 *	However, Target's can be more complex.  The destination can be one of
 		 *	a set of states selected by arbitrary criteria (such as probability).
@@ -98,14 +98,14 @@ namespace Menge {
 			 *	@brief		Determines the next state for the given agent.
 			 *
 			 *	This function defines the main functionality of the target.
-			 *	Given the current agent and the class's internal state, it determines 
+			 *	Given the current agent and the class's internal state, it determines
 			 *	The state to move the agent into.  This should be overridden by each
 			 *	sub-class.
 			 *
 			 *	@param		agent		The agent to test the transition for.
 			 *	@returns	A pointer to the next state.
 			 */
-			virtual State * nextState( Agents::BaseAgent * agent ) = 0;	
+			virtual State * nextState( const Agents::BaseAgent * agent ) = 0;
 
 			/*!
 			 *	@brief		Performs any necessary connections to the target state(s).
@@ -116,7 +116,7 @@ namespace Menge {
 			 *	@param		stateMap		A mapping from state names to state pointers.
 			 *	@returns	True if connection was successful, false otherwise.
 			 */
-			virtual bool connectStates( std::map< std::string, State * > & stateMap ) = 0;
+			virtual bool connectStates( const std::map< std::string, State * > & stateMap ) = 0;
 
 			/*!
 			 *	@brief		Create a copy of this target.
@@ -163,14 +163,14 @@ namespace Menge {
 			 *	@brief		Determines the next state for the given agent.
 			 *
 			 *	This function defines the main functionality of the target.
-			 *	Given the current agent and the class's internal state, it determines 
+			 *	Given the current agent and the class's internal state, it determines
 			 *	The state to move the agent into.  This should be overridden by each
 			 *	sub-class.
 			 *
 			 *	@param		agent		The agent to test the transition for.
 			 *	@returns	A pointer to the next state.
 			 */
-			virtual State * nextState( Agents::BaseAgent * agent ) { return _next; }	
+			virtual State * nextState( const Agents::BaseAgent * agent ) { return _next; }
 
 			/*!
 			 *	@brief		Performs any necessary connections to the target state(s).
@@ -181,7 +181,7 @@ namespace Menge {
 			 *	@param		stateMap		A mapping from state names to state pointers.
 			 *	@returns	True if connection was successful, false otherwise.
 			 */
-			virtual bool connectStates( std::map< std::string, State * > & stateMap );
+			virtual bool connectStates( const std::map< std::string, State * > & stateMap );
 
 			/*!
 			 *	@brief		Create a copy of this target.
@@ -193,14 +193,14 @@ namespace Menge {
 			 */
 			virtual TransitionTarget * copy();
 
-			
+
 		protected:
-			/*! 
+			/*!
 			 *	@brief		The name of the state to which this transition leads.
 			 */
 			 std::string	_nextName;
 
-			/*! 
+			/*!
 			*	@brief		a pointer to the state to which this transition leads.
 			*/
 			State *	_next;

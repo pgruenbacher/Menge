@@ -22,7 +22,7 @@ namespace Menge {
 
     void SelectStateByClassTarget::onLeave( Agents::BaseAgent * agent ) {}
 
-    State * SelectStateByClassTarget::nextState( Agents::BaseAgent * agent ) {
+    State * SelectStateByClassTarget::nextState( const Agents::BaseAgent * agent ) {
       return _targets[agent->_class];
     }
 
@@ -30,7 +30,7 @@ namespace Menge {
       return new SelectStateByClassTarget( *this );
     }
 
-    bool SelectStateByClassTarget::connectStates( std::map< std::string, State * > & stateMap ) {
+    bool SelectStateByClassTarget::connectStates( const std::map< std::string, State * > & stateMap ) {
       // if ( stateMap.find( _nextName ) == stateMap.end() ) {
       //   logger << Logger::ERR_MSG;
       //   logger << "SingleTarget with invalid to node name: " << _nextName << "\n";

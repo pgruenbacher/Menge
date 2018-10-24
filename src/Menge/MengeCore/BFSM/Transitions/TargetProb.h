@@ -43,7 +43,7 @@ namespace Menge {
 		///////////////////////////////////////////////////////////////////////////
 
 		/*!
-		 *	@brief		The definition of the probabalistic target. 
+		 *	@brief		The definition of the probabalistic target.
 		 *
 		 *	Typically, the FSM will be deterministic in that if an agent is in
 		 *	a current state, with a particualr condition being true, it will
@@ -70,14 +70,14 @@ namespace Menge {
 			 *	@brief		Determines the next state for the given agent.
 			 *
 			 *	This function defines the main functionality of the target.
-			 *	Given the current agent and the class's internal state, it determines 
+			 *	Given the current agent and the class's internal state, it determines
 			 *	The state to move the agent into.  This should be overridden by each
 			 *	sub-class.
 			 *
 			 *	@param		agent		The agent to test the transition for.
 			 *	@returns	A pointer to the next state.
 			 */
-			virtual State * nextState( Agents::BaseAgent * agent );	
+			virtual State * nextState( const Agents::BaseAgent * agent );
 
 			/*!
 			 *	@brief		Performs any necessary connections to the target state(s).
@@ -88,7 +88,7 @@ namespace Menge {
 			 *	@param		stateMap		A mapping from state names to state pointers.
 			 *	@returns	True if connection was successful, false otherwise.
 			 */
-			virtual bool connectStates( std::map< std::string, State * > & stateMap );
+			virtual bool connectStates( const std::map< std::string, State * > & stateMap );
 
 			/*!
 			 *	@brief		Create a copy of this target.
@@ -99,7 +99,7 @@ namespace Menge {
 			 *				objects between this and its copy.
 			 */
 			virtual TransitionTarget * copy();
-			
+
 			friend class ProbTargetFactory;
 		protected:
 			/*!
@@ -123,9 +123,9 @@ namespace Menge {
 			 *	@brief		The set of target states and their corresponding relative
 			 *				weights.
 			 */
-			std::map< State *, float > _targets;	
+			std::map< State *, float > _targets;
 		};
-		
+
 		///////////////////////////////////////////////////////////////////////////
 
 		/*!
@@ -155,7 +155,7 @@ namespace Menge {
 					" transition to a randomly selected member of a set of states. "
 					"The state selected is based on weighted probabilities.";
 			}
-			
+
 		protected:
 			/*!
 			 *	@brief		Create an instance of this class's condition.
@@ -185,13 +185,13 @@ namespace Menge {
 			 *	@param		behaveFldr		The path to the behavior file.  If the condition
 			 *								references resources in the file system, it should be
 			 *								defined relative to the behavior file location.  This
-			 *								is the folder containing that path. 
+			 *								is the folder containing that path.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
 			virtual bool setFromXML( TransitionTarget * target, TiXmlElement * node,
 									 const std::string & behaveFldr ) const;
 		};
-		
+
 	}	// namespace BFSM
 }	// namespace Menge
 #endif	// __TARGET_PROB_H__

@@ -81,7 +81,7 @@ namespace Menge {
 
 		/////////////////////////////////////////////////////////////////////
 
-		bool Transition::connectStates( std::map< std::string, State * > & stateMap ) {
+		bool Transition::connectStates( const std::map< std::string, State * > & stateMap ) {
 			assert( _target && "Connecting states for a transition with no target" );
 			return _target->connectStates( stateMap );
 		}

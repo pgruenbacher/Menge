@@ -44,7 +44,7 @@ namespace Menge {
 		///////////////////////////////////////////////////////////////////////////
 
 		/*!
-		 *	@brief		The definition of the return target. 
+		 *	@brief		The definition of the return target.
 		 *
 		 *	The return target causes the agent to go back to the state from which
 		 *	the agent transitioned to the current state.  However, this isn't necessarily
@@ -89,14 +89,14 @@ namespace Menge {
 			 *	@brief		Determines the next state for the given agent.
 			 *
 			 *	This function defines the main functionality of the target.
-			 *	Given the current agent and the class's internal state, it determines 
+			 *	Given the current agent and the class's internal state, it determines
 			 *	The state to move the agent into.  This should be overridden by each
 			 *	sub-class.
 			 *
 			 *	@param		agent		The agent to test the transition for.
 			 *	@returns	A pointer to the next state.
 			 */
-			virtual State * nextState( Agents::BaseAgent * agent );	
+			virtual State * nextState( const Agents::BaseAgent * agent );
 
 			/*!
 			 *	@brief		Performs any necessary connections to the target state(s).
@@ -107,7 +107,7 @@ namespace Menge {
 			 *	@param		stateMap		A mapping from state names to state pointers.
 			 *	@returns	True if connection was successful, false otherwise.
 			 */
-			virtual bool connectStates( std::map< std::string, State * > & stateMap );
+			virtual bool connectStates( const std::map< std::string, State * > & stateMap );
 
 			/*!
 			 *	@brief		Create a copy of this target.
@@ -118,7 +118,7 @@ namespace Menge {
 			 *				objects between this and its copy.
 			 */
 			virtual TransitionTarget * copy();
-			
+
 			friend class ReturnTargetFactory;
 		protected:
 			/*!
@@ -130,9 +130,9 @@ namespace Menge {
 			 *	@brief		Lock to protect _targets;
 			 */
 			ReadersWriterLock	_lock;
-		
+
 		};
-		
+
 		///////////////////////////////////////////////////////////////////////////
 
 		/*!
@@ -161,7 +161,7 @@ namespace Menge {
 				return "Defines the transition target as the state the agent was in when "
 					   "it advanced to this state.";
 			}
-			
+
 		protected:
 			/*!
 			 *	@brief		Create an instance of this class's condition.
@@ -175,7 +175,7 @@ namespace Menge {
 			 */
 			virtual TransitionTarget * instance() const { return new ReturnTarget(); }
 		};
-		
+
 	}	// namespace BFSM
 }	// namespace Menge
 #endif	// __TARGET_RETURN_H__

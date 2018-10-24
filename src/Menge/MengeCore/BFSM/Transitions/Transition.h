@@ -83,7 +83,7 @@ namespace Menge {
 			 *	@param		stateMap		A mapping from state names to state pointers.
 			 *	@returns	True if connection was successful, false otherwise.
 			 */
-			bool connectStates( std::map< std::string, State * > & stateMap );
+			bool connectStates( const std::map< std::string, State * > & stateMap );
 
 			/*!
 			 *	@brief		Called when an agent enters a state with this exiting transition.
