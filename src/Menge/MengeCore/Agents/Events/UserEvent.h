@@ -27,11 +27,20 @@ public:
     ProjectileCollision(size_t agentId, float dmg) : agentId(agentId), damage(dmg) {}
   };
 
+  struct AddFormation : UserEvent {
+    int groupId;
+    std::vector<Menge::Math::Vector2> points;
+    void perform() const override;
+    AddFormation(int groupId, const std::vector<Menge::Math::Vector2>& pts) :
+      groupId(groupId), points(pts) {}
+  };
+
   struct ToFormation : UserEvent {
     int groupId;
     int formationId;
     void perform() const override;
-    ToFormation(int groupId, int formationId) : groupId(groupId), formationId(formationId) {}
+    ToFormation(int groupId, int formationId) :
+      groupId(groupId), formationId(formationId) {}
   };
 
   struct AddWaypoints : UserEvent {
@@ -40,7 +49,8 @@ public:
     std::vector<Menge::Math::Vector2> points;
     void perform() const override;
     AddWaypoints(int groupId) : groupId(groupId) {};
-    AddWaypoints(int groupId, const std::vector<Menge::Math::Vector2>& pts) : groupId(groupId), points(pts) {};
+    AddWaypoints(int groupId, const std::vector<Menge::Math::Vector2>& pts) :
+      groupId(groupId), points(pts) {};
   };
 
   struct ToWaypoints : UserEvent {

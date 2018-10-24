@@ -169,7 +169,7 @@ namespace Formations {
 		 *	@brief		The formation points defining the formation.
 		 */
 		std::vector< FormationPoint * >  _formationPoints;
-		void setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount);
+		void setPoints( const std::vector<Vector2>& points, const std::vector<size_t>& weights, unsigned int borderCount);
 		std::map< size_t, size_t > getFormationPointAgent() {return _formationPoint_agent;}
 		const std::map< size_t, const Menge::Agents::BaseAgent * >& getCurrentAgents() const { return _agents; };
 

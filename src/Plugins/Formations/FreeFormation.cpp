@@ -516,7 +516,10 @@ namespace Formations {
 	/////////////////////////////////////////////////////////////////////
 
 
-	void FreeFormation::setPoints( std::vector<Vector2>& points, std::vector<size_t>& weights, unsigned int borderCount) {
+	void FreeFormation::setPoints(
+		const std::vector<Vector2>& points,
+		const std::vector<size_t>& weights,
+		unsigned int borderCount) {
 		// TODO: Change this to support comments.
 		if(points.size() != weights.size()) {
 			throw VelModFatalException("Points and weights size must match. " + std::to_string(points.size()) + " " + std::to_string(weights.size()) );

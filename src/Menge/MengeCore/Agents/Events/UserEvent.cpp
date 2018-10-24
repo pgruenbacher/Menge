@@ -8,6 +8,9 @@
 #include "Plugins/napoleon/waypoints/WayPointComponent.h"
 #include "Plugins/napoleon/waypoints/WayPointTask.h"
 #include "MengeCore/BFSM/GoalSelectors/GoalSelectorIdentity.h"
+#include "Plugins/Formations/SteadyFormation.h"
+#include "Plugins/Formations/FreeFormation.h"
+#include "Plugins/Formations/FormationsComponent.h"
 
 void UserEvents::ProjectileCollision::perform() const {
   Napoleon::DamageTask* dt = Napoleon::DamageTask::getSingleton();
@@ -21,29 +24,10 @@ void UserEvents::CanFire::perform() const {
   tsk->setGroupCommand(groupId, cmd);
 }
 
-Menge::BFSM::State* makeWaypointState(size_t classId) {
-  using Napoleon::WayPointComponent;
-  using Napoleon::Curve2D;
-  // godot specific.
-  // uses SteadyFormation instead of FreeFormation,
-  // which means it won't update mapAgentsToPoitns continuously.
-  Menge::BFSM::State* st = new Menge::BFSM::State("Waypoints" + std::to_string(classId), "Waypoints", classId);
-  st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
-  st->setFinal(false);
-  std::string resourceName = "curve2D" + std::to_string(classId);
-  Resource * rsrc = ResourceManager::getResource( resourceName, &Curve2D::make, Curve2D::LABEL );
-  if ( rsrc == 0x0 ) {
-    logger << Logger::ERR_MSG << "No resource available.";
-    delete st;
-    throw ResourceException();
-  }
-  // std::cout << "FORM  " << st->getName() << std::endl;
-  Curve2D * curve = dynamic_cast< Curve2D * >( rsrc );
-  WayPointComponent* wComp = new WayPointComponent();
-  wComp->setCurve(Napoleon::CurvePtr( curve ));
-  st->setVelComponent(wComp);
-  return st;
-}
+
+Menge::BFSM::State* makeWaypointState(size_t classId);
+Menge::BFSM::State* makeFormationState(size_t classId);
+
 
 void UserEvents::AddWaypoints::perform() const {
   const char* waypointStateName = "WayPoints";
@@ -76,6 +60,35 @@ void UserEvents::AddWaypoints::perform() const {
   if (autoStart) {
     tsk->setCanPerform(true);
   }
+}
+
+void UserEvents::AddFormation::perform() const {
+  const char* waypointStateName = "FormState";
+  std::vector< Menge::BFSM::State * >& states = Menge::ACTIVE_FSM->getStates();
+  Formations::FormationComponent* fc = 0x0;
+  for (const Menge::BFSM::State* state : states) {
+    if (state->getType() == waypointStateName &&
+      state->getClassId() == groupId) {
+        fc = dynamic_cast<Formations::FormationComponent*>(state->getVelComponent());
+        if (!fc) continue;
+        break;
+    }
+  }
+  if (!fc) {
+    Menge::BFSM::State* state = makeFormationState(groupId);
+    fc = dynamic_cast<Formations::FormationComponent*>(state->getVelComponent());
+    // otherwise we need to make the state and add it in.
+    Menge::ACTIVE_FSM->addNode(state);
+    Menge::ACTIVE_FSM->addTask(fc->getTask());
+    Menge::ACTIVE_FSM->updateTransitions();
+  }
+
+  std::vector<size_t> weights;
+  weights.resize(points.size());
+  std::fill(weights.begin(), weights.end(), 1);
+  unsigned int borderCount = 0;
+  Formations::FormationPtr form = fc->getFormation();
+  form->setPoints(points, weights, borderCount);
 }
 
 void UserEvents::ToWaypoints::perform() const {
@@ -111,4 +124,56 @@ void UserEvents::perform() {
     delete evt;
   }
   _userEvents.clear();
+}
+
+
+Menge::BFSM::State* makeWaypointState(size_t classId) {
+  using Napoleon::WayPointComponent;
+  using Napoleon::Curve2D;
+  // godot specific.
+  // uses SteadyFormation instead of FreeFormation,
+  // which means it won't update mapAgentsToPoitns continuously.
+  Menge::BFSM::State* st = new Menge::BFSM::State("Waypoints" + std::to_string(classId), "Waypoints", classId);
+  st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+  st->setFinal(false);
+  std::string resourceName = "curve2D" + std::to_string(classId);
+  Resource * rsrc = ResourceManager::getResource( resourceName, &Curve2D::make, Curve2D::LABEL );
+  if ( rsrc == 0x0 ) {
+    logger << Logger::ERR_MSG << "No resource available.";
+    delete st;
+    throw ResourceException();
+  }
+  // std::cout << "FORM  " << st->getName() << std::endl;
+  Curve2D * curve = dynamic_cast< Curve2D * >( rsrc );
+  WayPointComponent* wComp = new WayPointComponent();
+  wComp->setCurve(Napoleon::CurvePtr( curve ));
+  st->setVelComponent(wComp);
+  return st;
+}
+
+Menge::BFSM::State* makeFormationState(size_t classId) {
+  // godot specific.
+  // uses SteadyFormation instead of FreeFormation,
+  // which means it won't update mapAgentsToPoitns continuously.
+  using Formations::SteadyFormation;
+  using Formations::FormationComponent;
+  using Formations::FormationPtr;
+
+  size_t uniqueIndex = classId;
+  Menge::BFSM::State* st = new Menge::BFSM::State("Formation" + std::to_string(uniqueIndex), "FormState", classId);
+  st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+  st->setFinal(false);
+  std::string resourceName = "freeFormation" + std::to_string(uniqueIndex);
+  Resource * rsrc = ResourceManager::getResource( resourceName, &SteadyFormation::make, SteadyFormation::LABEL );
+  if ( rsrc == 0x0 ) {
+    logger << Logger::ERR_MSG << "No resource available.";
+    delete st;
+    throw ResourceException();
+  }
+  // std::cout << "FORM  " << st->getName() << std::endl;
+  SteadyFormation * form = dynamic_cast< SteadyFormation * >( rsrc );
+  FormationComponent* fComp = new FormationComponent();
+  fComp->setFormation(FormationPtr( form ));
+  st->setVelComponent(fComp);
+  return st;
 }
