@@ -130,7 +130,7 @@ namespace Menge {
 			 *	@param		agent		The agent whose properties are to be set.
 			 *	@returns	True if the properties were set successfully, false otherwise.
 			 */
-			virtual bool setProperties( BaseAgent * agent );
+			virtual bool setProperties( BaseAgent * agent ) const;
 
 			/*!
 			 *	@brief		Sets all generators to default values.

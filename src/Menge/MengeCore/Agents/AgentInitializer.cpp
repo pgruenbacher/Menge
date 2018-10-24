@@ -201,7 +201,7 @@ namespace Menge {
 
 		////////////////////////////////////////////////////////////////
 
-		bool AgentInitializer::setProperties( BaseAgent * agent ) {
+		bool AgentInitializer::setProperties( BaseAgent * agent ) const {
 			agent->_maxSpeed = _maxSpeed->getValue();
 			agent->_maxAccel = _maxAccel->getValue();
 			agent->_prefSpeed = _prefSpeed->getValue();
@@ -215,7 +215,7 @@ namespace Menge {
 			agent->_enemDist = _enemDist->getValue();
 			agent->_maxEnem = _maxEnem->getValue();
 
-			std::vector< BFSM::VelModifier * >::iterator vItr = _velModifiers.begin();
+			std::vector< BFSM::VelModifier * >::const_iterator vItr = _velModifiers.begin();
 			for ( ; vItr != _velModifiers.end(); ++vItr ) {
 				BFSM::VelModifier *newVel = (*vItr)->copy();
 				agent->addVelModifier(newVel);

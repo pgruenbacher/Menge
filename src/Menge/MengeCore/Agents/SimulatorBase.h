@@ -122,6 +122,8 @@ namespace Menge {
 			 */
 			virtual BaseAgent * addAgent( const Vector2 & pos, AgentInitializer * agentInit );
 
+			virtual void setProfiles(const HASH_MAP< std::string, AgentInitializer * >&	profiles) override;
+			const HASH_MAP< std::string, const AgentInitializer * >&	getProfiles() override;
 			/*!
 			 *  @brief      Returns the count of agents in the simulation.
 			 *
@@ -174,6 +176,7 @@ namespace Menge {
 			 *	@brief		The collection of agents in the simulation
 			 */
 			std::vector< Agent > _agents;
+			HASH_MAP< std::string, const AgentInitializer * > _profiles;
 		};
 
 		////////////////////////////////////////////////////////////////
@@ -189,6 +192,15 @@ namespace Menge {
 		template < class Agent >
 		SimulatorBase<Agent>::~SimulatorBase() {
 			_agents.clear();
+
+			// added by Paul Oct 2018
+			// for ( HASH_MAP< std::string, AgentInitializer * >::const_iterator itr = _profiles.begin();
+			// 	itr != _profiles.end();
+			// 	++itr )
+			// {
+			// 	delete itr->second;
+			// }
+			// _profiles.clear();
 		}
 
 		////////////////////////////////////////////////////////////////
@@ -244,6 +256,17 @@ namespace Menge {
 		}
 
 		////////////////////////////////////////////////////////////////
+
+
+		template < class Agent >
+		void SimulatorBase<Agent>::setProfiles(const HASH_MAP< std::string, AgentInitializer * >&	profiles) {
+			// _profiles.insert(profiles.begin(), profiles.end());
+		}
+
+		template < class Agent >
+		const HASH_MAP< std::string, const AgentInitializer * >&	SimulatorBase<Agent>::getProfiles() {
+			return _profiles;
+		}
 
 		template < class Agent >
 		BaseAgent * SimulatorBase<Agent>::addAgent( const Vector2 & pos,

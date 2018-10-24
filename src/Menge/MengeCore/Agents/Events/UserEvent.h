@@ -20,6 +20,15 @@ class UserEvents {
 
 public:
 
+  struct SpawnAgents : UserEvent {
+    size_t groupId;
+    const char* profileName;
+    const std::vector<Menge::Math::Vector2> points;
+    void perform() const override;
+    SpawnAgents(int groupId, const std::vector<Menge::Math::Vector2>& pts) :
+      groupId(groupId), points(pts) {};
+  };
+
   struct ProjectileCollision : UserEvent {
     size_t agentId;
     float damage;
@@ -29,7 +38,7 @@ public:
 
   struct AddFormation : UserEvent {
     int groupId;
-    std::vector<Menge::Math::Vector2> points;
+    const std::vector<Menge::Math::Vector2> points;
     void perform() const override;
     AddFormation(int groupId, const std::vector<Menge::Math::Vector2>& pts) :
       groupId(groupId), points(pts) {}
@@ -46,7 +55,7 @@ public:
   struct AddWaypoints : UserEvent {
     int groupId;
     bool autoStart;
-    std::vector<Menge::Math::Vector2> points;
+    const std::vector<Menge::Math::Vector2> points;
     void perform() const override;
     AddWaypoints(int groupId) : groupId(groupId) {};
     AddWaypoints(int groupId, const std::vector<Menge::Math::Vector2>& pts) :

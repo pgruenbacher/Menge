@@ -144,7 +144,7 @@ namespace Menge {
 					if ( ! ( commonDone || targetDone || spatialQueryDone ) ) {
 						tagQueue.push_back( child );
 					} else {
-						if ( !parseAgentGroup( child, agentInit ) ) {
+						if ( !parseAgentGroup( child ) ) {
 							return false;
 						}
 					}
@@ -222,7 +222,7 @@ namespace Menge {
 			for ( ; tagItr != tagQueue.end(); ++tagItr ) {
 				TiXmlElement * child = *tagItr;
 				if ( child->ValueStr() == "AgentGroup" ) {
-					if ( !parseAgentGroup( child, agentInit ) ) {
+					if ( !parseAgentGroup( child ) ) {
 						return false;
 					}
 				} else if ( child->ValueStr() == "ObstacleSet" ) {
@@ -246,13 +246,16 @@ namespace Menge {
 
 			// free up the profiles
 			//	TODO: I'll need to save these when I have AgentSources.
-			for ( HASH_MAP< std::string, AgentInitializer * >::iterator itr = _profiles.begin();
-				itr != _profiles.end();
-				++itr )
-			{
-				delete itr->second;
-			}
-			_profiles.clear();
+			// I'm actually going to have these belong under the simulator I think,
+			// and then just have simulator clean them up when deleting...
+			// for ( HASH_MAP< std::string, AgentInitializer * >::iterator itr = _profiles.begin();
+			// 	itr != _profiles.end();
+			// 	++itr )
+			// {
+			// 	delete itr->second;
+			// }
+			// _profiles.clear();
+			_sim->setProfiles(_profiles);
 
 			return _sim->initSpatialQuery();
 		}
@@ -365,6 +368,9 @@ namespace Menge {
 					}
 				}
 			}
+
+			_sim->setProfiles(_profiles);
+
 			if ( !targetDone || !commonDone || !spatialQueryDone) {
 				logger << Logger::ERR_MSG << "Missing required experiment parameters: \n";
 				if ( !targetDone ) logger << "\tmodel simulation parameters ";
@@ -381,7 +387,7 @@ namespace Menge {
 		};
 		////////////////////////////////////////////////////////////////////
 
-		bool SimXMLLoader::parseAgentGroup( TiXmlElement * node, AgentInitializer * agentInit ) {
+		bool SimXMLLoader::parseAgentGroup( TiXmlElement * node ) {
 			// 2-pass approach
 			// Pass 1 get the profile selector
 			// Pass 2 initialize AgentGenerator (Generator for short)

@@ -89,7 +89,7 @@ namespace Menge {
 			 *							properties.
 			 *	@returns	A boolean reporting success (true) or failure (false).
 			 */
-			bool parseAgentGroup( TiXmlElement * node, AgentInitializer * agentInit );
+			bool parseAgentGroup( TiXmlElement * node);
 
 
 			/*!

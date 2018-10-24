@@ -63,7 +63,7 @@ namespace Zanlungo {
 		 *	@param		agent		The agent whose properties are to be set.
 		 *	@returns	True if the properties were set successfully, false otherwise.
 		 */
-		virtual bool setProperties( Menge::Agents::BaseAgent * agent );
+		virtual bool setProperties( Menge::Agents::BaseAgent * agent ) const;
 
 		/*!
 		 *	@brief		Sets all generators to default values.
@@ -78,7 +78,7 @@ namespace Zanlungo {
 		 *	@brief		Creates a copy of this AgentInitializer instance.
 		 *
 		 *	@returns	A pointer to a new AgentInitializer with all of the same values
-		 *				as this.  The caller is responsible for freeing up the 
+		 *				as this.  The caller is responsible for freeing up the
 		 *				new instance.
 		 */
 		virtual AgentInitializer * copy() const { return new AgentInitializer( *this ); }
@@ -93,7 +93,7 @@ namespace Zanlungo {
 		 *	space.  Each pedestrian model which introduces new per-agent properties that
 		 *	must override this function.  However, the overriden function must, in turn,
 		 *	call the parent class if it doesn't consider the tag relevant, giving the
-		 *	parent class a chance to determine if the tag is relevant.  This is the 
+		 *	parent class a chance to determine if the tag is relevant.  This is the
 		 *	mechanism by which derived classes will also benefit from the `<Zanlungo>`
 		 *	parameter set.
 		 *
@@ -105,9 +105,9 @@ namespace Zanlungo {
 		/*!
 		 *	@brief		Defines a constant value for an agent property as specified
 		 *				by the attribute of an agent property tag.
-		 *	
+		 *
 		 *	Derived classes should override this function, but possibly call the parent
-		 *	class's implementation.  First, it should test to see if the paramName is 
+		 *	class's implementation.  First, it should test to see if the paramName is
 		 *	expected by the derived class.  If so, the derived class can determine fail
 		 *	or accept.  If it is not expected, it should call the parent class's implementation
 		 *	and returns its value.
@@ -120,13 +120,13 @@ namespace Zanlungo {
 			const ::std::string & paramName, const ::std::string & value );
 
 		/*!
-		 *	@brief		Process the given <Property .../> tag.  
+		 *	@brief		Process the given <Property .../> tag.
 		 *
 		 *	As a pre-condition to this function, the XML node contains a <Property.../>
 		 *	tag and has been confirmed to have, at least, a name attribute.  Nothing
-		 *	else about the tag has been validated.  
+		 *	else about the tag has been validated.
 		 *
-		 *	If the property name is unexpected, it will be ignored.  If it is expected, 
+		 *	If the property name is unexpected, it will be ignored.  If it is expected,
 		 *	this function will attempt to interpret the XML tag as a number distribution
 		 *	for a valid agent attribute.  If it can do so, it is successful, if it can't,
 		 *	it fails.
@@ -140,7 +140,7 @@ namespace Zanlungo {
 		/*!
 		 *	@brief		The mass of the agent.
 		 */
-		Menge::Math::FloatGenerator * _mass;		
+		Menge::Math::FloatGenerator * _mass;
 	};
 }	// namespace Zanlungo
 

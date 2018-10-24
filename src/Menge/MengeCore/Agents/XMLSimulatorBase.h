@@ -205,6 +205,8 @@ namespace Menge {
 			 */
 			virtual SpatialQuery * getSpatialQuery() = 0;
 
+			virtual const HASH_MAP< std::string, const AgentInitializer * >&	getProfiles() = 0;
+			virtual void setProfiles(const HASH_MAP< std::string, AgentInitializer * >&	_profiles) = 0;
 			/*!
 			 *	@brief		Reports if the spatial query has been set.
 			 *

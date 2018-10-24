@@ -3,6 +3,7 @@
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/BFSM/State.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
+#include "MengeCore/Agents/AgentInitializer.h"
 #include "Plugins/napoleon/DamageTask.h"
 #include "Plugins/napoleon/UserCommandTask.h"
 #include "Plugins/napoleon/waypoints/WayPointComponent.h"
@@ -27,6 +28,38 @@ void UserEvents::CanFire::perform() const {
 
 Menge::BFSM::State* makeWaypointState(size_t classId);
 Menge::BFSM::State* makeFormationState(size_t classId);
+
+
+void UserEvents::SpawnAgents::perform() const {
+  // from the pool of dead agents, spawn new agents
+  // with updated classId.
+  using Menge::Agents::AgentInitializer;
+
+  Menge::Agents::SimulatorInterface* simulator = Menge::SIMULATOR;
+  const HASH_MAP< std::string, const AgentInitializer * >& profiles = simulator->getProfiles();
+  const HASH_MAP< std::string, const AgentInitializer * >::const_iterator it = profiles.find(profileName);
+  if (it == profiles.end()) {
+    logger << Logger::ERR_MSG << "Profile not found for spawning: " << profileName;
+    return;
+  }
+  const AgentInitializer* init = it->second;
+
+  int i = 0;
+  for (const Vector2& pt : points) {
+    if (i >= simulator->getNumAgents()) {
+      logger << Logger::ERR_MSG << "Spawning more agents than sim capacity";
+      return;
+    }
+    // now find the next available reserved agent.
+    for (; i < simulator->getNumAgents(); ++i) {
+      Menge::Agents::BaseAgent* agt = simulator->getAgent(i);
+      if (!agt->isDead()) continue;
+      // update the agent with new properties about it.
+      init->setProperties(agt);
+      break;
+    }
+  }
+}
 
 
 void UserEvents::AddWaypoints::perform() const {
