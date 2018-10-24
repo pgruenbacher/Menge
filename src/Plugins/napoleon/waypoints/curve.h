@@ -89,6 +89,7 @@ class Curve2D : public Menge::Resource {
 
   Curve2D(const std::string& fileName);
   static Menge::Resource* load(const std::string& fileName);
+  static Menge::Resource* make(const std::string& name) { return new Curve2D(name); }
 };
 
 typedef Menge::ResourcePtr<Curve2D> CurvePtr;

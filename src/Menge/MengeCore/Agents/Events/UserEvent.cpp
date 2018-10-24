@@ -7,6 +7,7 @@
 #include "Plugins/napoleon/UserCommandTask.h"
 #include "Plugins/napoleon/waypoints/WayPointComponent.h"
 #include "Plugins/napoleon/waypoints/WayPointTask.h"
+#include "MengeCore/BFSM/GoalSelectors/GoalSelectorIdentity.h"
 
 void UserEvents::ProjectileCollision::perform() const {
   Napoleon::DamageTask* dt = Napoleon::DamageTask::getSingleton();
@@ -20,26 +21,68 @@ void UserEvents::CanFire::perform() const {
   tsk->setGroupCommand(groupId, cmd);
 }
 
+Menge::BFSM::State* makeWaypointState(size_t classId) {
+  using Napoleon::WayPointComponent;
+  using Napoleon::Curve2D;
+  // godot specific.
+  // uses SteadyFormation instead of FreeFormation,
+  // which means it won't update mapAgentsToPoitns continuously.
+  Menge::BFSM::State* st = new Menge::BFSM::State("Waypoints" + std::to_string(classId), "Waypoints", classId);
+  st->setGoalSelector(new Menge::BFSM::IdentityGoalSelector());
+  st->setFinal(false);
+  std::string resourceName = "curve2D" + std::to_string(classId);
+  Resource * rsrc = ResourceManager::getResource( resourceName, &Curve2D::make, Curve2D::LABEL );
+  if ( rsrc == 0x0 ) {
+    logger << Logger::ERR_MSG << "No resource available.";
+    delete st;
+    throw ResourceException();
+  }
+  // std::cout << "FORM  " << st->getName() << std::endl;
+  Curve2D * curve = dynamic_cast< Curve2D * >( rsrc );
+  WayPointComponent* wComp = new WayPointComponent();
+  wComp->setCurve(Napoleon::CurvePtr( curve ));
+  st->setVelComponent(wComp);
+  return st;
+}
+
 void UserEvents::AddWaypoints::perform() const {
   const char* waypointStateName = "WayPoints";
   std::vector< Menge::BFSM::State * >& states = Menge::ACTIVE_FSM->getStates();
+  Napoleon::WayPointComponent* wc = 0x0;
   for (const Menge::BFSM::State* state : states) {
     if (state->getType() == waypointStateName &&
       state->getClassId() == groupId) {
-        Napoleon::WayPointComponent* wc = dynamic_cast<Napoleon::WayPointComponent*>(state->getVelComponent());
+        wc = dynamic_cast<Napoleon::WayPointComponent*>(state->getVelComponent());
         if (!wc) continue;
-        Napoleon::WayPointsTask* tsk = wc->get_task();
-        Napoleon::CurvePtr curve = wc->getCurve();
-        tsk->reset();
-        curve->clear();
-        for (const Menge::Math::Vector2& pt : points) {
-          curve->addPoint(pt);
-        }
-        if (autoStart) {
-          tsk->setCanPerform(true);
-        }
+        break;
     }
   }
+  if (!wc) {
+    Menge::BFSM::State* state = makeWaypointState(groupId);
+    wc = dynamic_cast<Napoleon::WayPointComponent*>(state->getVelComponent());
+    // otherwise we need to make the state and add it in.
+    Menge::ACTIVE_FSM->addNode(state);
+    Menge::ACTIVE_FSM->addTask(wc->getTask());
+    Menge::ACTIVE_FSM->updateTransitions();
+  }
+
+  Napoleon::WayPointsTask* tsk = wc->get_task();
+  Napoleon::CurvePtr curve = wc->getCurve();
+  tsk->reset();
+  curve->clear();
+  for (const Menge::Math::Vector2& pt : points) {
+    curve->addPoint(pt);
+  }
+  if (autoStart) {
+    tsk->setCanPerform(true);
+  }
+}
+
+void UserEvents::ToWaypoints::perform() const {
+  Napoleon::UserCommandTask* tsk = Napoleon::UserCommandTask::getSingleton();
+  Napoleon::UserGroupCommand cmd = tsk->getGroupCommand(groupId);
+  cmd.toWaypoints = true;
+  tsk->setGroupCommand(groupId, cmd);
 }
 
 void UserEvents::ToFormation::perform() const {

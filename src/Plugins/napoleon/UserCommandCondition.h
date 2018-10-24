@@ -21,6 +21,7 @@ namespace Napoleon {
       UserCommandCondition * copy();
       bool _canFire;
       bool _toFormation;
+      bool _toWaypoints;
   };
 
   /*!
@@ -43,6 +44,7 @@ namespace Napoleon {
 
     size_t _canFireID;
     size_t _toFormationID;
+    size_t _toWaypointsID;
 
     virtual Condition * instance() const { return new UserCommandCondition(); }
     virtual bool setFromXML( Condition * condition, TiXmlElement * node,

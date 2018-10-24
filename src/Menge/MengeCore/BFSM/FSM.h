@@ -204,6 +204,7 @@ namespace Menge {
 			 */
 			bool addTransition( size_t fromNode, Transition * t );
 
+			void updateTransitions();
 			/*!
 			 *	@brief		Adds a goal to the indicated goal set.
 			 *

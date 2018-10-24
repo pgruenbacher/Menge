@@ -11,6 +11,9 @@ namespace Napoleon {
 struct UserGroupCommand {
   bool moveToFormation;
   bool canFire;
+  bool toWaypoints;
+
+  UserGroupCommand() : moveToFormation(false), canFire(false), toWaypoints(false) {}
 };
 
 /*!

@@ -40,6 +40,13 @@ public:
     std::vector<Menge::Math::Vector2> points;
     void perform() const override;
     AddWaypoints(int groupId) : groupId(groupId) {};
+    AddWaypoints(int groupId, const std::vector<Menge::Math::Vector2>& pts) : groupId(groupId), points(pts) {};
+  };
+
+  struct ToWaypoints : UserEvent {
+    int groupId;
+    void perform() const override;
+    ToWaypoints(int groupId) : groupId(groupId) {}
   };
 
   struct CanFire : UserEvent {

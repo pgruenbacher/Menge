@@ -128,6 +128,7 @@ namespace Napoleon {
     }
 
     if (!_canPerform) return;
+    // std::cout << "WAYPOITN TASK PERFORM " << _followPoints[0].getPosition() << std::endl;
     updateFollowPoints(_followPoints);
     currentPosition += (getSpeed() * Menge::SIM_TIME_STEP);
     // std::cout << currentPosition

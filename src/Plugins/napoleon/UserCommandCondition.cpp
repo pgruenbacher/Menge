@@ -16,6 +16,10 @@ namespace Napoleon {
       if (_toFormation && !groupCmd.moveToFormation) {
         isValid = false;
       }
+      if (_toWaypoints && !groupCmd.toWaypoints) {
+        isValid = false;
+      }
+
       return isValid;
     }
 
@@ -28,6 +32,7 @@ namespace Napoleon {
     UserCommandConditionFactory::UserCommandConditionFactory() : ConditionFactory() {
       _canFireID = _attrSet.addBoolAttribute("can_fire", false, false);
       _toFormationID = _attrSet.addBoolAttribute("to_formation", false, false);
+      _toWaypointsID = _attrSet.addBoolAttribute("to_waypoints", false, false);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -43,8 +48,9 @@ namespace Napoleon {
 
       tCond->_canFire = _attrSet.getBool(_canFireID);
       tCond->_toFormation = _attrSet.getBool(_toFormationID);
+      tCond->_toWaypoints = _attrSet.getBool(_toWaypointsID);
 
-      if (!tCond->_canFire && !tCond->_toFormation) {
+      if (!tCond->_canFire && !tCond->_toFormation && !tCond->_toWaypoints) {
         return false;
       }
 

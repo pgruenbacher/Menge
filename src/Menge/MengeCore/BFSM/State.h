@@ -176,6 +176,7 @@ namespace Menge {
 			 */
 			State * testTransitions( Agents::BaseAgent * agent );
 
+			void updateTransitions(std::map< std::string, State * >& stateNameMap);
 			/*!
 			 *	@brief		Automatically called when an agent enters the state.
 			 *

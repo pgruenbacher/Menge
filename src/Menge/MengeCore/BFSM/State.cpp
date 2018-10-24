@@ -106,6 +106,12 @@ namespace Menge {
 			// std::cout << "CLEARED MEM " << _goalSelector << std::endl;
 		}
 
+		void State::updateTransitions(std::map< std::string, State * >& stateNameMap) {
+			for (Transition* t : transitions_) {
+				t->connectStates(stateNameMap);
+			}
+		}
+
 		/////////////////////////////////////////////////////////////////////
 
 		void State::getTasks( FSM * fsm ) {

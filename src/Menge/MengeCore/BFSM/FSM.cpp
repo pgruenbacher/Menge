@@ -108,6 +108,12 @@ namespace Menge {
 			// _stateNameMap.clear();
 		}
 
+		void FSM::updateTransitions() {
+			for (State* st : _nodes) {
+				st->updateTransitions(_stateNameMap);
+			}
+		}
+
 		/////////////////////////////////////////////////////////////////////
 
 		void FSM::collectTasks() {
