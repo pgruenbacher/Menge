@@ -19,7 +19,7 @@ namespace Napoleon {
 
   class WayPointsTask : public Menge::BFSM::Task {
 
-    float getSpeed() { return 0.2; };
+    float getSpeed() { return 2.0; };
     float currentPosition;
     bool _canPerform;
     bool _isDirty;

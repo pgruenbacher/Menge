@@ -20,6 +20,7 @@ enum MENGE_STATE {
 namespace Napoleon {
     MENGE_STATE getState(size_t agent_id);
     void debugState(size_t agent_id);
+    const char* getStateString(size_t agent_id);
 }
 
 
