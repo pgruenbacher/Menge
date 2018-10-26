@@ -168,7 +168,12 @@ namespace Formations {
 		/*!
 		 *	@brief		The formation points defining the formation.
 		 */
-		std::vector< FormationPoint * >  _formationPoints;
+		std::vector< FormationPoint >  _formationPoints;
+		/*!
+		 *	@brief		A separate cache of border points -- this is a subset of _formationPoints.
+		 */
+		std::vector< FormationPoint > _borderPoints;
+
 		void setPoints( const std::vector<Vector2>& points, const std::vector<size_t>& weights, unsigned int borderCount);
 		std::map< size_t, size_t > getFormationPointAgent() {return _formationPoint_agent;}
 		const std::map< size_t, const Menge::Agents::BaseAgent * >& getCurrentAgents() const { return _agents; };
@@ -203,7 +208,7 @@ namespace Formations {
 		 *	@param		pt		A border point to map to an agent.
 		 *
 		 */
-		void mapPointToAgent(FormationPoint *pt);
+		void mapPointToAgent(FormationPoint& pt);
 
 
 		/*!
@@ -222,7 +227,7 @@ namespace Formations {
 		 *	@param		pt2		the other point to check
 		 *	@returns	The "distance" between the two formatin points.
 		 */
-		float formationDistance( FormationPoint *pt1, FormationPoint *pt2 );
+		float formationDistance( const FormationPoint& pt1, const FormationPoint& pt2 );
 
 		/*!
 		 *	@brief		Maps formation point identifiers to agent identifiers.
@@ -242,13 +247,9 @@ namespace Formations {
 		 *				doing a lot of vector math each timestep
 		 *				? WHAT ?
 		 */
-		std::map< size_t, FormationPoint * > _agentPoints;
+		std::map< size_t, FormationPoint > _agentPoints;
 
 
-		/*!
-		 *	@brief		A separate cache of border points -- this is a subset of _formationPoints.
-		 */
-		std::vector< FormationPoint * > _borderPoints;
 
 		/*!
 		 *	@brief		The formation's direction of travel.
