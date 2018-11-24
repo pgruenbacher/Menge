@@ -145,9 +145,9 @@ namespace Menge {
 			}
 
 			/*!
-			 *	@brief		Reports if the obstacle is convext at _point. 
+			 *	@brief		Reports if the obstacle is convext at _point.
 			 *
-			 *	Takes into account the double-sidedness of the obstacle and the side 
+			 *	Takes into account the double-sidedness of the obstacle and the side
 			 *	of the obstacle the agent is on.
 			 *
 			 *	@param		agtOnRight		Indicate if the agent is on the right side of
@@ -159,9 +159,9 @@ namespace Menge {
 			}
 
 			/*!
-			 *	@brief		Reports if the obstacle is convext at _point + _length * _unitDir. 
+			 *	@brief		Reports if the obstacle is convext at _point + _length * _unitDir.
 			 *
-			 *	Takes into account the double-sidedness of the obstacle and the side 
+			 *	Takes into account the double-sidedness of the obstacle and the side
 			 *	of the obstacle the agent is on.
 			 *
 			 *	@param		agtOnRight		Indicate if the agent is on the right side of
@@ -171,18 +171,18 @@ namespace Menge {
 			// NOTE: The only way for _nextObstacle to be NULL is for this to be double sided.
 			//		And end points of double-sided obstacles are always convex.
 			inline bool p1Convex( bool agtOnRight) const {
-				return _nextObstacle == 0x0 ? 
-					true : 
-					( agtOnRight ? 
-						_nextObstacle->_isConvex : 
+				return _nextObstacle == 0x0 ?
+					true :
+					( agtOnRight ?
+						_nextObstacle->_isConvex :
 						_doubleSided && _nextObstacle->_isConvex
 					);
 			}
 
 			/*!
-			 *	@brief		Sets the obstacle's closed state.  
+			 *	@brief		Sets the obstacle's closed state.
 			 *
-			 *	If closed, it is part of a sequence of obstacles that form a closed polygon.  
+			 *	If closed, it is part of a sequence of obstacles that form a closed polygon.
 			 *	If open, it is part of a polyline.
 			 *
 			 *	@param		closed		Defines the obstacle as part of a closed polygon (true),
@@ -193,7 +193,7 @@ namespace Menge {
 			/*!
 			 *	@brief		Reports if the obstacle is double sided.
 			 *
-			 *	If double sided (true) then the obstacle should be included in the 
+			 *	If double sided (true) then the obstacle should be included in the
 			 *	nearby obstacles, *regardless* of which side of the line the agent lies.
 			 */
 			bool _doubleSided;
@@ -214,7 +214,7 @@ namespace Menge {
 			 *	@brief		The point from which the obstacle is defined.
 			 */
 			Math::Vector2 _point;
-			
+
 			/*!
 			 *	@brief		Pointer to the previous obstacle in the greater obstacle structure.
 			 *				If the obstacle is open, it could be NULL.
@@ -232,7 +232,7 @@ namespace Menge {
 			float _length;
 
 			/*!
-			 *	@brief		A unique identifier for this obstacle.	
+			 *	@brief		A unique identifier for this obstacle.
 			 */
 			size_t _id;
 
@@ -252,7 +252,7 @@ namespace Menge {
 		   *                              be calculated.
 		   *  @returns    The squared distance from the line segment to the point.
 		   */
-		  inline MENGE_API float distSqPointLineSegment( const Math::Vector2& a, 
+		  inline MENGE_API float distSqPointLineSegment( const Math::Vector2& a,
 														 const Math::Vector2& b,
 														 const Math::Vector2& c)
 		  {

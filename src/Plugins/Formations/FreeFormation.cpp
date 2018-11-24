@@ -197,7 +197,10 @@ void FreeFormation::clearFormationPoints() {
 
 /////////////////////////////////////////////////////////////////////
 
-void FreeFormation::addAgentPoint(const BaseAgent* agt) {
+void FreeFormation::addAgentPoint(const std::vector<EntityType>,
+  const Vector2& avgPos,
+  std::map<EntityType, Data::FormationPoint>& agentPoints
+  ) {
   // make a sentinel point
   // FormationPoint* agtPoint = new FormationPoint();
   FormationPoint agtPoint;

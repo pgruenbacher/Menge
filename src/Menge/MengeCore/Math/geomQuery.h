@@ -46,7 +46,7 @@ namespace Menge {
 		 *	@param		radius		A float.  The radius of the circle.
 		 *	@returns	The expected "time" to collision ("infinity" if there is no collision).
 		 */
-		MENGE_API float rayCircleTTC( const Vector2 & dir, const Vector2 & center, float radius );
+		float MENGE_API rayCircleTTC( const Vector2 & dir, const Vector2 & center, float radius );
 
 		/*!
 		 *	@brief		Perform spherical linear interpolation between two vectors
@@ -57,7 +57,7 @@ namespace Menge {
 		 *	@param		sinTheta	The sine of the angle between the two vectors.
 		 *	@returns	The interpolated vector.
 		 */
-		MENGE_API Vector2 slerp( float t, const Vector2 & p0, const Vector2 & p1, float sinTheta );
+		Vector2 MENGE_API slerp( float t, const Vector2 & p0, const Vector2 & p1, float sinTheta );
 	}	// namespace Math
 
 }	// namespace Menge

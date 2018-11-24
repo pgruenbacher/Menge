@@ -46,9 +46,13 @@ namespace Menge {
 		 *  @param			a               The float to be squared.
 		 *  @returns		The square of the float.
 		 */
-		inline MENGE_API float sqr(float a) {
+		template<typename T>
+		MENGE_API T sqr(T a) {
 			return a * a;
 		}
+		// inline MENGE_API double sqr(double a) {
+		// 	return a * a;
+		// }
 
 		/*!
 		 *	@brief		Templated vector in R2
