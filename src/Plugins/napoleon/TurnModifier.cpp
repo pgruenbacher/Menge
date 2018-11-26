@@ -125,17 +125,8 @@ namespace Napoleon {
         newPref.set( maxCt * newPref._x + maxSt * newPref._y,
                -maxSt * newPref._x + maxCt * newPref._y );
       }
-
-      // std::cout << "NEW PREF " << agent->_maxAngVel << " " << maxCt << " " << ct << " " << pVel.getSpeed() << std::endl;
     }
     pVel.setSingle(newPref);
-    // pVel.setSpeed
-    // std::cout << "CTERR " << maxCT <<  " " << ct << std::endl;
-
-    // Vector2 target = pVel.getTarget();
-    // std::cout << "TRA " << target << std::endl;
-    // float cross
-
   }
 
   /////////////////////////////////////////////////////////////////////
