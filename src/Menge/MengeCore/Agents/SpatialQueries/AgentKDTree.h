@@ -108,12 +108,12 @@ namespace Menge {
 			/*!
 			 *  @brief      Define the set of agents on which <i>k</i>d-tree will query.
 			 */
-			void setAgents( const std::vector< BaseAgent * > & agents );	
+			void setAgents( const std::vector< BaseAgent * > & agents );
 
 			/*!
 			 *  @brief      Builds a <i>k</i>d-tree on the set of agents.
 			 */
-			void buildTree();	
+			void buildTree();
 
 			/*!
 			 *  @brief      gets agents within a range, and passes them to the supplied filter
@@ -126,7 +126,7 @@ namespace Menge {
 			 *  @brief      Does the full work of constructing the <i>k</i>d-tree.
 			 *
 			 *	@param		begin		The index of the first agent in the region of the tree.
-			 *	@param		end			The index of the last (just outside).  So, the 
+			 *	@param		end			The index of the last (just outside).  So, the
 			 *							agents in this branch are in the interval [begin, end)
 			 *	@param		node		The index of the node to build.
 			 */

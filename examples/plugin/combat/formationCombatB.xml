@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<BFSM>
+	<GoalSet id="0">
+		<Goal type="point" id="0" x="-10" y="0.0"/>
+		<Goal type="point" id="1" x="10" y="0.0"/>
+        <Goal type="point" id="2" x="-10" y="0.0"/>
+        <Goal type="point" id="3" x="10" y="0.0"/>
+	</GoalSet>
+
+    <State name="WalkRight" final="0" type="ChargeState" class="1">
+        <GoalSelector type="explicit" goal_set="0" goal="1" persistent="0" />
+        <VelComponent type="goal" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare.txt" /> -->
+    </State>
+
+    <State name="WalkLeft" final="0" type="ChargeState" class="2">
+        <GoalSelector type="explicit" goal_set="0" goal="0" persistent="0" />
+        <VelComponent type="goal" />
+        <!-- <VelModifier type="formation" file_name="DenseSquare2.txt" /> -->
+    </State>
+
+    <State name="Attack" final="0">
+        <Action type="attack_action"/>
+        <GoalSelector type="identity"/>
+        <!-- <VelComponent type="goal" /> -->
+        <VelComponent type="enemy_near_comp" method="idle"/>
+    </State>
+    <State name="Idle" final="0">
+        <GoalSelector type="identity"/>
+        <VelComponent type="goal"/>
+    </State>
+
+    <State name="Dying" final="1">
+        <VelComponent type="idle"/>
+    </State>
+    <State name="Dead" final="1">
+        <VelComponent type="idle"/>
+    </State>
+
+
+    <State name="AdvancingEnemy" final="0">
+        <VelComponent type="enemy_near_comp" method="advancing"/>
+    </State>
+    <State name="TooManyEnemyNear" final="0">
+        <VelComponent type="enemy_near_comp" method="withdrawing"/>
+    </State>
+
+    <Transition from="AdvancingEnemy,TooManyEnemyNear" final="0">
+        <Condition type="enemy_near" dist="5.9" is_close="0"/>
+        <Target type="by_class" typename="ChargeState"/>
+    </Transition>
+
+    <Transition from="AdvancingEnemy,TooManyEnemyNear" to="Attack">
+        <Condition type="can_perform"/>
+        <Condition type="enemy_near" dist="1.1"/>
+        <Condition type="facing_enemy"/>
+    </Transition>
+
+    <Transition from="AdvancingEnemy" to="TooManyEnemyNear">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
+        <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9"/>
+    </Transition>
+    <Transition from="TooManyEnemyNear" to="AdvancingEnemy">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
+        <Condition type="enemy_proximity" enem_dist="3.9" friend_dist="3.9" inverse="1"/>
+    </Transition>
+
+    <Transition to="Dying" from="Attack,AdvancingEnemy,TooManyEnemyNear,WalkLeft,WalkRight">
+        <Condition type="dead"/>
+    </Transition>
+    <Transition from="Dying" to="Dead">
+        <Condition type="timer" dist="c" per_agent="1" value="10"/>
+    </Transition>
+
+    <Transition from="Attack" to="AdvancingEnemy">
+        <Condition type="timer" dist="u" min="2" max="3" seed="6" per_agent="1" />
+        <!-- <Condition type="timer" dist="c" value="2.5" per_agent="1" /> -->
+    </Transition>
+
+
+    <Transition from="WalkRight,WalkLeft,Idle" to="AdvancingEnemy">
+        <Condition type="enemy_near" dist="5.9"/>
+    </Transition>
+
+<!--     <Transition from="WalkRight" to="WalkDown" >
+        <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    </Transition>
+    <Transition from="WalkDown" to="WalkLeft" >
+        <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    </Transition>
+    <Transition from="WalkLeft" to="WalkUp" >
+        <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    </Transition>
+    <Transition from="WalkUp" to="WalkRight" >
+        <Condition type="timer"  dist="c" value="10" per_agent="0" />
+    </Transition> -->
+
+
+
+</BFSM>

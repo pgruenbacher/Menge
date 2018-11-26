@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(mengeTests)
 find_package(Threads REQUIRED)
 
-set(MENGE_EXE_DIR ${CMAKE_SOURCE_DIR}/../../Exe) 
+set(MENGE_EXE_DIR ${CMAKE_SOURCE_DIR}/../../Exe)
 if ( ${CMAKE_BUILD_TYPE} MATCHES "Debug" )
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${MENGE_EXE_DIR}/test/debug)
 else ( ${CMAKE_BUILD_TYPE} MATCHES "Debug" )
